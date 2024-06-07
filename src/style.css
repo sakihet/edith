@@ -17,6 +17,10 @@ ul {
   padding: 0 1rem;
 }
 
+a {
+  color: blue;
+}
+
 .layout-center {
   margin-left: auto;
   margin-right: auto;
