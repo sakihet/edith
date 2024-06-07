@@ -13,6 +13,10 @@ body {
   line-height: 1.5rem;
 }
 
+ul {
+  padding: 0 1rem;
+}
+
 .layout-center {
   margin-left: auto;
   margin-right: auto;
