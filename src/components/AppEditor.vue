@@ -6,6 +6,8 @@ import BulletList from '@tiptap/extension-bullet-list'
 import HorizontalRule from '@tiptap/extension-horizontal-rule'
 import Link from '@tiptap/extension-link'
 import StarterKit from '@tiptap/starter-kit'
+import TaskItem from '@tiptap/extension-task-item'
+import TaskList from '@tiptap/extension-task-list'
 
 const editor = useEditor({
   content: '<p>hello, editor</p>',
@@ -16,6 +18,10 @@ const editor = useEditor({
     HorizontalRule,
     Link,
     StarterKit,
+    TaskItem.configure({
+      nested: true
+    }),
+    TaskList,
   ],
 })
 </script>
@@ -42,6 +48,12 @@ const editor = useEditor({
         :class="{ 'pattern-button-base': true, 'pattern-button-selected': editor?.isActive('bulletList') }"
       >
         toggle bullet list
+      </button>
+      <button
+        @click="editor?.chain().focus().toggleTaskList().run()"
+        :class="{ 'pattern-button-base': true, 'pattern-button-selected': editor?.isActive('taskList') }"
+      >
+        toggle task list
       </button>
       <button
         @click="editor?.chain().focus().toggleBold().run()"

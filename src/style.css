@@ -103,3 +103,19 @@ a {
     }
   }
 }
+
+ul[data-type="taskList"] {
+  list-style: none;
+  margin-left: 0;
+  padding: 0;
+  li {
+    align-items: flex-start;
+    display: flex;
+    > label {
+      margin-right: 0.5rem;
+    }
+  }
+  input[type="checkbox"] {
+    cursor: pointer;
+  }
+}
