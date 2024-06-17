@@ -3,6 +3,7 @@ import { useEditor, EditorContent, BubbleMenu } from '@tiptap/vue-3'
 import Bold from '@tiptap/extension-bold'
 import { BubbleMenu as BubbleMenuExt } from '@tiptap/extension-bubble-menu'
 import BulletList from '@tiptap/extension-bullet-list'
+import HorizontalRule from '@tiptap/extension-horizontal-rule'
 import Link from '@tiptap/extension-link'
 import StarterKit from '@tiptap/starter-kit'
 
@@ -53,6 +54,12 @@ const editor = useEditor({
         :class="{ 'pattern-button-base': true, 'pattern-button-selected': editor?.isActive('link') }"
       >
         unset link
+      </button>
+      <button
+        @click="editor?.chain().focus().setHorizontalRule().run()"
+        :class="{ 'pattern-button-base': true, 'pattern-button-selected': editor?.isActive('horizontalRule') }"
+      >
+        horizontal rule
       </button>
     </div>
     <EditorContent :editor="editor" class=""/>
