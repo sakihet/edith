@@ -13,6 +13,7 @@ const editor = useEditor({
     Bold,
     BubbleMenuExt,
     BulletList,
+    HorizontalRule,
     Link,
     StarterKit,
   ],
