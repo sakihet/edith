@@ -103,7 +103,6 @@ a {
     }
   }
 }
-
 ul[data-type="taskList"] {
   list-style: none;
   margin-left: 0;
@@ -118,4 +117,11 @@ ul[data-type="taskList"] {
   input[type="checkbox"] {
     cursor: pointer;
   }
+}
+.tiptap p.is-empty::before {
+  color: silver;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
 }

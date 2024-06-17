@@ -5,6 +5,7 @@ import { BubbleMenu as BubbleMenuExt } from '@tiptap/extension-bubble-menu'
 import BulletList from '@tiptap/extension-bullet-list'
 import HorizontalRule from '@tiptap/extension-horizontal-rule'
 import Link from '@tiptap/extension-link'
+import Placeholder from '@tiptap/extension-placeholder'
 import StarterKit from '@tiptap/starter-kit'
 import TaskItem from '@tiptap/extension-task-item'
 import TaskList from '@tiptap/extension-task-list'
@@ -17,6 +18,9 @@ const editor = useEditor({
     BulletList,
     HorizontalRule,
     Link,
+    Placeholder.configure({
+      placeholder: "Write something..."
+    }),
     StarterKit,
     TaskItem.configure({
       nested: true
