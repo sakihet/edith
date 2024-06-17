@@ -1,3 +1,4 @@
+/* reset */
 *,
 *::before,
 *::after {
@@ -6,6 +7,7 @@
   padding: 0;
 }
 
+/* element */
 body {
   color: var(--color-text-primary);
   background-color: var(--color-bg-primary);
@@ -21,6 +23,7 @@ a {
   color: blue;
 }
 
+/* layout */
 .layout-center {
   margin-left: auto;
   margin-right: auto;
@@ -29,7 +32,64 @@ a {
 .layout-stack-4>*+* {
   margin-top: 1rem;
 }
+.layout-stack-h-1>*+* {
+  margin-left: 0.25rem;
+}
 
+/* utility */
+.m-4 {
+  margin: 1rem;
+}
+.p-4 {
+  padding: 1rem;
+}
 .p-8 {
   padding: 2rem;
+}
+.px-2 {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+.py-1 {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+.bg-transparent {
+  background-color: transparent;
+}
+.bg-primary {
+  background-color: #ffffff;
+}
+.border-none {
+  border-style: none;
+}
+.border-solid {
+  border-style: solid;
+}
+.border-1 {
+  border-width: 1px;
+}
+.border-color-default {
+  border-color: silver;
+}
+
+/* pattern */
+.pattern-button-base {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  background-color: transparent;
+  border-style: solid;
+  border-width: 1px;
+  border-color: silver;
+  color: #666;
+}
+.pattern-button-selected {
+  background-color: cyan;
+}
+
+/* tiptap */
+.tiptap {
+  padding: 1rem;
 }

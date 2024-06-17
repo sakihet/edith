@@ -24,32 +24,37 @@ const editor = useEditor({
       <BubbleMenu
         :editor="editor"
         v-if="editor"
+        class="border-solid border-1 border-color-default bg-primary"
       >
         <button
           @click="editor?.chain().focus().toggleBold().run()"
+          class="px-2 border-none bg-primary"
         >
           bold
         </button>
       </BubbleMenu>
     </div>
-    <div>
+    <div class="layout-stack-h-1">
       <button
         @click="editor?.chain().focus().toggleBulletList().run()"
+        :class="{ 'pattern-button-base': true, 'pattern-button-selected': editor?.isActive('bulletList') }"
       >
         toggle bullet list
       </button>
       <button
         @click="editor?.chain().focus().toggleBold().run()"
+        :class="{ 'pattern-button-base': true, 'pattern-button-selected': editor?.isActive('bold') }"
       >
         toggle bold
       </button>
       <button
         @click="editor?.chain().focus().unsetLink().run()"
         :disabled="!editor?.isActive('link')"
+        :class="{ 'pattern-button-base': true, 'pattern-button-selected': editor?.isActive('link') }"
       >
         unset link
       </button>
     </div>
-    <EditorContent :editor="editor" />
+    <EditorContent :editor="editor" class=""/>
   </div>
 </template>
