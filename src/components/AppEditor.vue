@@ -4,6 +4,7 @@ import Bold from '@tiptap/extension-bold'
 import { BubbleMenu as BubbleMenuExt } from '@tiptap/extension-bubble-menu'
 import BulletList from '@tiptap/extension-bullet-list'
 import HorizontalRule from '@tiptap/extension-horizontal-rule'
+import Italic from '@tiptap/extension-italic'
 import Link from '@tiptap/extension-link'
 import Placeholder from '@tiptap/extension-placeholder'
 import StarterKit from '@tiptap/starter-kit'
@@ -23,6 +24,7 @@ const editor = useEditor({
       suggestion
     }),
     HorizontalRule,
+    Italic,
     Link,
     Placeholder.configure({
       placeholder: "Write something..."
@@ -50,6 +52,12 @@ const editor = useEditor({
         >
           bold
         </button>
+        <button
+          @click="editor?.chain().focus().toggleItalic().run()"
+          class="px-2 border-none bg-primary"
+        >
+          italic
+        </button>
       </BubbleMenu>
     </div>
     <div class="layout-stack-h-1">
@@ -70,6 +78,12 @@ const editor = useEditor({
         :class="{ 'pattern-button-base': true, 'pattern-button-selected': editor?.isActive('bold') }"
       >
         toggle bold
+      </button>
+      <button
+        @click="editor?.chain().focus().toggleItalic().run()"
+        :class="{ 'pattern-button-base': true, 'pattern-button-selected': editor?.isActive('italic') }"
+      >
+        toggle italic
       </button>
       <button
         @click="editor?.chain().focus().unsetLink().run()"
