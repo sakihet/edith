@@ -37,6 +37,10 @@ a {
 }
 
 /* utility */
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
 .m-4 {
   margin: 1rem;
 }
@@ -84,9 +88,13 @@ a {
   border-width: 1px;
   border-color: silver;
   color: #666;
+  cursor: pointer;
 }
 .pattern-button-selected {
-  background-color: cyan;
+  background-color: yellow;
+}
+.pattern-selected {
+  background-color: yellow;
 }
 
 /* tiptap */

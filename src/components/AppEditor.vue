@@ -10,12 +10,18 @@ import StarterKit from '@tiptap/starter-kit'
 import TaskItem from '@tiptap/extension-task-item'
 import TaskList from '@tiptap/extension-task-list'
 
+import Commands from '../commands'
+import suggestion from '../suggestion'
+
 const editor = useEditor({
   content: '<p>hello, editor</p>',
   extensions: [
     Bold,
     BubbleMenuExt,
     BulletList,
+    Commands.configure({
+      suggestion
+    }),
     HorizontalRule,
     Link,
     Placeholder.configure({
