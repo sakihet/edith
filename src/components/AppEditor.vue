@@ -8,6 +8,7 @@ import Italic from '@tiptap/extension-italic'
 import Link from '@tiptap/extension-link'
 import Placeholder from '@tiptap/extension-placeholder'
 import StarterKit from '@tiptap/starter-kit'
+import Strike from '@tiptap/extension-strike'
 import TaskItem from '@tiptap/extension-task-item'
 import TaskList from '@tiptap/extension-task-list'
 
@@ -30,6 +31,7 @@ const editor = useEditor({
       placeholder: "Write something..."
     }),
     StarterKit,
+    Strike,
     TaskItem.configure({
       nested: true
     }),
@@ -58,6 +60,12 @@ const editor = useEditor({
         >
           italic
         </button>
+        <button
+          @click="editor?.chain().focus().toggleStrike().run()"
+          class="px-2 border-none bg-primary"
+        >
+          strike
+        </button>
       </BubbleMenu>
     </div>
     <div class="layout-stack-h-1">
@@ -84,6 +92,12 @@ const editor = useEditor({
         :class="{ 'pattern-button-base': true, 'pattern-button-selected': editor?.isActive('italic') }"
       >
         toggle italic
+      </button>
+      <button
+        @click="editor?.chain().focus().toggleStrike().run()"
+        :class="{ 'pattern-button-base': true, 'pattern-button-selected': editor?.isActive('strike') }"
+      >
+        toggle strike
       </button>
       <button
         @click="editor?.chain().focus().unsetLink().run()"
