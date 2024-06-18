@@ -6,6 +6,7 @@ import BulletList from '@tiptap/extension-bullet-list'
 import HorizontalRule from '@tiptap/extension-horizontal-rule'
 import Italic from '@tiptap/extension-italic'
 import Link from '@tiptap/extension-link'
+import OrderedList from '@tiptap/extension-ordered-list'
 import Placeholder from '@tiptap/extension-placeholder'
 import StarterKit from '@tiptap/starter-kit'
 import Strike from '@tiptap/extension-strike'
@@ -27,6 +28,7 @@ const editor = useEditor({
     HorizontalRule,
     Italic,
     Link,
+    OrderedList,
     Placeholder.configure({
       placeholder: "Write something..."
     }),
@@ -74,6 +76,12 @@ const editor = useEditor({
         :class="{ 'pattern-button-base': true, 'pattern-button-selected': editor?.isActive('bulletList') }"
       >
         toggle bullet list
+      </button>
+      <button
+        @click="editor?.chain().focus().toggleOrderedList().run()"
+        :class="{ 'pattern-button-base': true, 'pattern-button-selected': editor?.isActive('orderedList') }"
+      >
+        toggle ordered list
       </button>
       <button
         @click="editor?.chain().focus().toggleTaskList().run()"

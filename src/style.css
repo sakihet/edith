@@ -110,6 +110,10 @@ a {
       border-top: 1px solid blue;
     }
   }
+  ul,ol {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
 }
 ul[data-type="taskList"] {
   list-style: none;

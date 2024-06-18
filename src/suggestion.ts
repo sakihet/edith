@@ -18,6 +18,12 @@ export default {
         }
       },
       {
+        title: 'Ordered List',
+        command: ({ editor, range }: { editor: Editor, range: Range }) => {
+          editor.chain().focus().deleteRange(range).toggleOrderedList().run()
+        }
+      },
+      {
         title: 'Task List',
         command: ({ editor, range }: { editor: Editor, range: Range }) => {
           editor.chain().focus().deleteRange(range).toggleTaskList().run()
