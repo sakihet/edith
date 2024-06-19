@@ -44,32 +44,30 @@ const editor = useEditor({
 
 <template>
   <div class="layout-stack-4">
-    <div>
-      <BubbleMenu
-        :editor="editor"
-        v-if="editor"
-        class="border-solid border-1 border-color-default bg-primary"
+    <BubbleMenu
+      :editor="editor"
+      v-if="editor"
+      class="border-solid border-1 border-color-default bg-primary"
+    >
+      <button
+        @click="editor?.chain().focus().toggleBold().run()"
+        class="px-2 border-none bg-primary"
       >
-        <button
-          @click="editor?.chain().focus().toggleBold().run()"
-          class="px-2 border-none bg-primary"
-        >
-          bold
-        </button>
-        <button
-          @click="editor?.chain().focus().toggleItalic().run()"
-          class="px-2 border-none bg-primary"
-        >
-          italic
-        </button>
-        <button
-          @click="editor?.chain().focus().toggleStrike().run()"
-          class="px-2 border-none bg-primary"
-        >
-          strike
-        </button>
-      </BubbleMenu>
-    </div>
+        bold
+      </button>
+      <button
+        @click="editor?.chain().focus().toggleItalic().run()"
+        class="px-2 border-none bg-primary"
+      >
+        italic
+      </button>
+      <button
+        @click="editor?.chain().focus().toggleStrike().run()"
+        class="px-2 border-none bg-primary"
+      >
+        strike
+      </button>
+    </BubbleMenu>
     <div class="layout-stack-h-1">
       <button
         @click="editor?.chain().focus().toggleBulletList().run()"
@@ -121,6 +119,6 @@ const editor = useEditor({
         horizontal rule
       </button>
     </div>
-    <EditorContent :editor="editor" class=""/>
+    <EditorContent :editor="editor" class="" />
   </div>
 </template>

@@ -23,11 +23,24 @@ a {
   color: blue;
 }
 
+/* app */
+#app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 /* layout */
 .layout-center {
   margin-left: auto;
   margin-right: auto;
   max-width: 60ch;
+}
+.layout-stack-1>*+* {
+  margin-top: 0.25rem;
+}
+.layout-stack-2>*+* {
+  margin-top: 0.5rem;
 }
 .layout-stack-4>*+* {
   margin-top: 1rem;
@@ -37,15 +50,63 @@ a {
 }
 
 /* utility */
-.flex-col {
+.flex-column {
   display: flex;
   flex-direction: column;
+}
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+.f-1 {
+  flex: 1;
+}
+.h-full {
+  height: 100%;
+}
+.text-small {
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+.text-medium {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+.text-primary {
+  color: #000000;
+}
+.text-secondary {
+  color: #666666;
+}
+.text-tertiary {
+  color: #999999;
+}
+.h-4 {
+  height: 1rem;
+}
+.h-6 {
+  height: 1.5rem;
+}
+.h-8 {
+  height: 2rem;
+}
+.h-10 {
+  height: 2.5rem;
+}
+.w-48 {
+  width: 12rem;
+}
+.w-64 {
+  width: 16rem;
 }
 .m-4 {
   margin: 1rem;
 }
 .p-4 {
   padding: 1rem;
+}
+.p-6 {
+  padding: 1.5rem;
 }
 .p-8 {
   padding: 2rem;
@@ -58,11 +119,18 @@ a {
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
 }
+.py-2 {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
 .bg-transparent {
   background-color: transparent;
 }
 .bg-primary {
   background-color: #ffffff;
+}
+.bg-secondary {
+  background-color: #f7f7f7;
 }
 .border-none {
   border-style: none;
@@ -114,20 +182,20 @@ a {
     padding-left: 1rem;
     padding-right: 1rem;
   }
-}
-ul[data-type="taskList"] {
-  list-style: none;
-  margin-left: 0;
-  padding: 0;
-  li {
-    align-items: flex-start;
-    display: flex;
-    > label {
-      margin-right: 0.5rem;
+  ul[data-type="taskList"] {
+    list-style: none;
+    margin-left: 0;
+    padding: 0;
+    li {
+      align-items: flex-start;
+      display: flex;
+      > label {
+        margin-right: 0.5rem;
+      }
     }
-  }
-  input[type="checkbox"] {
-    cursor: pointer;
+    input[type="checkbox"] {
+      cursor: pointer;
+    }
   }
 }
 .tiptap p.is-empty::before {
