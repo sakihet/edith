@@ -20,19 +20,19 @@ import AppEditor from './components/AppEditor.vue'
             <div class="text-tertiary">3</div>
           </div>
           <div>
-            <ul class="text-medium text-secondary layout-stack-1">
+            <ul class="text-medium text-secondary layout-stack-1 list-style-none pl-0">
               <li>
-                <a href="#">
+                <a href="#" class="text-decoration-none">
                   <div class="h-8 py-1">Note 1</div>
                 </a>
               </li>
               <li>
-                <a href="#">
+                <a href="#" class="text-decoration-none">
                   <div class="h-8 py-1">Note 2</div>
                 </a>
               </li>
               <li>
-                <a href="#">
+                <a href="#" class="text-decoration-none">
                   <div class="h-8 py-1">Note 3</div>
                 </a>
               </li>

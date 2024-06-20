@@ -25,7 +25,7 @@
 
 /* light */
 body {
-  --color-bg-hover: var(--color-gray-50);
+  --color-bg-hover: var(--color-gray-100);
   --color-bg-link: var(--color-gray-100);
   --color-bg-primary: var(--color-white);
   --color-bg-secondary: var(--color-gray-100);
@@ -171,6 +171,9 @@ a {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
 }
+.pl-0 {
+  padding-left: 0;
+}
 .bg-transparent {
   background-color: transparent;
 }
@@ -191,6 +194,15 @@ a {
 }
 .border-color-default {
   border-color: var(--color-border-primary);
+}
+.list-style-none {
+  list-style: none;
+}
+.text-decoration-none {
+  text-decoration: none;
+}
+.hover:hover {
+  background-color: var(--color-bg-hover);
 }
 
 /* pattern */
