@@ -1,5 +1,6 @@
-import { reactive } from "vue";
-import { Note } from "../types/note";
+import { reactive } from "vue"
+import { Note } from "../types/note"
+import { open } from "../repositories"
 
 interface Store {
   notes: Array<Note>,
@@ -8,7 +9,8 @@ interface Store {
 
 export const store: Store = reactive<Store>({
   notes: [],
-  init: () => {
+  init: async () => {
     console.log('init')
+    await open()
   }
 })
