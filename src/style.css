@@ -96,6 +96,12 @@ a {
 .layout-stack-h-1>*+* {
   margin-left: 0.25rem;
 }
+.layout-stack-h-2>*+* {
+  margin-left: 0.5rem;
+}
+.layout-stack-h-4>*+* {
+  margin-left: 1rem;
+}
 
 /* utility */
 .flex-column {
@@ -162,6 +168,10 @@ a {
 .px-2 {
   padding-left: 0.5rem;
   padding-right: 0.5rem;
+}
+.px-4 {
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 .py-1 {
   padding-top: 0.25rem;
