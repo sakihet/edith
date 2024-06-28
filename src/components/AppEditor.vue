@@ -1,45 +1,18 @@
 <script setup lang="ts">
-import { useEditor, EditorContent, BubbleMenu } from '@tiptap/vue-3'
-import Bold from '@tiptap/extension-bold'
-import { BubbleMenu as BubbleMenuExt } from '@tiptap/extension-bubble-menu'
-import BulletList from '@tiptap/extension-bullet-list'
-import HorizontalRule from '@tiptap/extension-horizontal-rule'
-import Italic from '@tiptap/extension-italic'
-import Link from '@tiptap/extension-link'
-import OrderedList from '@tiptap/extension-ordered-list'
-import Placeholder from '@tiptap/extension-placeholder'
-import StarterKit from '@tiptap/starter-kit'
-import Strike from '@tiptap/extension-strike'
-import TaskItem from '@tiptap/extension-task-item'
-import TaskList from '@tiptap/extension-task-list'
+import { EditorContent, BubbleMenu, Editor } from '@tiptap/vue-3'
 
-import Commands from '../commands'
-import suggestion from '../suggestion'
+import { store } from '../store'
 
-const editor = useEditor({
-  content: '<p>hello, editor</p>',
-  extensions: [
-    Bold,
-    BubbleMenuExt,
-    BulletList,
-    Commands.configure({
-      suggestion
-    }),
-    HorizontalRule,
-    Italic,
-    Link,
-    OrderedList,
-    Placeholder.configure({
-      placeholder: "Write something..."
-    }),
-    StarterKit,
-    Strike,
-    TaskItem.configure({
-      nested: true
-    }),
-    TaskList,
-  ],
-})
+const props = defineProps<{
+  editor: Editor,
+  noteId: string,
+}>()
+
+const handleInput = () => {
+  if (props.editor) {
+    store.put({id: props.noteId, content: props.editor.getJSON()})
+  }
+}
 </script>
 
 <template>
@@ -119,6 +92,9 @@ const editor = useEditor({
         horizontal rule
       </button>
     </div>
-    <EditorContent :editor="editor" class="" />
+    <EditorContent
+      :editor="editor"
+      @input="handleInput"
+    />
   </div>
 </template>

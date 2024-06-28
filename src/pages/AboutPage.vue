@@ -2,7 +2,9 @@
 </script>
 
 <template>
-  <h1>About</h1>
+  <div class="p-6">
+    <h1>About</h1>
+  </div>
 </template>
 
 <style scoped>

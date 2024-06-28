@@ -4,7 +4,14 @@ import IndexPage from './pages/IndexPage.vue'
 import AboutPage from './pages/AboutPage.vue'
 
 const routes = [
-  { path: '/', component: IndexPage },
+  {
+    path: '/',
+    component: IndexPage,
+  },
+  {
+    path: '/:noteId',
+    component: IndexPage,
+  },
   { path: '/about', component: AboutPage }
 ]
 
