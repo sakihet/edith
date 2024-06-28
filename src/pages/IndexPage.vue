@@ -71,12 +71,15 @@ watch (() => route.params.noteId, (noteIdAfter, noteIdBefore) => {
   }
 })
 const handleAdd = () => {
+  const now = new Date().toISOString()
   const note: Note = {
     id: v4(),
     content: {
       "type": "doc",
       "content": []
-    }
+    },
+    createdAt: now,
+    updatedAt: now
   }
   store.add(note)
   router.push(`/${note.id}`)
@@ -118,7 +121,7 @@ const handleDelete = (id: string) => {
           <div>
             <ul class="text-medium text-secondary layout-stack-1 list-style-none px-0">
               <li
-                v-for="note in store.notes"
+                v-for="note in store.notes.sort((a, b) => new Date(a.updatedAt) < new Date(b.updatedAt) ? 1 : -1)"
                 :key="note.id"
               >
                 <router-link
@@ -144,9 +147,9 @@ const handleDelete = (id: string) => {
       </div>
       <div class="p-6 layout-center">
         <AppEditor
-          v-if="editor"
+          v-if="editor && store.currentNote"
           :editor="editor"
-          :noteId="route.params.noteId as string"
+          :note="store.currentNote"
         />
         <div
           v-else

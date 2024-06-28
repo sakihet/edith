@@ -2,15 +2,21 @@
 import { EditorContent, BubbleMenu, Editor } from '@tiptap/vue-3'
 
 import { store } from '../store'
+import { Note } from '../types/note';
 
 const props = defineProps<{
   editor: Editor,
-  noteId: string,
+  note: Note
 }>()
 
 const handleInput = () => {
   if (props.editor) {
-    store.put({id: props.noteId, content: props.editor.getJSON()})
+    store.put({
+      id: props.note.id,
+      content: props.editor.getJSON(),
+      createdAt: props.note.createdAt,
+      updatedAt: new Date().toISOString()
+    })
   }
 }
 </script>
