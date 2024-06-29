@@ -70,7 +70,7 @@ watch (() => route.params.noteId, (noteIdAfter, noteIdBefore) => {
     editor?.destroy()
   }
 })
-const handleAdd = () => {
+const handleAdd = async () => {
   const now = new Date().toISOString()
   const note: Note = {
     id: v4(),
@@ -81,7 +81,7 @@ const handleAdd = () => {
     createdAt: now,
     updatedAt: now
   }
-  store.add(note)
+  await store.add(note)
   router.push(`/${note.id}`)
   // TODO: focus
 }
