@@ -86,8 +86,9 @@ const handleAdd = async () => {
   await store.add(note)
   router.push(`/${note.id}`)
 }
-const handleClear = () => {
-  store.clear()
+const handleClear = async () => {
+  await store.clear()
+  router.push(`/`)
 }
 const handleDelete = (id: string) => {
   store.delete(id)
