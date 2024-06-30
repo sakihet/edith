@@ -24,8 +24,8 @@ const handleInput = () => {
 <template>
   <div class="layout-stack-4">
     <BubbleMenu
-      :editor="editor"
-      v-if="editor"
+      :editor="props.editor"
+      v-if="props.editor"
       class="border-solid border-1 border-color-default bg-primary"
     >
       <button
@@ -99,7 +99,7 @@ const handleInput = () => {
       </button>
     </div>
     <EditorContent
-      :editor="editor"
+      :editor="props.editor"
       @input="handleInput"
     />
   </div>
