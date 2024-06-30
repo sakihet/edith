@@ -61,10 +61,12 @@ watch (() => route.params.noteId, (noteIdAfter, noteIdBefore) => {
   if (noteIdBefore === undefined && noteIdAfter) {
     store.currentNote = store.notes.find(n => n.id === noteIdAfter)
     editor = createEditor(store.currentNote?.content)
+    editor.chain().focus().run()
   } else if (noteIdAfter && noteIdBefore && (noteIdAfter !== noteIdBefore)) {
     editor?.destroy()
     store.currentNote = store.notes.find(n => n.id === noteIdAfter)
     editor = createEditor(store.currentNote?.content)
+    editor.chain().focus().run()
   } else if (!noteIdAfter) {
     store.currentNote = undefined
     editor?.destroy()
@@ -83,7 +85,6 @@ const handleAdd = async () => {
   }
   await store.add(note)
   router.push(`/${note.id}`)
-  // TODO: focus
 }
 const handleClear = () => {
   store.clear()
