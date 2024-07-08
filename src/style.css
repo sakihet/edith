@@ -25,7 +25,8 @@
 
 /* light */
 body {
-  --color-bg-hover: var(--color-gray-100);
+  --color-bg-active: var(--color-gray-200);
+  --color-bg-hover: var(--color-gray-200);
   --color-bg-link: var(--color-gray-100);
   --color-bg-primary: var(--color-white);
   --color-bg-secondary: var(--color-gray-100);
@@ -153,6 +154,9 @@ a {
 .w-64 {
   width: 16rem;
 }
+.w-80 {
+  width: 20rem;
+}
 .m-4 {
   margin: 1rem;
 }
@@ -236,6 +240,10 @@ a {
   color: var(--color-text-secondary);
   cursor: pointer;
 }
+.pattern-button-base:hover {
+  background-color: var(--color-bg-hover);
+}
+
 .pattern-button-selected {
   background-color: yellow;
 }
@@ -282,4 +290,9 @@ a {
   float: left;
   height: 0;
   pointer-events: none;
+}
+
+/* router-link-exact-active */
+.router-link-exact-active > div {
+  background-color: var(--color-bg-active);
 }

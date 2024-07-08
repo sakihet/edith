@@ -98,13 +98,15 @@ const handleDelete = (id: string) => {
 <template>
   <div class="f-1 flex-column">
     <div class="f-1 flex-row">
-      <div class="p-6 w-64 bg-secondary">
+      <div class="p-6 w-80 bg-secondary">
         <div class="layout-stack-4">
           <div class="">
             <RouterLink
               to="/"
               class="text-decoration-none"
-            >Index</RouterLink>
+            >
+              <div class="px-2 py-1">Index</div>
+            </RouterLink>
           </div>
           <div class="flex-row">
             <div class="f-1"></div>
@@ -114,13 +116,6 @@ const handleDelete = (id: string) => {
               class="pattern-button-base px-2 py-1"
               @click="handleAdd"
             >+</button>
-          </div>
-          <div class="flex-row">
-            <div class="f-1"></div>
-            <button
-              @click="handleClear"
-              class="pattern-button-base"
-            >Clear</button>
           </div>
           <div class="text-small text-secondary flex-row">
             <div class="f-1">Notes</div>
@@ -137,7 +132,7 @@ const handleDelete = (id: string) => {
                   class="text-decoration-none"
                   :to="`/${note.id}`"
                 >
-                  <div class="h-8 py-1 flex-row">
+                  <div class="h-8 px-2 py-1 flex-row hover">
                     <div class="f-1">
                       {{ note.content.content && note.content.content[0]?.content && note.content.content[0].content[0].text || "Empty"}}
                     </div>
@@ -150,6 +145,13 @@ const handleDelete = (id: string) => {
                 </router-link>
               </li>
             </ul>
+          </div>
+          <div class="flex-row">
+            <div class="f-1"></div>
+            <button
+              @click="handleClear"
+              class="pattern-button-base"
+            >Clear</button>
           </div>
         </div>
       </div>
