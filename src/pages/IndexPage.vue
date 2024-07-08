@@ -100,6 +100,12 @@ const handleDelete = (id: string) => {
     <div class="f-1 flex-row">
       <div class="p-6 w-64 bg-secondary">
         <div class="layout-stack-4">
+          <div class="">
+            <RouterLink
+              to="/"
+              class="text-decoration-none"
+            >Index</RouterLink>
+          </div>
           <div class="flex-row">
             <div class="f-1"></div>
             <button
