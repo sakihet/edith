@@ -94,6 +94,9 @@ a {
 .layout-stack-4>*+* {
   margin-top: 1rem;
 }
+.layout-stack-8>*+* {
+  margin-top: 2rem;
+}
 .layout-stack-h-1>*+* {
   margin-left: 0.25rem;
 }
@@ -115,6 +118,12 @@ a {
 }
 .f-1 {
   flex: 1;
+}
+.overflow-hidden {
+  overflow: hidden;
+}
+.overflow-y-auto {
+  overflow-y: auto;
 }
 .h-full {
   height: 100%;
@@ -147,6 +156,12 @@ a {
 }
 .h-10 {
   height: 2.5rem;
+}
+.w-6 {
+  width: 1.5rem;
+}
+.w-8 {
+  width: 2rem;
 }
 .w-48 {
   width: 12rem;
@@ -226,6 +241,9 @@ a {
 .hover:hover {
   background-color: var(--color-bg-hover);
 }
+.pointer {
+  cursor: pointer;
+}
 
 /* pattern */
 .pattern-button-base {
@@ -243,12 +261,49 @@ a {
 .pattern-button-base:hover {
   background-color: var(--color-bg-hover);
 }
-
 .pattern-button-selected {
   background-color: yellow;
 }
+.pattern-button-icon {
+  display: block;
+  background-color: transparent;
+  border-style: none;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+.pattern-button-icon > svg{
+  display: block;
+}
+.pattern-button-icon:hover {
+  background-color: var(--color-bg-hover);
+}
 .pattern-selected {
   background-color: yellow;
+}
+.pattern-dropdown {
+  position: relative;
+}
+.pattern-dropdown > summary {
+  list-style: none;
+}
+.pattern-dropdown > summary::-webkit-details-marker {
+  display: none;
+}
+details[open].pattern-dropdown>summary:before {
+  content: " ";
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 50;
+}
+.pattern-dropdown>div {
+  position: absolute;
+  top: 2rem;
+  right: 0;
+  z-index: 100;
 }
 
 /* tiptap */
@@ -294,5 +349,8 @@ a {
 
 /* router-link-exact-active */
 .router-link-exact-active > div {
+  background-color: var(--color-bg-active);
+}
+.router-link-exact-active > * {
   background-color: var(--color-bg-active);
 }

@@ -21,6 +21,7 @@ import { Note } from '../types/note'
 import { store } from '../store'
 import Commands from '../commands'
 import suggestion from '../suggestion'
+import IconEditSquare from '../components/IconEditSquare.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -100,24 +101,25 @@ const handleDelete = (id: string) => {
     <div class="f-1 flex-row">
       <div class="p-6 w-80 bg-secondary">
         <div class="layout-stack-4">
-          <div class="">
+          <div class="flex-row layout-stack-h-1">
             <RouterLink
               to="/"
-              class="text-decoration-none"
+              class="text-decoration-none f-1"
             >
-              <div class="px-2 py-1">Index</div>
+              <div class="px-2 text-secondary">Index</div>
             </RouterLink>
+            <div>
+              <button
+                type="button"
+                title="Create a new note"
+                class="pattern-button-icon"
+                @click="handleAdd"
+              >
+                <IconEditSquare />
+              </button>
+            </div>
           </div>
-          <div class="flex-row">
-            <div class="f-1"></div>
-            <button
-              type="button"
-              title="Create a new note"
-              class="pattern-button-base px-2 py-1"
-              @click="handleAdd"
-            >+</button>
-          </div>
-          <div class="text-small text-secondary flex-row">
+          <div class="text-small text-secondary flex-row px-2">
             <div class="f-1">Notes</div>
             <div class="text-tertiary">3</div>
           </div>
@@ -126,21 +128,31 @@ const handleDelete = (id: string) => {
               <li
                 v-for="note in store.notes.sort((a, b) => new Date(a.updatedAt) < new Date(b.updatedAt) ? 1 : -1)"
                 :key="note.id"
+                class=""
               >
                 <router-link
-                  href="#"
-                  class="text-decoration-none"
+                  class="text-decoration-none layout-stack-1"
                   :to="`/${note.id}`"
                 >
-                  <div class="h-8 px-2 py-1 flex-row hover">
-                    <div class="f-1">
-                      {{ note.content.content && note.content.content[0]?.content && note.content.content[0].content[0].text || "Empty"}}
+                  <div class="px-2 py-1 hover">
+                    <div class="h-8 py-1 flex-row layout-stack-h-1">
+                      <div class="f-1 overflow-hidden text-secondary">
+                        {{ note.content.content && note.content.content[0]?.content && note.content.content[0].content[0].text || "Empty"}}
+                      </div>
+                      <button
+                        type="button"
+                        class="pattern-button-base"
+                        @click="handleDelete(note.id)"
+                      >x</button>
                     </div>
-                    <button
-                      type="button"
-                      class="pattern-button-base"
-                      @click="handleDelete(note.id)"
-                    >x</button>
+                    <div class="flex-row">
+                      <div class="f-1"></div>
+                      <div class="">
+                        <span class="text-secondary text-small" title="updated">
+                          {{ note.updatedAt.split('T')[0] }}
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </router-link>
               </li>
