@@ -55,6 +55,11 @@ const createEditor = (content: any) => {
   })
 }
 onMounted(() => {
+  if (route.params.noteId) {
+    store.currentNote = store.notes.find(n => n.id === route.params.noteId)
+    editor = createEditor(store.currentNote?.content)
+    editor.chain().focus().run()
+  }
 })
 onUpdated(() => {
 })
@@ -169,7 +174,7 @@ const handleDelete = (id: string) => {
       </div>
       <div class="p-6 layout-center">
         <AppEditor
-          v-if="editor && store.currentNote"
+          v-if="store.currentNote && editor"
           :editor="editor"
           :note="store.currentNote"
         />

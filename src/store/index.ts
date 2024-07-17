@@ -5,9 +5,10 @@ import { NoteApplicationServiceImpl } from "../applications/noteApplicationServi
 import { NoteRepositoryImpl } from "../repositories/noteRepository"
 
 interface Store {
+  isLoaded: boolean,
   currentNote: Note | undefined,
   notes: Array<Note>,
-  init: () => void,
+  init: () => Promise<void>,
   add: (note: Note) => void,
   clear: () => void,
   delete: (id: string) => void,
@@ -19,6 +20,7 @@ const noteApplicationService = new NoteApplicationServiceImpl(
 )
 
 export const store: Store = reactive<Store>({
+  isLoaded: false,
   currentNote: undefined,
   notes: [],
   async init() {
@@ -28,6 +30,7 @@ export const store: Store = reactive<Store>({
     if (results) {
       this.notes = results
     }
+    this.isLoaded = true
   },
   async add(note: Note) {
     await noteApplicationService.add(note)
