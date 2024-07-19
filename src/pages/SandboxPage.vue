@@ -1,8 +1,22 @@
 <script setup lang="ts">
+import { v4 } from 'uuid'
 import IconClose from '../components/IconClose.vue'
 import IconEditSquare from '../components/IconEditSquare.vue'
 import IconMoreHoriz from '../components/IconMoreHoriz.vue'
 import IconSearch from '../components/IconSearch.vue'
+import NoteItem from '../components/NoteItem.vue'
+import { Note } from '../types/note'
+
+const now = new Date().toISOString()
+const note: Note = {
+  id: v4(),
+  content: {
+    "type": "doc",
+    "content": []
+  },
+  createdAt: now,
+  updatedAt: now
+}
 </script>
 
 <template>
@@ -65,6 +79,10 @@ import IconSearch from '../components/IconSearch.vue'
           </div>
         </details>
       </div>
+    </div>
+    <h2>NoteItem</h2>
+    <div class="w-64">
+      <NoteItem :note="note" />
     </div>
   </div>
 </template>
