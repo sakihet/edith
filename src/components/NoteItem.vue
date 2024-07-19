@@ -10,12 +10,12 @@ const props = defineProps<{
 <template>
   <router-link
     class="text-decoration-none text-secondary"
-    :to="`/url`"
+    :to="`/${props.note.id}`"
   >
     <div class="p-2 layout-stack-1 hover">
       <div class="h-8 flex-row">
         <div class="f-1 overflow-hidden">
-          Title
+          {{ props.note.content.content && props.note.content.content[0]?.content && props.note.content.content[0].content[0].text || "Empty"}}
         </div>
         <button
           type="button"
@@ -24,7 +24,6 @@ const props = defineProps<{
       </div>
       <div class="flex-row">
         <div class="f-1 text-small">
-          Content
         </div>
         <div>
           <span class="text-secondary text-small" title="">

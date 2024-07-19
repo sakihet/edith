@@ -5,18 +5,72 @@ import IconEditSquare from '../components/IconEditSquare.vue'
 import IconMoreHoriz from '../components/IconMoreHoriz.vue'
 import IconSearch from '../components/IconSearch.vue'
 import NoteItem from '../components/NoteItem.vue'
+import NoteList from '../components/NoteList.vue'
 import { Note } from '../types/note'
 
-const now = new Date().toISOString()
-const note: Note = {
-  id: v4(),
-  content: {
-    "type": "doc",
-    "content": []
-  },
-  createdAt: now,
-  updatedAt: now
+const content1 = {
+  "type": "doc",
+  "content": [
+    {
+      "content": [
+        {
+          "text": "Note 1",
+          "type": "text"
+        }
+      ],
+      "type": "paragraph"
+    }
+  ]
 }
+const content2 = {
+  "type": "doc",
+  "content": [
+    {
+      "content": [
+        {
+          "text": "Note 2",
+          "type": "text"
+        }
+      ],
+      "type": "paragraph"
+    }
+  ]
+}
+const content3 = {
+  "type": "doc",
+  "content": [
+    {
+      "content": [
+        {
+          "text": "Note 3",
+          "type": "text"
+        }
+      ],
+      "type": "paragraph"
+    }
+  ]
+}
+const now = new Date().toISOString()
+const notes: Array<Note> = [
+  {
+    id: v4(),
+    content: content1,
+    createdAt: now,
+    updatedAt: now
+  },
+  {
+    id: v4(),
+    content: content2,
+    createdAt: now,
+    updatedAt: now
+  },
+  {
+    id: v4(),
+    content: content3,
+    createdAt: now,
+    updatedAt: now
+  },
+]
 </script>
 
 <template>
@@ -82,7 +136,11 @@ const note: Note = {
     </div>
     <h2>NoteItem</h2>
     <div class="w-64">
-      <NoteItem :note="note" />
+      <NoteItem :note="notes[0]" />
+    </div>
+    <h2>NoteList</h2>
+    <div class="w-64">
+      <NoteList :notes="notes" />
     </div>
   </div>
 </template>
