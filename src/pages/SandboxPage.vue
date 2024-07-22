@@ -124,7 +124,7 @@ const notes: Array<Note> = [
               <IconMoreHoriz />
             </div>
           </summary>
-          <div>
+          <div class="bg-primary">
             <ul class="list-style-none px-0 border-solid border-1 border-color-default py-2">
               <li><div class="px-4 h-8 py-1 hover pointer">Item</div></li>
               <li><div class="px-4 h-8 py-1 hover pointer">Item</div></li>

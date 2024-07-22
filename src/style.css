@@ -267,6 +267,19 @@ a {
 .pattern-button-base:hover {
   background-color: var(--color-bg-hover);
 }
+.pattern-button-dropdown {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  background-color: transparent;
+  color: var(--color-text-secondary);
+  border-style: none;
+  cursor: pointer;
+}
+.pattern-button-dropdown:hover {
+  background-color: var(--color-bg-hover);
+}
 .pattern-button-selected {
   background-color: yellow;
 }
