@@ -22,6 +22,7 @@ import { store } from '../store'
 import Commands from '../commands'
 import suggestion from '../suggestion'
 import IconEditSquare from '../components/IconEditSquare.vue'
+import NoteItem from '../components/NoteItem.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -135,31 +136,10 @@ const handleDelete = (id: string) => {
                 :key="note.id"
                 class=""
               >
-                <router-link
-                  class="text-decoration-none layout-stack-1"
-                  :to="`/${note.id}`"
-                >
-                  <div class="px-2 py-1 hover">
-                    <div class="h-8 py-1 flex-row layout-stack-h-1">
-                      <div class="f-1 overflow-hidden text-secondary">
-                        {{ note.content.content && note.content.content[0]?.content && note.content.content[0].content[0].text || "Empty"}}
-                      </div>
-                      <button
-                        type="button"
-                        class="pattern-button-base"
-                        @click="handleDelete(note.id)"
-                      >x</button>
-                    </div>
-                    <div class="flex-row">
-                      <div class="f-1"></div>
-                      <div class="">
-                        <span class="text-secondary text-small" title="updated">
-                          {{ note.updatedAt.split('T')[0] }}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </router-link>
+                <NoteItem
+                  :note="note"
+                  @delete-note="handleDelete(note.id)"
+                />
               </li>
             </ul>
           </div>
