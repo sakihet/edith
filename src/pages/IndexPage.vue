@@ -127,7 +127,7 @@ const handleDelete = (id: string) => {
           </div>
           <div class="text-small text-secondary flex-row px-2">
             <div class="f-1">Notes</div>
-            <div class="text-tertiary">3</div>
+            <div class="text-tertiary">{{ store.notes.length }}</div>
           </div>
           <div>
             <ul class="text-medium text-secondary layout-stack-1 list-style-none px-0">
