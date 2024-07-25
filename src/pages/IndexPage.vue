@@ -94,11 +94,15 @@ const handleAdd = async () => {
   router.push(`/${note.id}`)
 }
 const handleClear = async () => {
-  await store.clear()
-  router.push(`/`)
+  if(window.confirm('Do you really want to delete all notes?')) {
+    await store.clear()
+    router.push(`/`)
+  }
 }
 const handleDelete = (id: string) => {
-  store.delete(id)
+  if(window.confirm('Do you really want to delete?')) {
+    store.delete(id)
+  }
 }
 </script>
 
