@@ -117,7 +117,7 @@ const handleDelete = (id: string) => {
               to="/"
               class="text-decoration-none f-1"
             >
-              <div class="px-2 text-secondary">Index</div>
+              <div class="px-2 text-secondary hover">Index</div>
             </RouterLink>
             <div>
               <button
@@ -178,7 +178,7 @@ const handleDelete = (id: string) => {
         <div
           v-else
           class="text-secondary"
-        >Empty</div>
+        ></div>
       </div>
     </div>
   </div>
