@@ -76,14 +76,52 @@ const notes: Array<Note> = [
 <template>
   <div class="p-6 layout-stack-8">
     <h1>Sandbox</h1>
-    <h2>Icon</h2>
+    <div class="layout-stack-2">
+      <div class="bold text-secondary">Recently visited</div>
+      <div class="text-secondary">
+        <ul class="list-style-none px-0 layout-stack-h-1">
+          <li class="inline-block">
+            <router-link to="/#" class="text-decoration-none text-secondary">
+              <div class="w-48 p-3 border-solid border-1 border-primary border-color-default hover">
+                <div class="layout-stack-1">
+                  <div class="text-small">Note 1</div>
+                  <div class="text-small text-tertiary text-right">2024/07/27</div>
+                </div>
+              </div>
+            </router-link>
+          </li>
+          <li class="inline-block">
+            <router-link to="/#" class="text-decoration-none text-secondary">
+              <div class="w-48 p-3 border-solid border-1 border-primary border-color-default hover">
+                <div class="layout-stack-1">
+                  <div class="text-small">Note 2</div>
+                  <div class="text-small text-tertiary text-right">2024/07/27</div>
+                </div>
+              </div>
+            </router-link>
+          </li>
+          <li class="inline-block">
+            <router-link to="/#" class="text-decoration-none text-secondary">
+              <div class="w-48 p-3 border-solid border-1 border-primary border-color-default hover">
+                <div class="layout-stack-1">
+                  <div class="text-small">Note 3</div>
+                  <div class="text-small text-tertiary text-right">2024/07/27</div>
+                </div>
+              </div>
+            </router-link>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <h2>Components</h2>
+    <h3>Icon</h3>
     <div class="">
       <IconClose />
       <IconEditSquare />
       <IconMoreHoriz />
       <IconSearch />
     </div>
-    <h2>Button</h2>
+    <h3>Button</h3>
     <div class="layout-stack-2">
       <button
         type="button"
@@ -114,7 +152,7 @@ const notes: Array<Note> = [
         <IconSearch />
       </button>
     </div>
-    <h2>Dropdown</h2>
+    <h3>Dropdown</h3>
     <div>
       <div class="flex-row layout-stack-h-1">
         <div class="text-secondary">Content</div>
@@ -134,11 +172,11 @@ const notes: Array<Note> = [
         </details>
       </div>
     </div>
-    <h2>NoteItem</h2>
+    <h3>NoteItem</h3>
     <div class="w-64">
       <NoteItem :note="notes[0]" />
     </div>
-    <h2>NoteList</h2>
+    <h3>NoteList</h3>
     <div class="w-64">
       <NoteList :notes="notes" />
     </div>
