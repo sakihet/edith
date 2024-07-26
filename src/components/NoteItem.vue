@@ -58,7 +58,7 @@ const handleDelete = (e: Event) => {
         </div>
         <div>
           <span
-            class="text-secondary text-small"
+            class="text-tertiary text-small"
             :title="props.note.updatedAt.split('T')[0]"
           >
             {{ props.note.updatedAt.split('T')[0] }}

@@ -94,6 +94,9 @@ a {
 .layout-stack-4>*+* {
   margin-top: 1rem;
 }
+.layout-stack-6>*+* {
+  margin-top: 1.5rem;
+}
 .layout-stack-8>*+* {
   margin-top: 2rem;
 }
@@ -125,6 +128,9 @@ a {
 .overflow-y-auto {
   overflow-y: auto;
 }
+.overflow-y-scroll {
+  overflow-y: scroll;
+}
 .h-full {
   height: 100%;
 }
@@ -144,6 +150,9 @@ a {
 }
 .text-tertiary {
   color: var(--color-text-tertiary);
+}
+.bold {
+  font-weight: bold;
 }
 .h-4 {
   height: 1rem;
@@ -244,6 +253,15 @@ a {
 .text-decoration-none {
   text-decoration: none;
 }
+.text-center {
+  text-align: center;
+}
+.text-left {
+  text-align: left;
+}
+.text-right {
+  text-align: right;
+}
 .hover:hover {
   background-color: var(--color-bg-hover);
 }
@@ -255,6 +273,10 @@ a {
 }
 
 /* pattern */
+.pattern-height-note-list {
+  max-height: calc(100vh - 9rem);
+}
+
 .pattern-button-base {
   padding-left: 0.5rem;
   padding-right: 0.5rem;
@@ -332,6 +354,15 @@ details[open].pattern-dropdown>summary:before {
 }
 .pattern-hiding-child:hover>*>.pattern-hidden-child {
   display: inline-block;
+}
+
+.pattern-scrollbar-thin::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+  background-color: var(--color-bg-scrollbar);
+}
+.pattern-scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: var(--color-bg-scrollbar-thumb);
 }
 
 /* tiptap */

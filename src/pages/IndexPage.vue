@@ -23,6 +23,7 @@ import Commands from '../commands'
 import suggestion from '../suggestion'
 import IconEditSquare from '../components/IconEditSquare.vue'
 import NoteItem from '../components/NoteItem.vue'
+import IconMoreHoriz from '../components/IconMoreHoriz.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -110,7 +111,7 @@ const handleDelete = (id: string) => {
   <div class="f-1 flex-column">
     <div class="f-1 flex-row">
       <div class="p-6 w-80 bg-secondary">
-        <div class="layout-stack-4">
+        <div class="layout-stack-6">
           <div class="flex-row layout-stack-h-1">
             <RouterLink
               to="/"
@@ -129,11 +130,30 @@ const handleDelete = (id: string) => {
               </button>
             </div>
           </div>
-          <div class="text-small text-secondary flex-row px-2">
-            <div class="f-1">Notes</div>
-            <div class="text-tertiary">{{ store.notes.length }}</div>
+          <div class="text-secondary flex-row layout-stack-h-1">
+            <div class="f-1 px-2 text-tertiary bold">Notes</div>
+            <div class="text-tertiary w-6 h-6 text-center">{{ store.notes.length }}</div>
+            <details
+              class="pattern-dropdown pattern-hidden-child"
+            >
+              <summary class="w-6 h-6 hover">
+                <IconMoreHoriz />
+              </summary>
+              <div class="bg-primary drop-shadow">
+                <ul class="list-style-none px-0 border-solid border-1 border-color-default py-2">
+                  <li>
+                    <button
+                      @click="handleClear"
+                      class="pattern-button-dropdown"
+                    >
+                      Clear
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </details>
           </div>
-          <div>
+          <div class="pattern-height-note-list overflow-y-scroll pattern-scrollbar-thin">
             <ul class="text-medium text-secondary layout-stack-1 list-style-none px-0">
               <li
                 v-for="note in store.notes.sort((a, b) => new Date(a.updatedAt) < new Date(b.updatedAt) ? 1 : -1)"
@@ -146,13 +166,6 @@ const handleDelete = (id: string) => {
                 />
               </li>
             </ul>
-          </div>
-          <div class="flex-row">
-            <div class="f-1"></div>
-            <button
-              @click="handleClear"
-              class="pattern-button-base"
-            >Clear</button>
           </div>
         </div>
       </div>
