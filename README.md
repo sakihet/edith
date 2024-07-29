@@ -1,6 +1,12 @@
 # Edith
 
-Edith is a note taking app.
+[Edith](https://edith.sakih.net/) is a note taking app. It works on your browser once you open the URL. The data is only stored in your browser's IndexedDB, not in the cloud.
+
+## Features
+
+- Rich text editor
+- Bubble menu
+- Slash commands
 
 ## Tech
 
