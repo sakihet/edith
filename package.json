@@ -1,5 +1,5 @@
 {
-  "name": "e1",
+  "name": "Edith",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -36,6 +36,7 @@
     "@vitejs/plugin-vue": "^5.0.4",
     "typescript": "^5.2.2",
     "vite": "^5.2.0",
+    "vite-plugin-pwa": "^0.20.1",
     "vue-tsc": "^2.0.6"
   }
 }
