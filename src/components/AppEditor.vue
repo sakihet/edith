@@ -3,6 +3,9 @@ import { EditorContent, BubbleMenu, Editor } from '@tiptap/vue-3'
 
 import { store } from '../store'
 import { Note } from '../types/note';
+import IconFormatBold from './IconFormatBold.vue';
+import IconFormatItalic from './IconFormatItalic.vue';
+import IconFormatStrikethrough from './IconFormatStrikethrough.vue';
 
 const props = defineProps<{
   editor: Editor,
@@ -26,25 +29,29 @@ const handleInput = () => {
     <BubbleMenu
       :editor="props.editor"
       v-if="props.editor"
-      class="border-solid border-1 border-color-default bg-primary"
+      class="bg-primary drop-shadow p-1"
+      style="line-height: 0;"
     >
       <button
         @click="editor?.chain().focus().toggleBold().run()"
-        class="px-2 border-none bg-primary"
+        class="bg-primary border-none hover pointer"
+        title="Bold"
       >
-        bold
+        <IconFormatBold />
       </button>
       <button
         @click="editor?.chain().focus().toggleItalic().run()"
-        class="px-2 border-none bg-primary"
+        class="bg-primary border-none hover pointer"
+        title="Italic"
       >
-        italic
+        <IconFormatItalic />
       </button>
       <button
         @click="editor?.chain().focus().toggleStrike().run()"
-        class="px-2 border-none bg-primary"
+        class="bg-primary border-none hover pointer"
+        title="Strikethrough"
       >
-        strike
+        <IconFormatStrikethrough />
       </button>
     </BubbleMenu>
     <div class="layout-stack-h-1">

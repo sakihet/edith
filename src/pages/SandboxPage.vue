@@ -2,6 +2,9 @@
 import { v4 } from 'uuid'
 import IconClose from '../components/IconClose.vue'
 import IconEditSquare from '../components/IconEditSquare.vue'
+import IconFormatBold from '../components/IconFormatBold.vue'
+import IconFormatItalic from '../components/IconFormatItalic.vue'
+import IconFormatStrikethrough from '../components/IconFormatStrikethrough.vue'
 import IconMoreHoriz from '../components/IconMoreHoriz.vue'
 import IconSearch from '../components/IconSearch.vue'
 import NoteItem from '../components/NoteItem.vue'
@@ -120,6 +123,9 @@ const notes: Array<Note> = [
       <IconEditSquare />
       <IconMoreHoriz />
       <IconSearch />
+      <IconFormatBold />
+      <IconFormatItalic />
+      <IconFormatStrikethrough />
     </div>
     <h3>Button</h3>
     <div class="layout-stack-2">
@@ -170,6 +176,22 @@ const notes: Array<Note> = [
             </ul>
           </div>
         </details>
+      </div>
+    </div>
+    <h3>BubbleMenu</h3>
+    <div>
+      <div
+        class="h-8 inline-block drop-shadow"
+      >
+        <button type="button" class="bg-primary border-none hover pointer">
+          <IconFormatBold />
+        </button>
+        <button type="button" class="bg-primary border-none hover pointer">
+          <IconFormatItalic />
+        </button>
+        <button type="button" class="bg-primary border-none hover pointer">
+          <IconFormatStrikethrough />
+        </button>
       </div>
     </div>
     <h3>NoteItem</h3>
