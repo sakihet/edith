@@ -1,0 +1,89 @@
+.pattern-height-note-list {
+  max-height: calc(100vh - 9rem);
+}
+.pattern-button-base {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  background-color: transparent;
+  border-style: solid;
+  border-width: 1px;
+  border-color: var(--color-border-primary);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+.pattern-button-base:hover {
+  background-color: var(--color-bg-hover);
+}
+.pattern-button-dropdown {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  background-color: transparent;
+  color: var(--color-text-secondary);
+  border-style: none;
+  cursor: pointer;
+}
+.pattern-button-dropdown:hover {
+  background-color: var(--color-bg-hover);
+}
+.pattern-button-selected {
+  background-color: var(--color-blue-100);
+}
+.pattern-button-icon {
+  display: block;
+  background-color: transparent;
+  border-style: none;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+.pattern-button-icon > svg{
+  display: block;
+}
+.pattern-button-icon:hover {
+  background-color: var(--color-bg-hover);
+}
+.pattern-selected {
+  background-color: var(--color-blue-100);
+}
+.pattern-dropdown {
+  position: relative;
+}
+.pattern-dropdown > summary {
+  list-style: none;
+}
+.pattern-dropdown > summary::-webkit-details-marker {
+  display: none;
+}
+details[open].pattern-dropdown>summary:before {
+  content: " ";
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 50;
+}
+.pattern-dropdown>div {
+  position: absolute;
+  top: 2rem;
+  right: 0;
+  z-index: 100;
+}
+.pattern-hiding-child>*>.pattern-hidden-child {
+  display: none;
+}
+.pattern-hiding-child:hover>*>.pattern-hidden-child {
+  display: inline-block;
+}
+.pattern-scrollbar-thin::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+  background-color: var(--color-bg-scrollbar);
+}
+.pattern-scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: var(--color-bg-scrollbar-thumb);
+}

@@ -1,0 +1,75 @@
+/* element */
+body {
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-primary);
+  font-family: sans-serif;
+  line-height: 1.5rem;
+}
+
+ul {
+  padding: 0 1rem;
+}
+
+a {
+  color: var(--color-fg-link);
+}
+
+svg {
+  fill: currentColor;
+}
+
+/* app */
+#app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* tiptap */
+.tiptap {
+  padding: 1rem;
+  hr {
+    border: none;
+    border-top: 1px solid var(--color-border-primary);
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    cursor: pointer;
+    &.ProseMirror-selectednode {
+      border-top: 1px solid var(--color-focus);
+    }
+  }
+  ul,ol {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  ul[data-type="taskList"] {
+    list-style: none;
+    margin-left: 0;
+    padding: 0;
+    li {
+      align-items: flex-start;
+      display: flex;
+      > label {
+        margin-right: 0.5rem;
+      }
+    }
+    input[type="checkbox"] {
+      cursor: pointer;
+    }
+  }
+}
+.tiptap p.is-empty::before {
+  color: var(--color-text-tertiary);
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+/* router-link-exact-active */
+.router-link-exact-active > div {
+  background-color: var(--color-bg-active);
+}
+.router-link-exact-active > * {
+  background-color: var(--color-bg-active);
+}

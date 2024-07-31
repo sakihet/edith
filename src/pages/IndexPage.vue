@@ -45,7 +45,7 @@ const createEditor = (note: Note) => {
         Link,
         OrderedList,
         Placeholder.configure({
-          placeholder: "Write something..."
+          placeholder: "Write something, or press '/' for commands..."
         }),
         StarterKit,
         Strike,

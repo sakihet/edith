@@ -22,21 +22,30 @@ const props = defineProps<{
     >
       <button
         @click="editor?.chain().focus().toggleBold().run()"
-        class="bg-primary border-none hover pointer"
+        :class="{
+          'bg-primary border-none hover pointer': true,
+          'text-selected': props.editor?.isActive('bold')
+        }"
         title="Bold"
       >
         <IconFormatBold />
       </button>
       <button
         @click="editor?.chain().focus().toggleItalic().run()"
-        class="bg-primary border-none hover pointer"
+        :class="{
+          'bg-primary border-none hover pointer': true,
+          'text-selected': props.editor?.isActive('italic')
+        }"
         title="Italic"
       >
         <IconFormatItalic />
       </button>
       <button
         @click="editor?.chain().focus().toggleStrike().run()"
-        class="bg-primary border-none hover pointer"
+        :class="{
+          'bg-primary border-none hover pointer': true,
+          'text-selected': props.editor?.isActive('strike')
+        }"
         title="Strikethrough"
       >
         <IconFormatStrikethrough />
@@ -60,24 +69,6 @@ const props = defineProps<{
         :class="{ 'pattern-button-base': true, 'pattern-button-selected': editor?.isActive('taskList') }"
       >
         toggle task list
-      </button>
-      <button
-        @click="editor?.chain().focus().toggleBold().run()"
-        :class="{ 'pattern-button-base': true, 'pattern-button-selected': editor?.isActive('bold') }"
-      >
-        toggle bold
-      </button>
-      <button
-        @click="editor?.chain().focus().toggleItalic().run()"
-        :class="{ 'pattern-button-base': true, 'pattern-button-selected': editor?.isActive('italic') }"
-      >
-        toggle italic
-      </button>
-      <button
-        @click="editor?.chain().focus().toggleStrike().run()"
-        :class="{ 'pattern-button-base': true, 'pattern-button-selected': editor?.isActive('strike') }"
-      >
-        toggle strike
       </button>
       <button
         @click="editor?.chain().focus().unsetLink().run()"

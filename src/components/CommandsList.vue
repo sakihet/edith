@@ -22,7 +22,7 @@ const selectItem = (index: number) => {
 const selectedIndex = ref(0)
 
 const upHandler = () => {
-  selectedIndex.value = ((selectedIndex.value + props.items.length) - 1)
+  selectedIndex.value = selectedIndex.value > 0 ? (selectedIndex.value - 1) : (props.items.length - 1)
 }
 
 const downHandler = () => {
@@ -55,20 +55,23 @@ defineExpose({
 </script>
 
 <template>
-  <div class="flex-col bg-primary">
-    <template v-if="items.length">
-      <button
+  <div class="flex-column bg-primary">
+    <ul v-if="items.length" class="list-style-none px-0">
+      <li
         v-for="(item, index) in props.items"
-        :class="{ 'pattern-selected': index === selectedIndex, 'pattern-button-base': true }"
+        :class="{
+          'pattern-selected': index === selectedIndex,
+          'pattern-button-base': true
+        }"
         :key="index"
         @click="selectItem(index)"
       >
-      {{
-        // @ts-ignore
-        item.title
-      }}
-      </button>
-    </template>
+        {{
+          // @ts-ignore
+          item.title
+        }}
+      </li>
+    </ul>
     <div v-else>
       No result
     </div>
