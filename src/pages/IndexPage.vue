@@ -30,9 +30,9 @@ const router = useRouter()
 
 let editor: Editor | null
 
-const createEditor = (content: any) => {
+const createEditor = (note: Note) => {
   return new Editor({
-    content: content,
+    content: note.content,
       extensions: [
         Bold,
         BubbleMenuExt,
@@ -54,13 +54,23 @@ const createEditor = (content: any) => {
         }),
         TaskList,
       ],
+    onUpdate({ editor }) {
+      store.put({
+        id: note.id,
+        content: editor.getJSON(),
+        createdAt: note.createdAt,
+        updatedAt: new Date().toISOString()
+      })
+    }
   })
 }
 onMounted(() => {
   if (route.params.noteId) {
     store.currentNote = store.notes.find(n => n.id === route.params.noteId)
-    editor = createEditor(store.currentNote?.content)
-    editor.chain().focus().run()
+    if (store.currentNote) {
+      editor = createEditor(store.currentNote)
+      editor.chain().focus().run()
+    }
   }
 })
 onUpdated(() => {
@@ -68,13 +78,17 @@ onUpdated(() => {
 watch (() => route.params.noteId, (noteIdAfter, noteIdBefore) => {
   if (noteIdBefore === undefined && noteIdAfter) {
     store.currentNote = store.notes.find(n => n.id === noteIdAfter)
-    editor = createEditor(store.currentNote?.content)
-    editor.chain().focus().run()
+    if (store.currentNote) {
+      editor = createEditor(store.currentNote)
+      editor.chain().focus().run()
+    }
   } else if (noteIdAfter && noteIdBefore && (noteIdAfter !== noteIdBefore)) {
     editor?.destroy()
     store.currentNote = store.notes.find(n => n.id === noteIdAfter)
-    editor = createEditor(store.currentNote?.content)
-    editor.chain().focus().run()
+    if (store.currentNote) {
+      editor = createEditor(store.currentNote)
+      editor.chain().focus().run()
+    }
   } else if (!noteIdAfter) {
     store.currentNote = undefined
     editor?.destroy()

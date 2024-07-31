@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { EditorContent, BubbleMenu, Editor } from '@tiptap/vue-3'
 
-import { store } from '../store'
 import { Note } from '../types/note';
 import IconFormatBold from './IconFormatBold.vue';
 import IconFormatItalic from './IconFormatItalic.vue';
@@ -11,17 +10,6 @@ const props = defineProps<{
   editor: Editor,
   note: Note
 }>()
-
-const handleInput = () => {
-  if (props.editor) {
-    store.put({
-      id: props.note.id,
-      content: props.editor.getJSON(),
-      createdAt: props.note.createdAt,
-      updatedAt: new Date().toISOString()
-    })
-  }
-}
 </script>
 
 <template>
@@ -107,7 +95,6 @@ const handleInput = () => {
     </div>
     <EditorContent
       :editor="props.editor"
-      @input="handleInput"
     />
   </div>
 </template>
