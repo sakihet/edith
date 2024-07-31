@@ -1,16 +1,22 @@
 # Edith
 
-[Edith](https://edith.sakih.net/) is a note taking app. It works on your browser once you open the URL. The data is only stored in your browser's IndexedDB, not in the cloud.
+[Edith](https://edith.sakih.net/) is a tiny note-taking PWA for individuals. You can take notes using a rich text editor. It works on your browser once you open the URL. The data is only stored in your browser's IndexedDB, not in the cloud.
 
 ## Features
 
 - Rich text editor
-- Bubble menu
 - Slash commands
 
 ## Tech
 
+- [idb](https://github.com/jakearchibald/idb)
 - [Tiptap](https://tiptap.dev/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [uuid](https://github.com/uuidjs/uuid)
+- [Vite](https://vitejs.dev/)
+- [vite-plugin-pwa](https://vite-pwa-org.netlify.app/)
+- [Vue](https://vuejs.org/)
+- [vue-router](https://router.vuejs.org/)
 
 ## Development
 
