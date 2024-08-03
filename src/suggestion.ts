@@ -12,6 +12,24 @@ export default {
   items: ({ query }: { query: string }) => {
     return [
       {
+        title: 'Heading 1',
+        command: ({ editor, range }: { editor: Editor, range: Range }) => {
+          editor.chain().focus().deleteRange(range).toggleHeading({ level: 1 }).run()
+        }
+      },
+      {
+        title: 'Heading 2',
+        command: ({ editor, range }: { editor: Editor, range: Range }) => {
+          editor.chain().focus().deleteRange(range).toggleHeading({ level: 2 }).run()
+        }
+      },
+      {
+        title: 'Heading 3',
+        command: ({ editor, range }: { editor: Editor, range: Range }) => {
+          editor.chain().focus().deleteRange(range).toggleHeading({ level: 3 }).run()
+        }
+      },
+      {
         title: 'Bullet List',
         command: ({ editor, range }: { editor: Editor, range: Range }) => {
           editor.chain().focus().deleteRange(range).toggleBulletList().run()

@@ -28,6 +28,9 @@ svg {
 /* tiptap */
 .tiptap {
   padding: 1rem;
+  h1,h2,h3 {
+    line-height: 2;
+  }
   hr {
     border: none;
     border-top: 1px solid var(--color-border-primary);

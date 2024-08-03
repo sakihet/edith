@@ -6,6 +6,7 @@ import { Editor } from '@tiptap/vue-3'
 import Bold from '@tiptap/extension-bold'
 import { BubbleMenu as BubbleMenuExt } from '@tiptap/extension-bubble-menu'
 import BulletList from '@tiptap/extension-bullet-list'
+import Heading from '@tiptap/extension-heading'
 import HorizontalRule from '@tiptap/extension-horizontal-rule'
 import Italic from '@tiptap/extension-italic'
 import Link from '@tiptap/extension-link'
@@ -39,6 +40,9 @@ const createEditor = (note: Note) => {
         BulletList,
         Commands.configure({
           suggestion
+        }),
+        Heading.configure({
+          levels: [1, 2, 3],
         }),
         HorizontalRule,
         Italic,
