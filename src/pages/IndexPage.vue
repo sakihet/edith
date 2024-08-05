@@ -3,6 +3,7 @@ import { v4 } from 'uuid'
 import { onMounted, onUpdated, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { Editor } from '@tiptap/vue-3'
+import Blockquote from '@tiptap/extension-blockquote'
 import Bold from '@tiptap/extension-bold'
 import { BubbleMenu as BubbleMenuExt } from '@tiptap/extension-bubble-menu'
 import BulletList from '@tiptap/extension-bullet-list'
@@ -35,6 +36,7 @@ const createEditor = (note: Note) => {
   return new Editor({
     content: note.content,
       extensions: [
+        Blockquote,
         Bold,
         BubbleMenuExt,
         BulletList,

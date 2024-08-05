@@ -28,6 +28,11 @@ svg {
 /* tiptap */
 .tiptap {
   padding: 1rem;
+  blockquote {
+    border-left: 2px solid var(--color-border-primary);
+    padding-left: 1rem;
+    margin: 1rem 0;
+  }
   h1,h2,h3 {
     line-height: 2;
   }

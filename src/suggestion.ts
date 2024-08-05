@@ -48,6 +48,12 @@ export default {
         }
       },
       {
+        title: 'Blockquote',
+        command: ({ editor, range }: { editor: Editor, range: Range }) => {
+          editor.chain().focus().deleteRange(range).toggleBlockquote().run()
+        }
+      },
+      {
         title: 'Horizontal Rule',
         command: ({ editor, range }: { editor: Editor, range: Range }) => {
           editor.chain().focus().deleteRange(range).setHorizontalRule().run()
