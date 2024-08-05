@@ -57,6 +57,15 @@
 .w-80 {
   width: 20rem;
 }
+.line-height-normal {
+  line-height: normal;
+}
+.line-height-0 {
+  line-height: 0;
+}
+.line-height-1 {
+  line-height: 1;
+}
 /* text */
 .text-small {
   font-size: 0.75rem;

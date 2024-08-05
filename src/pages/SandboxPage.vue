@@ -183,13 +183,19 @@ const notes: Array<Note> = [
       <div
         class="h-8 inline-block drop-shadow"
       >
-        <button type="button" class="bg-primary border-none hover pointer">
+        <select class="h-6 px-2 py-1 border-solid border-1 border-color-default">
+          <option>Text</option>
+          <option>Heading 1</option>
+          <option>Heading 2</option>
+          <option>Heading 3</option>
+        </select>
+        <button type="button" class="bg-primary border-none hover pointer line-height-0">
           <IconFormatBold />
         </button>
-        <button type="button" class="bg-primary border-none hover pointer">
+        <button type="button" class="bg-primary border-none hover pointer line-height-0">
           <IconFormatItalic />
         </button>
-        <button type="button" class="bg-primary border-none hover pointer">
+        <button type="button" class="bg-primary border-none hover pointer line-height-0">
           <IconFormatStrikethrough />
         </button>
       </div>
