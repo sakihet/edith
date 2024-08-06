@@ -2,9 +2,11 @@
 import { EditorContent, BubbleMenu, Editor } from '@tiptap/vue-3'
 
 import { Note } from '../types/note';
+import IconCode from './IconCode.vue';
 import IconFormatBold from './IconFormatBold.vue';
 import IconFormatItalic from './IconFormatItalic.vue';
 import IconFormatStrikethrough from './IconFormatStrikethrough.vue';
+import IconFormatUnderlined from './IconFormatUnderlined.vue';
 
 const props = defineProps<{
   editor: Editor,
@@ -41,6 +43,16 @@ const props = defineProps<{
         <IconFormatItalic />
       </button>
       <button
+        @click="editor?.chain().focus().toggleUnderline().run()"
+        :class="{
+          'bg-primary border-none hover pointer': true,
+          'text-selected': props.editor?.isActive('underline')
+        }"
+        title="Underline"
+      >
+        <IconFormatUnderlined />
+      </button>
+      <button
         @click="editor?.chain().focus().toggleStrike().run()"
         :class="{
           'bg-primary border-none hover pointer': true,
@@ -49,6 +61,16 @@ const props = defineProps<{
         title="Strikethrough"
       >
         <IconFormatStrikethrough />
+      </button>
+      <button
+        @click="editor?.chain().focus().toggleCode().run()"
+        :class="{
+          'bg-primary border-none hover pointer': true,
+          'text-selected': props.editor?.isActive('code')
+        }"
+        title="Code"
+      >
+        <IconCode />
       </button>
     </BubbleMenu>
     <div class="layout-stack-h-1">

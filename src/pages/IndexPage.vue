@@ -7,6 +7,7 @@ import Blockquote from '@tiptap/extension-blockquote'
 import Bold from '@tiptap/extension-bold'
 import { BubbleMenu as BubbleMenuExt } from '@tiptap/extension-bubble-menu'
 import BulletList from '@tiptap/extension-bullet-list'
+import Code from '@tiptap/extension-code'
 import Heading from '@tiptap/extension-heading'
 import HorizontalRule from '@tiptap/extension-horizontal-rule'
 import Italic from '@tiptap/extension-italic'
@@ -17,6 +18,7 @@ import StarterKit from '@tiptap/starter-kit'
 import Strike from '@tiptap/extension-strike'
 import TaskItem from '@tiptap/extension-task-item'
 import TaskList from '@tiptap/extension-task-list'
+import Underline from '@tiptap/extension-underline'
 
 import AppEditor from '../components/AppEditor.vue'
 import { Note } from '../types/note'
@@ -40,6 +42,7 @@ const createEditor = (note: Note) => {
         Bold,
         BubbleMenuExt,
         BulletList,
+        Code,
         Commands.configure({
           suggestion
         }),
@@ -59,6 +62,7 @@ const createEditor = (note: Note) => {
           nested: true
         }),
         TaskList,
+        Underline,
       ],
     onUpdate({ editor }) {
       store.put({

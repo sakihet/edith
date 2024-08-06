@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { v4 } from 'uuid'
 import IconClose from '../components/IconClose.vue'
+import IconCode from '../components/IconCode.vue'
 import IconEditSquare from '../components/IconEditSquare.vue'
 import IconFormatBold from '../components/IconFormatBold.vue'
 import IconFormatItalic from '../components/IconFormatItalic.vue'
 import IconFormatStrikethrough from '../components/IconFormatStrikethrough.vue'
+import IconFormatUnderlined from '../components/IconFormatUnderlined.vue'
 import IconMoreHoriz from '../components/IconMoreHoriz.vue'
 import IconSearch from '../components/IconSearch.vue'
 import NoteItem from '../components/NoteItem.vue'
@@ -126,6 +128,8 @@ const notes: Array<Note> = [
       <IconFormatBold />
       <IconFormatItalic />
       <IconFormatStrikethrough />
+      <IconFormatUnderlined />
+      <IconCode />
     </div>
     <h3>Button</h3>
     <div class="layout-stack-2">
