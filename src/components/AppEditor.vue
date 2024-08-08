@@ -75,35 +75,11 @@ const props = defineProps<{
     </BubbleMenu>
     <div class="layout-stack-h-1">
       <button
-        @click="editor?.chain().focus().toggleBulletList().run()"
-        :class="{ 'pattern-button-base': true, 'pattern-button-selected': editor?.isActive('bulletList') }"
-      >
-        toggle bullet list
-      </button>
-      <button
-        @click="editor?.chain().focus().toggleOrderedList().run()"
-        :class="{ 'pattern-button-base': true, 'pattern-button-selected': editor?.isActive('orderedList') }"
-      >
-        toggle ordered list
-      </button>
-      <button
-        @click="editor?.chain().focus().toggleTaskList().run()"
-        :class="{ 'pattern-button-base': true, 'pattern-button-selected': editor?.isActive('taskList') }"
-      >
-        toggle task list
-      </button>
-      <button
         @click="editor?.chain().focus().unsetLink().run()"
         :disabled="!editor?.isActive('link')"
         :class="{ 'pattern-button-base': true, 'pattern-button-selected': editor?.isActive('link') }"
       >
         unset link
-      </button>
-      <button
-        @click="editor?.chain().focus().setHorizontalRule().run()"
-        :class="{ 'pattern-button-base': true, 'pattern-button-selected': editor?.isActive('horizontalRule') }"
-      >
-        horizontal rule
       </button>
       <button
         @click="editor?.chain().focus().clearNodes().run()"
