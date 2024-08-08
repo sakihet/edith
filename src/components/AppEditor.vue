@@ -105,6 +105,12 @@ const props = defineProps<{
       >
         horizontal rule
       </button>
+      <button
+        @click="editor?.chain().focus().clearNodes().run()"
+        class="pattern-button-base"
+      >
+        clear format
+      </button>
     </div>
     <EditorContent
       :editor="props.editor"
