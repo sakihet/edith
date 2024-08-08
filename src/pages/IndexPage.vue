@@ -28,6 +28,7 @@ import suggestion from '../suggestion'
 import IconEditSquare from '../components/IconEditSquare.vue'
 import NoteItem from '../components/NoteItem.vue'
 import IconMoreHoriz from '../components/IconMoreHoriz.vue'
+import { version } from '../../package.json'
 
 const route = useRoute()
 const router = useRouter()
@@ -134,8 +135,8 @@ const handleDelete = (id: string) => {
 <template>
   <div class="f-1 flex-column">
     <div class="f-1 flex-row">
-      <div class="p-6 w-80 bg-secondary">
-        <div class="layout-stack-6">
+      <div class="p-6 w-80 bg-secondary flex-column">
+        <div class="layout-stack-6 f-1">
           <div class="flex-row layout-stack-h-1">
             <RouterLink
               to="/"
@@ -192,6 +193,7 @@ const handleDelete = (id: string) => {
             </ul>
           </div>
         </div>
+        <div class="text-tertiary text-small font-mono">v {{ version }}</div>
       </div>
       <div class="p-6 f-1 layout-stack-2">
         <div class="flex-row">

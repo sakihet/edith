@@ -90,6 +90,10 @@
 .bold {
   font-weight: bold;
 }
+/* font */
+.font-mono {
+  font-family: monospace;
+}
 /* spacing */
 .m-4 {
   margin: 1rem;
