@@ -15,7 +15,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <div class="layout-stack-4">
+  <div class="layout-stack-2 flex-column">
     <BubbleMenu
       :editor="props.editor"
       v-if="props.editor"
@@ -73,23 +73,31 @@ const props = defineProps<{
         <IconCode />
       </button>
     </BubbleMenu>
-    <div class="layout-stack-h-1">
-      <button
-        @click="editor?.chain().focus().unsetLink().run()"
-        :disabled="!editor?.isActive('link')"
-        :class="{ 'pattern-button-base': true, 'pattern-button-selected': editor?.isActive('link') }"
-      >
-        unset link
-      </button>
-      <button
-        @click="editor?.chain().focus().clearNodes().run()"
-        class="pattern-button-base"
-      >
-        clear format
-      </button>
+    <div class="">
+      <div class="layout-center">
+        <div class="layout-stack-h-1">
+          <button
+            @click="editor?.chain().focus().unsetLink().run()"
+            :disabled="!editor?.isActive('link')"
+            :class="{ 'pattern-button-base': true, 'pattern-button-selected': editor?.isActive('link') }"
+          >
+            unset link
+          </button>
+          <button
+            @click="editor?.chain().focus().clearNodes().run()"
+            class="pattern-button-base"
+          >
+            clear format
+          </button>
+        </div>
+      </div>
     </div>
-    <EditorContent
-      :editor="props.editor"
-    />
+    <div class="overflow-y-scroll pattern-height-editor-content pattern-scrollbar-thick">
+      <div class="layout-center">
+        <EditorContent
+          :editor="props.editor"
+        />
+      </div>
+    </div>
   </div>
 </template>

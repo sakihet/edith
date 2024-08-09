@@ -4,6 +4,7 @@ body {
   background-color: var(--color-bg-primary);
   font-family: sans-serif;
   line-height: 1.5rem;
+  overflow: hidden;
 }
 
 ul {
@@ -23,6 +24,7 @@ svg {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 /* tiptap */

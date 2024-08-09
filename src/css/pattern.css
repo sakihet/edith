@@ -1,6 +1,9 @@
 .pattern-height-note-list {
   max-height: calc(100vh - 9rem);
 }
+.pattern-height-editor-content {
+  max-height: calc(100vh - 5.5rem);
+}
 .pattern-button-base {
   padding-left: 0.5rem;
   padding-right: 0.5rem;
@@ -79,6 +82,17 @@ details[open].pattern-dropdown>summary:before {
 .pattern-hiding-child:hover>*>.pattern-hidden-child {
   display: inline-block;
 }
+
+.pattern-scrollbar-thick::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  background-color: var(--color-bg-scrollbar);
+}
+
+.pattern-scrollbar-thick::-webkit-scrollbar-thumb {
+  background-color: var(--color-bg-scrollbar-thumb);
+}
+
 .pattern-scrollbar-thin::-webkit-scrollbar {
   width: 4px;
   height: 4px;

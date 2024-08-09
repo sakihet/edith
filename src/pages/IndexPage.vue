@@ -133,8 +133,8 @@ const handleDelete = (id: string) => {
 </script>
 
 <template>
-  <div class="f-1 flex-column">
-    <div class="f-1 flex-row">
+  <div class="f-1 flex-column overflow-hidden">
+    <div class="f-1 flex-row overflow-hidden">
       <div class="p-6 w-80 bg-secondary flex-column">
         <div class="layout-stack-6 f-1">
           <div class="flex-row layout-stack-h-1">
@@ -195,8 +195,8 @@ const handleDelete = (id: string) => {
         </div>
         <div class="text-tertiary text-small font-mono">v {{ version }}</div>
       </div>
-      <div class="p-6 f-1 layout-stack-2">
-        <div class="flex-row">
+      <div class="f-1 layout-stack-2 flex-column overflow-y-hidden">
+        <div class="flex-row px-6 pt-6">
           <div class="f-1"></div>
           <details
             class="pattern-dropdown pattern-hidden-child"
@@ -221,7 +221,7 @@ const handleDelete = (id: string) => {
             </div>
           </details>
         </div>
-        <div class="layout-center">
+        <div class="f-1 flex-column">
           <AppEditor
             v-if="store.currentNote && editor"
             :editor="editor"
