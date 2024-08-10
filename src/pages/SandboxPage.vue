@@ -185,9 +185,9 @@ const notes: Array<Note> = [
     <h3>BubbleMenu</h3>
     <div>
       <div
-        class="h-8 inline-block drop-shadow"
+        class="h-8 px-1 inline-block border-solid border-1 border-color-default drop-shadow"
       >
-        <select class="h-6 px-2 py-1 border-solid border-1 border-color-default">
+        <select class="h-6 px-2 py-1 border-none">
           <option>Text</option>
           <option>Heading 1</option>
           <option>Heading 2</option>
@@ -202,6 +202,31 @@ const notes: Array<Note> = [
         <button type="button" class="bg-primary border-none hover pointer line-height-0">
           <IconFormatStrikethrough />
         </button>
+      </div>
+    </div>
+    <div>
+      <div class="h-8 px-2 inline-flex border-solid border-1 border-color-default">
+        <div class="flex-column">
+          <select class="m-auto h-6 px-2 border-none">
+            <option>Text</option>
+            <option>Heading 1</option>
+            <option>Heading 2</option>
+            <option>Heading 3</option>
+          </select>
+        </div>
+        <div class="h-6 flex-column px-1">
+          <div class="h-4 m-auto layout-stack-h-1 block">
+            <button type="button" class="bg-primary border-none hover pointer line-height-0">
+              <IconFormatBold />
+            </button>
+            <button type="button" class="bg-primary border-none hover pointer line-height-0">
+              <IconFormatItalic />
+            </button>
+            <button type="button" class="bg-primary border-none hover pointer line-height-0">
+              <IconFormatStrikethrough />
+            </button>
+          </div>
+        </div>
       </div>
     </div>
     <h3>NoteItem</h3>
