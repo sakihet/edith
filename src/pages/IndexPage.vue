@@ -8,6 +8,7 @@ import Bold from '@tiptap/extension-bold'
 import { BubbleMenu as BubbleMenuExt } from '@tiptap/extension-bubble-menu'
 import BulletList from '@tiptap/extension-bullet-list'
 import Code from '@tiptap/extension-code'
+import CodeBlock from '@tiptap/extension-code-block'
 import Heading from '@tiptap/extension-heading'
 import HorizontalRule from '@tiptap/extension-horizontal-rule'
 import Italic from '@tiptap/extension-italic'
@@ -44,6 +45,7 @@ const createEditor = (note: Note) => {
         BubbleMenuExt,
         BulletList,
         Code,
+        CodeBlock,
         Commands.configure({
           suggestion
         }),

@@ -54,6 +54,12 @@ export default {
         }
       },
       {
+        title: 'Code Block',
+        command: ({ editor, range }: { editor: Editor, range: Range}) => {
+          editor.chain().focus().deleteRange(range).toggleCodeBlock().run()
+        }
+      },
+      {
         title: 'Horizontal Rule',
         command: ({ editor, range }: { editor: Editor, range: Range }) => {
           editor.chain().focus().deleteRange(range).setHorizontalRule().run()

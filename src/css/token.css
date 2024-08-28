@@ -33,6 +33,7 @@ body {
   --color-bg-scrollbar: var(--color-gray-300);
   --color-bg-scrollbar-thumb: var(--color-gray-500);
   --color-bg-mask: var(--color-gray-300);
+  --color-bg-pre: var(--color-gray-100);
   --color-text-primary: var(--color-gray-900);
   --color-text-secondary: var(--color-gray-600);
   --color-text-tertiary: var(--color-gray-400);
