@@ -35,6 +35,9 @@ pre {
 }
 
 /* tiptap */
+.tiptap:focus {
+  outline: none;
+}
 .tiptap {
   padding: 1rem;
   blockquote {
