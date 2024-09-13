@@ -19,79 +19,82 @@ const props = defineProps<{
     <BubbleMenu
       :editor="props.editor"
       v-if="props.editor"
-      class="bg-primary drop-shadow p-1"
+      class="bg-primary drop-shadow p-1 flex-row layout-stack-h-1"
       style="line-height: 0;"
     >
-      <button
-        @click="editor?.chain().focus().toggleBold().run()"
-        :class="{
-          'bg-primary border-none hover pointer': true,
-          'text-selected': props.editor?.isActive('bold')
-        }"
-        title="Bold"
-      >
-        <IconFormatBold />
-      </button>
-      <button
-        @click="editor?.chain().focus().toggleItalic().run()"
-        :class="{
-          'bg-primary border-none hover pointer': true,
-          'text-selected': props.editor?.isActive('italic')
-        }"
-        title="Italic"
-      >
-        <IconFormatItalic />
-      </button>
-      <button
-        @click="editor?.chain().focus().toggleUnderline().run()"
-        :class="{
-          'bg-primary border-none hover pointer': true,
-          'text-selected': props.editor?.isActive('underline')
-        }"
-        title="Underline"
-      >
-        <IconFormatUnderlined />
-      </button>
-      <button
-        @click="editor?.chain().focus().toggleStrike().run()"
-        :class="{
-          'bg-primary border-none hover pointer': true,
-          'text-selected': props.editor?.isActive('strike')
-        }"
-        title="Strikethrough"
-      >
-        <IconFormatStrikethrough />
-      </button>
-      <button
-        @click="editor?.chain().focus().toggleCode().run()"
-        :class="{
-          'bg-primary border-none hover pointer': true,
-          'text-selected': props.editor?.isActive('code')
-        }"
-        title="Code"
-      >
-        <IconCode />
-      </button>
-    </BubbleMenu>
-    <div class="">
-      <div class="layout-center">
-        <div class="layout-stack-h-1">
-          <button
-            @click="editor?.chain().focus().unsetLink().run()"
-            :disabled="!editor?.isActive('link')"
-            :class="{ 'pattern-button-base': true, 'pattern-button-selected': editor?.isActive('link') }"
-          >
-            unset link
-          </button>
-          <button
-            @click="editor?.chain().focus().clearNodes().run()"
-            class="pattern-button-base"
-          >
-            clear format
-          </button>
-        </div>
+      <div class="layout-stack-h-1">
+        <button
+          @click="editor?.chain().focus().toggleBold().run()"
+          :class="{
+            'bg-primary border-none hover pointer': true,
+            'text-selected': props.editor?.isActive('bold')
+          }"
+          title="Bold"
+        >
+          <IconFormatBold />
+        </button>
+        <button
+          @click="editor?.chain().focus().toggleItalic().run()"
+          :class="{
+            'bg-primary border-none hover pointer': true,
+            'text-selected': props.editor?.isActive('italic')
+          }"
+          title="Italic"
+        >
+          <IconFormatItalic />
+        </button>
+        <button
+          @click="editor?.chain().focus().toggleUnderline().run()"
+          :class="{
+            'bg-primary border-none hover pointer': true,
+            'text-selected': props.editor?.isActive('underline')
+          }"
+          title="Underline"
+        >
+          <IconFormatUnderlined />
+        </button>
+        <button
+          @click="editor?.chain().focus().toggleStrike().run()"
+          :class="{
+            'bg-primary border-none hover pointer': true,
+            'text-selected': props.editor?.isActive('strike')
+          }"
+          title="Strikethrough"
+        >
+          <IconFormatStrikethrough />
+        </button>
+        <button
+          @click="editor?.chain().focus().toggleCode().run()"
+          :class="{
+            'bg-primary border-none hover pointer': true,
+            'text-selected': props.editor?.isActive('code')
+          }"
+          title="Code"
+        >
+          <IconCode />
+        </button>
       </div>
-    </div>
+      <div>
+        <button
+          @click="editor?.chain().focus().unsetLink().run()"
+          :class="{
+            'bg-primary border-none hover pointer px-2 py-1': true,
+            'text-selected': props.editor?.isActive('code'),
+          }"
+          :disabled="!editor?.isActive('link')"
+        >
+          Unset Link
+        </button>
+        <button
+          @click="editor?.chain().focus().clearNodes().run()"
+          :class="{
+            'bg-primary border-none hover pointer px-2 py-1': true,
+          }"
+        >
+          Clear Format
+        </button>
+      </div>
+    </BubbleMenu>
     <div class="overflow-y-scroll pattern-height-editor-content pattern-scrollbar-thick">
       <div class="layout-center">
         <EditorContent
