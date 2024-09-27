@@ -30,6 +30,9 @@ import IconEditSquare from '../components/IconEditSquare.vue'
 import NoteItem from '../components/NoteItem.vue'
 import IconMoreHoriz from '../components/IconMoreHoriz.vue'
 import { version } from '../../package.json'
+import IconLightMode from '../components/IconLightMode.vue'
+import IconDarkMode from '../components/IconDarkMode.vue'
+import { applyTheme, setTheme } from '../utils'
 
 const route = useRoute()
 const router = useRouter()
@@ -132,6 +135,16 @@ const handleDelete = (id: string) => {
     store.delete(id)
   }
 }
+
+const handleToggleMode = () => {
+  if (store.theme === 'light') {
+    store.theme = 'dark'
+  } else {
+    store.theme = 'light'
+  }
+  applyTheme(store.theme)
+  setTheme(store.theme)
+}
 </script>
 
 <template>
@@ -198,8 +211,18 @@ const handleDelete = (id: string) => {
         <div class="text-tertiary text-small font-mono">v {{ version }}</div>
       </div>
       <div class="f-1 layout-stack-2 flex-column overflow-y-hidden">
-        <div class="flex-row px-6 pt-6">
+        <div class="flex-row px-6 pt-6 layout-stack-h-1">
           <div class="f-1"></div>
+          <div>
+            <button
+              class="pattern-button-icon"
+              type="button"
+              @click="handleToggleMode()"
+            >
+              <IconLightMode v-if="store.theme === 'light'"/>
+              <IconDarkMode v-else />
+            </button>
+          </div>
           <details
             class="pattern-dropdown pattern-hidden-child"
           >

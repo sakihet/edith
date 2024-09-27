@@ -9,6 +9,8 @@ import IconFormatStrikethrough from '../components/IconFormatStrikethrough.vue'
 import IconFormatUnderlined from '../components/IconFormatUnderlined.vue'
 import IconMoreHoriz from '../components/IconMoreHoriz.vue'
 import IconSearch from '../components/IconSearch.vue'
+import IconDarkMode from '../components/IconDarkMode.vue'
+import IconLightMode from '../components/IconLightMode.vue'
 import NoteItem from '../components/NoteItem.vue'
 import NoteList from '../components/NoteList.vue'
 import { Note } from '../types/note'
@@ -130,6 +132,8 @@ const notes: Array<Note> = [
       <IconFormatStrikethrough />
       <IconFormatUnderlined />
       <IconCode />
+      <IconLightMode />
+      <IconDarkMode />
     </div>
     <h3>Button</h3>
     <div class="layout-stack-2">
