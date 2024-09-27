@@ -45,5 +45,20 @@ body {
 /* dark */
 .dark>* {
   color-scheme: dark;
-  /* TODO */
+  --color-bg-active: var(--color-gray-600);
+  --color-bg-hover: var(--color-gray-600);
+  --color-bg-link: var(--color-gray-800);
+  --color-bg-primary: var(--color-gray-900);
+  --color-bg-secondary: var(--color-gray-800);
+  --color-border-primary: var(--color-gray-500);
+  --color-bg-scrollbar: var(--color-gray-600);
+  --color-bg-scrollbar-thumb: var(--color-gray-400);
+  --color-bg-mask: var(--color-gray-600);
+  --color-bg-pre: var(--color-gray-800);
+  --color-text-primary: var(--color-white);
+  --color-text-secondary: var(--color-gray-200);
+  --color-text-tertiary: var(--color-gray-500);
+  --color-text-selected: var(--color-blue-300);
+  --color-fg-link: var(--color-blue-200);
+  --color-focus: var(--color-blue-200);
 }

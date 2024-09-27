@@ -3,9 +3,12 @@ import { Note } from "../types/note"
 import { open } from "../repositories"
 import { NoteApplicationServiceImpl } from "../applications/noteApplicationService"
 import { NoteRepositoryImpl } from "../repositories/noteRepository"
+import { Theme } from "../types/theme"
+import { applyTheme, getTheme } from "../utils"
 
 interface Store {
   isLoaded: boolean,
+  theme: Theme,
   currentNote: Note | undefined,
   notes: Array<Note>,
   init: () => Promise<void>,
@@ -21,6 +24,7 @@ const noteApplicationService = new NoteApplicationServiceImpl(
 
 export const store: Store = reactive<Store>({
   isLoaded: false,
+  theme: 'light',
   currentNote: undefined,
   notes: [],
   async init() {
@@ -30,6 +34,8 @@ export const store: Store = reactive<Store>({
     if (results) {
       this.notes = results
     }
+    this.theme = getTheme()
+    applyTheme(this.theme)
     this.isLoaded = true
   },
   async add(note: Note) {
