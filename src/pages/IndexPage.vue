@@ -7,6 +7,7 @@ import Blockquote from '@tiptap/extension-blockquote'
 import Bold from '@tiptap/extension-bold'
 import { BubbleMenu as BubbleMenuExt } from '@tiptap/extension-bubble-menu'
 import BulletList from '@tiptap/extension-bullet-list'
+import CharacterCount from '@tiptap/extension-character-count'
 import Code from '@tiptap/extension-code'
 import CodeBlock from '@tiptap/extension-code-block'
 import Heading from '@tiptap/extension-heading'
@@ -47,6 +48,7 @@ const createEditor = (note: Note) => {
         Bold,
         BubbleMenuExt,
         BulletList,
+        CharacterCount,
         Code,
         CodeBlock,
         Commands.configure({
@@ -211,40 +213,51 @@ const handleToggleMode = () => {
         <div class="text-tertiary text-small font-mono">v {{ version }}</div>
       </div>
       <div class="f-1 layout-stack-2 flex-column overflow-y-hidden">
-        <div class="flex-row px-6 pt-6 layout-stack-h-1">
-          <div class="f-1"></div>
-          <div>
-            <button
-              class="pattern-button-icon"
-              type="button"
-              @click="handleToggleMode()"
-            >
-              <IconLightMode v-if="store.theme === 'light'"/>
-              <IconDarkMode v-else />
-            </button>
+        <div class="flex-row px-6 pt-6 layout-stack-h-2">
+          <div class="f-1">
           </div>
-          <details
-            class="pattern-dropdown pattern-hidden-child"
-          >
-            <summary class="w-6 h-6 hover">
-              <IconMoreHoriz />
-            </summary>
-            <div class="bg-primary drop-shadow">
-              <ul class="list-style-none px-0 border-solid border-1 border-color-default py-2">
-                <li>
-                  <a
-                    href="https://github.com/sakihet/edith"
-                    target="_blank"
-                    class="text-decoration-none"
-                  >
-                    <div class="h-8 px-4 py-1 hover">
-                      GitHub
-                    </div>
-                  </a>
-                </li>
-              </ul>
+          <div>
+            <span class="text-tertiary text-small">
+              characters: {{ editor?.storage.characterCount.characters() || 0 }},
+            </span>
+            <span class="text-tertiary text-small">
+              words: {{ editor?.storage.characterCount.words() || 0 }}
+            </span>
+          </div>
+          <div class="flex-row layout-stack-h-1">
+            <div>
+              <button
+                class="pattern-button-icon"
+                type="button"
+                @click="handleToggleMode()"
+              >
+                <IconLightMode v-if="store.theme === 'light'"/>
+                <IconDarkMode v-else />
+              </button>
             </div>
-          </details>
+            <details
+              class="pattern-dropdown pattern-hidden-child"
+            >
+              <summary class="w-6 h-6 hover">
+                <IconMoreHoriz />
+              </summary>
+              <div class="bg-primary drop-shadow">
+                <ul class="list-style-none px-0 border-solid border-1 border-color-default py-2">
+                  <li>
+                    <a
+                      href="https://github.com/sakihet/edith"
+                      target="_blank"
+                      class="text-decoration-none"
+                    >
+                      <div class="h-8 px-4 py-1 hover">
+                        GitHub
+                      </div>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </details>
+          </div>
         </div>
         <div class="f-1 flex-column">
           <AppEditor
