@@ -34,6 +34,7 @@ import { version } from '../../package.json'
 import IconLightMode from '../components/IconLightMode.vue'
 import IconDarkMode from '../components/IconDarkMode.vue'
 import { applyTheme, setTheme } from '../utils'
+import { TaskCount } from '../extensions/task-count'
 
 const route = useRoute()
 const router = useRouter()
@@ -66,6 +67,7 @@ const createEditor = (note: Note) => {
         }),
         StarterKit,
         Strike,
+        TaskCount,
         TaskItem.configure({
           nested: true
         }),
@@ -221,7 +223,10 @@ const handleToggleMode = () => {
               characters: {{ editor?.storage.characterCount.characters() || 0 }},
             </span>
             <span class="text-tertiary text-small">
-              words: {{ editor?.storage.characterCount.words() || 0 }}
+              words: {{ editor?.storage.characterCount.words() || 0 }},
+            </span>
+            <span class="text-tertiary text-small">
+              tasks: {{ editor?.storage.taskCount.tasks().filter(t => t.attrs.checked === true).length }} / {{ editor?.storage.taskCount.tasks().length }}
             </span>
           </div>
           <div class="flex-row layout-stack-h-1">
