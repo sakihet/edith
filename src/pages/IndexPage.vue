@@ -226,7 +226,7 @@ const handleToggleMode = () => {
               words: {{ editor?.storage.characterCount.words() || 0 }},
             </span>
             <span class="text-tertiary text-small">
-              tasks: {{ editor?.storage.taskCount.tasks().filter(t => t.attrs.checked === true).length }} / {{ editor?.storage.taskCount.tasks().length }}
+              tasks: {{ editor?.storage.taskCount.tasks().filter((t: any) => t.attrs.checked === true).length }} / {{ editor?.storage.taskCount.tasks().length }}
             </span>
           </div>
           <div class="flex-row layout-stack-h-1">

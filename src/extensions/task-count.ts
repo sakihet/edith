@@ -6,16 +6,19 @@ export const TaskCount = Extension.create({
 
   addStorage() {
     return {
-      tasks: () => 0,
+      tasks: () => [],
     }
   },
 
   onBeforeCreate() {
     this.storage.tasks = () => {
       const node = this.editor.state.doc
-      const taskLists = node.content.toJSON().filter((c: { type: string }) => c.type === 'taskList')
-      const taskItems = taskLists.map((l: { content: any }) => l.content)
-      return taskItems.flat()
+      if (node.content && node.content.toJSON()) {
+        const taskLists = node.content.toJSON().filter((c: { type: string }) => c.type === 'taskList')
+        const taskItems = taskLists.map((l: { content: any }) => l.content)
+        return taskItems.flat()
+      }
+      return []
     }
   },
 
