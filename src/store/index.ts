@@ -11,11 +11,13 @@ interface Store {
   theme: Theme,
   currentNote: Note | undefined,
   notes: Array<Note>,
+  recentlyVisited: Array<string>,
   init: () => Promise<void>,
   add: (note: Note) => void,
   clear: () => void,
   delete: (id: string) => void,
   put: (note: Note) => void,
+  updateRecentlyVisited: (id: string) => void,
 }
 
 const noteApplicationService = new NoteApplicationServiceImpl(
@@ -27,8 +29,8 @@ export const store: Store = reactive<Store>({
   theme: 'light',
   currentNote: undefined,
   notes: [],
+  recentlyVisited: [],
   async init() {
-    console.log('init')
     await open()
     const results = await noteApplicationService.getAll()
     if (results) {
@@ -54,5 +56,8 @@ export const store: Store = reactive<Store>({
   async put(note: Note) {
     await noteApplicationService.put(note)
     this.notes = await noteApplicationService.getAll()
+  },
+  async updateRecentlyVisited(id: string) {
+    this.recentlyVisited = [...new Set([id, ...this.recentlyVisited])]
   }
 })

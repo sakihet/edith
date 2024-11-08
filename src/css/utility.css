@@ -19,9 +19,18 @@
 .f-1 {
   flex: 1;
 }
+.grid {
+  display: grid;
+}
 /* overflow */
 .overflow-hidden {
   overflow: hidden;
+}
+.overflow-x-auto {
+  overflow-x: auto;
+}
+.overflow-x-scroll {
+  overflow-x: scroll;
 }
 .overflow-y-auto {
   overflow-y: auto;
