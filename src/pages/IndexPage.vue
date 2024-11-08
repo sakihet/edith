@@ -35,6 +35,7 @@ import IconLightMode from '../components/IconLightMode.vue'
 import IconDarkMode from '../components/IconDarkMode.vue'
 import { applyTheme, setTheme } from '../utils'
 import { TaskCount } from '../extensions/task-count'
+import RecentlyVisited from '../components/RecentlyVisited.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -98,6 +99,9 @@ onUpdated(() => {
 watch (() => route.params.noteId, (noteIdAfter, noteIdBefore) => {
   if (noteIdBefore === undefined && noteIdAfter) {
     store.currentNote = store.notes.find(n => n.id === noteIdAfter)
+    if (store.currentNote?.id) {
+      store.updateRecentlyVisited(store.currentNote?.id)
+    }
     if (store.currentNote) {
       editor = createEditor(store.currentNote)
       editor.chain().focus().run()
@@ -105,6 +109,9 @@ watch (() => route.params.noteId, (noteIdAfter, noteIdBefore) => {
   } else if (noteIdAfter && noteIdBefore && (noteIdAfter !== noteIdBefore)) {
     editor?.destroy()
     store.currentNote = store.notes.find(n => n.id === noteIdAfter)
+    if (store.currentNote?.id) {
+      store.updateRecentlyVisited(store.currentNote?.id)
+    }
     if (store.currentNote) {
       editor = createEditor(store.currentNote)
       editor.chain().focus().run()
@@ -273,7 +280,13 @@ const handleToggleMode = () => {
           <div
             v-else
             class="text-secondary"
-          ></div>
+          >
+            <div class="layout-center-wide">
+              <RecentlyVisited
+                :notes="store.recentlyVisited.map(id => store.notes.find(n => n.id === id)).filter(n => !!n)"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>
