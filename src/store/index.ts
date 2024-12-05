@@ -5,6 +5,8 @@ import { NoteApplicationServiceImpl } from "../applications/noteApplicationServi
 import { NoteRepositoryImpl } from "../repositories/noteRepository"
 import { Theme } from "../types/theme"
 import { applyTheme, getTheme } from "../utils"
+import { SettingApplicationServiceImpl } from "../applications/settingApplicationService"
+import { SettingRepositoryImpl } from "../repositories/settingRepository"
 
 interface Store {
   isLoaded: boolean,
@@ -23,6 +25,9 @@ interface Store {
 const noteApplicationService = new NoteApplicationServiceImpl(
   new NoteRepositoryImpl()
 )
+const setttingApplicatinSerivce = new SettingApplicationServiceImpl(
+  new SettingRepositoryImpl()
+)
 
 export const store: Store = reactive<Store>({
   isLoaded: false,
@@ -35,6 +40,10 @@ export const store: Store = reactive<Store>({
     const results = await noteApplicationService.getAll()
     if (results) {
       this.notes = results
+    }
+    const recentlyVisited = await setttingApplicatinSerivce.get('recentlyVisited')
+    if (recentlyVisited) {
+      this.recentlyVisited = recentlyVisited
     }
     this.theme = getTheme()
     applyTheme(this.theme)
@@ -58,6 +67,8 @@ export const store: Store = reactive<Store>({
     this.notes = await noteApplicationService.getAll()
   },
   async updateRecentlyVisited(id: string) {
-    this.recentlyVisited = [...new Set([id, ...this.recentlyVisited])]
+    const newRecentlyVisited = [...new Set([id, ...this.recentlyVisited])]
+    await setttingApplicatinSerivce.set('recentlyVisited', newRecentlyVisited)
+    this.recentlyVisited = newRecentlyVisited
   }
 })

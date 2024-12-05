@@ -1,12 +1,17 @@
 import { openDB } from 'idb'
 
-export const DB_NAME = 'e1'
-export const DB_VERSION = 1
+export const DB_NAME = 'edith'
+export const DB_VERSION = 2
 
 export const open = async () => {
   await openDB(DB_NAME, DB_VERSION, {
-    upgrade(db, _oldVersion, _newVersion, _transaction) {
-      db.createObjectStore('notes', { keyPath: 'id' })
+    upgrade(db, oldVersion, _newVersion, _transaction) {
+      if (oldVersion < 1) {
+        db.createObjectStore('notes', { keyPath: 'id' })
+      }
+      if (oldVersion < 2) {
+        db.createObjectStore('settings')
+      }
     }
   })
 }
