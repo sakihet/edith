@@ -36,6 +36,9 @@
 .overflow-x-scroll {
   overflow-x: scroll;
 }
+.overflow-x-hidden {
+  overflow-x: hidden;
+}
 .overflow-y-auto {
   overflow-y: auto;
 }

@@ -8,7 +8,9 @@ const props = defineProps<{
 
 <template>
   <div class="layout-stack-4">
-    <div class="bold text-secondary">Recently visited</div>
+    <div class="flex-row">
+      <div class="f-1 bold text-secondary">Recently visited</div>
+    </div>
     <div class="text-secondary" v-if="props.notes.length >= 1">
       <ul class="list-style-none px-0 pattern-horizontal-scroll pattern-scrollbar-thin">
         <li
@@ -22,7 +24,7 @@ const props = defineProps<{
           >
             <div class="w-48 p-3 border-solid border-1 border-primary border-color-default hover">
               <div class="layout-stack-1">
-                <div class="text-small">{{ note.content.content && note.content.content[0]?.content && note.content.content[0].content[0].text || "Empty"}}
+                <div class="text-small overflow-hidden">{{ note.content.content && note.content.content[0]?.content && note.content.content[0].content[0].text || "Empty"}}
                 </div>
                 <div class="text-small text-tertiary text-right">{{ note.updatedAt.split('T')[0] }}</div>
               </div>
