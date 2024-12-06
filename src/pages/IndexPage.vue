@@ -135,6 +135,9 @@ const handleAdd = async () => {
   await store.add(note)
   router.push(`/${note.id}`)
 }
+const handleSort = (sortKey: string) => {
+  store.sort(sortKey)
+}
 const handleClear = async () => {
   if(window.confirm('Do you really want to delete all notes?')) {
     await store.clear()
@@ -194,8 +197,24 @@ const handleToggleMode = () => {
                 <ul class="list-style-none px-0 border-solid border-1 border-color-default py-2">
                   <li>
                     <button
+                      @click="handleSort('updated')"
+                      class="pattern-button-dropdown nowrap w-full"
+                    >
+                      Sort by updated
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      @click="handleSort('created')"
+                      class="pattern-button-dropdown nowrap w-full"
+                    >
+                      Sort by created
+                    </button>
+                  </li>
+                  <li>
+                    <button
                       @click="handleClear"
-                      class="pattern-button-dropdown"
+                      class="pattern-button-dropdown w-full"
                     >
                       Clear
                     </button>
@@ -207,7 +226,7 @@ const handleToggleMode = () => {
           <div class="pattern-height-note-list overflow-y-scroll pattern-scrollbar-thin">
             <ul class="text-medium text-secondary layout-stack-1 list-style-none px-0">
               <li
-                v-for="note in store.notes.sort((a, b) => new Date(a.updatedAt) < new Date(b.updatedAt) ? 1 : -1)"
+                v-for="note in store.notes"
                 :key="note.id"
                 class=""
               >

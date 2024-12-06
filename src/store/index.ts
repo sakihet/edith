@@ -19,6 +19,7 @@ interface Store {
   clear: () => void,
   delete: (id: string) => void,
   put: (note: Note) => void,
+  sort: (sortKey: string) => void,
   updateRecentlyVisited: (id: string) => void,
 }
 
@@ -52,6 +53,7 @@ export const store: Store = reactive<Store>({
   async add(note: Note) {
     await noteApplicationService.add(note)
     this.notes = await noteApplicationService.getAll()
+    this.sort('updated')
     return
   },
   async clear() {
@@ -61,10 +63,19 @@ export const store: Store = reactive<Store>({
   async delete(id: string) {
     await noteApplicationService.delete(id)
     this.notes = await noteApplicationService.getAll()
+    this.sort('updated')
   },
   async put(note: Note) {
     await noteApplicationService.put(note)
     this.notes = await noteApplicationService.getAll()
+    this.sort('updated')
+  },
+  sort (sortKey: string) {
+    if (sortKey === 'updated') {
+      this.notes = this.notes.sort((a, b) => new Date(a.updatedAt) < new Date(b.updatedAt) ? 1 : -1)
+    } else if (sortKey === 'created') {
+      this.notes = this.notes.sort((a, b) => new Date(a.createdAt) < new Date(b.createdAt) ? 1 : -1)
+    }
   },
   async updateRecentlyVisited(id: string) {
     const newRecentlyVisited = [...new Set([id, ...this.recentlyVisited])]
