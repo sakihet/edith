@@ -17,6 +17,7 @@ import Strike from '@tiptap/extension-strike'
 import TaskItem from '@tiptap/extension-task-item'
 import TaskList from '@tiptap/extension-task-list'
 import Underline from '@tiptap/extension-underline'
+import Youtube from "@tiptap/extension-youtube"
 
 import Commands from './commands'
 import suggestion from './suggestion'
@@ -55,6 +56,7 @@ export const createEditor = (note: Note, store:Store) => new Editor({
     }),
     TaskList,
     Underline,
+    Youtube,
   ],
   onUpdate({ editor }) {
     store.put({
