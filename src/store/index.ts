@@ -8,7 +8,7 @@ import { applyTheme, getTheme } from "../utils"
 import { SettingApplicationServiceImpl } from "../applications/settingApplicationService"
 import { SettingRepositoryImpl } from "../repositories/settingRepository"
 
-interface Store {
+export interface Store {
   isLoaded: boolean,
   theme: Theme,
   currentNote: Note | undefined,
