@@ -290,7 +290,7 @@ const handleClickSearch = () => {
                       <div class="overflow-hidden text-secondary">
                         {{ note.content.content && note.content.content[0]?.content && note.content.content[0].content[0].text || "Empty" }}
                       </div>
-                      <div class="overflow-hidden text-tertiary text-small h-12">
+                      <div class="overflow-hidden text-tertiary text-small max-h-12">
                         {{ generateTextCustom(note.content) }}
                       </div>
                     </div>

@@ -67,6 +67,9 @@
 .h-12 {
   height: 3rem;
 }
+.max-h-12 {
+  max-height: 3rem;
+}
 .w-6 {
   width: 1.5rem;
 }
