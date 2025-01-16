@@ -15,7 +15,7 @@ import IconLightMode from '../components/IconLightMode.vue'
 import IconDarkMode from '../components/IconDarkMode.vue'
 import { applyTheme, setTheme } from '../utils'
 import RecentlyVisited from '../components/RecentlyVisited.vue'
-import { createEditor } from '../editor'
+import { createEditor, generateTextCustom } from '../editor'
 import IconSearch from '../components/IconSearch.vue'
 
 const route = useRoute()
@@ -283,15 +283,15 @@ const handleClickSearch = () => {
               />
             </div> -->
             <div>
-              <ul class="list-style-none layout-stack-1 p-0">
+              <ul class="list-style-none layout-stack-2 p-0">
                 <li v-for="note in store.notes" :key="note.id" class="">
                   <router-link class="text-decoration-none text-secondary" :to="`/${note.id}`">
                     <div class="layout-stack-1 px-4 py-2 hover">
                       <div class="overflow-hidden text-secondary">
                         {{ note.content.content && note.content.content[0]?.content && note.content.content[0].content[0].text || "Empty" }}
                       </div>
-                      <div class="text-tertiary">
-                        snippet
+                      <div class="overflow-hidden text-tertiary text-small h-12">
+                        {{ generateTextCustom(note.content) }}
                       </div>
                     </div>
                   </router-link>
