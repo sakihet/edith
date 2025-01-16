@@ -10,6 +10,7 @@ import { SettingRepositoryImpl } from "../repositories/settingRepository"
 
 export interface Store {
   isLoaded: boolean,
+  isOpenDialog: boolean,
   theme: Theme,
   currentNote: Note | undefined,
   notes: Array<Note>,
@@ -32,6 +33,7 @@ const setttingApplicatinSerivce = new SettingApplicationServiceImpl(
 
 export const store: Store = reactive<Store>({
   isLoaded: false,
+  isOpenDialog: false,
   theme: 'light',
   currentNote: undefined,
   notes: [],

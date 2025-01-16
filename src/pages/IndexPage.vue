@@ -16,6 +16,7 @@ import IconDarkMode from '../components/IconDarkMode.vue'
 import { applyTheme, setTheme } from '../utils'
 import RecentlyVisited from '../components/RecentlyVisited.vue'
 import { createEditor } from '../editor'
+import IconSearch from '../components/IconSearch.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -33,7 +34,13 @@ onMounted(() => {
 })
 onUpdated(() => {
 })
+
+const closeDialog = () => {
+  store.isOpenDialog = false
+}
+
 watch (() => route.params.noteId, (noteIdAfter, noteIdBefore) => {
+  closeDialog()
   if (noteIdBefore === undefined && noteIdAfter) {
     store.currentNote = store.notes.find(n => n.id === noteIdAfter)
     if (store.currentNote?.id) {
@@ -96,13 +103,17 @@ const handleToggleMode = () => {
   applyTheme(store.theme)
   setTheme(store.theme)
 }
+
+const handleClickSearch = () => {
+  store.isOpenDialog = !store.isOpenDialog
+}
 </script>
 
 <template>
   <div class="f-1 flex-column overflow-hidden">
     <div class="f-1 flex-row overflow-hidden">
       <div class="p-6 w-80 bg-secondary flex-column">
-        <div class="layout-stack-6 f-1">
+        <div class="layout-stack-4 f-1">
           <div class="flex-row layout-stack-h-1">
             <RouterLink
               to="/"
@@ -120,6 +131,18 @@ const handleToggleMode = () => {
                 <IconEditSquare />
               </button>
             </div>
+          </div>
+          <div>
+            <button
+              type="button"
+              class="w-full px-2 border-none text-secondary flex-row pointer bg-transparent hover"
+              @click="handleClickSearch"
+            >
+              <div class="py-1">
+                Search
+              </div>
+              <div class="f-1"></div>
+            </button>
           </div>
           <div class="text-secondary flex-row layout-stack-h-1">
             <div class="f-1 px-2 text-tertiary bold">Notes</div>
@@ -244,6 +267,39 @@ const handleToggleMode = () => {
             </div>
           </div>
         </div>
+      </div>
+      <div class="" v-if="store.isOpenDialog">
+        <div class="pattern-mask" @click="store.isOpenDialog = false" />
+        <dialog
+          :open="store.isOpenDialog"
+          class="layout-center w-128 border-solid border-1 border-color-default drop-shadow my-8"
+        >
+          <div class="p-8 layout-stack-4">
+            <!-- <div>
+              <input
+                type="text"
+                class="h-8 border-solid border-1 border-color-default w-full px-2"
+                placeholder="Search..."
+              />
+            </div> -->
+            <div>
+              <ul class="list-style-none layout-stack-1 p-0">
+                <li v-for="note in store.notes" :key="note.id" class="">
+                  <router-link class="text-decoration-none text-secondary" :to="`/${note.id}`">
+                    <div class="layout-stack-1 px-4 py-2 hover">
+                      <div class="overflow-hidden text-secondary">
+                        {{ note.content.content && note.content.content[0]?.content && note.content.content[0].content[0].text || "Empty" }}
+                      </div>
+                      <div class="text-tertiary">
+                        snippet
+                      </div>
+                    </div>
+                  </router-link>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </dialog>
       </div>
     </div>
   </div>
