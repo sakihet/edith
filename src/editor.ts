@@ -1,4 +1,4 @@
-import { Editor } from "@tiptap/vue-3"
+import { Editor, generateText } from "@tiptap/vue-3"
 import Blockquote from '@tiptap/extension-blockquote'
 import Bold from '@tiptap/extension-bold'
 import { BubbleMenu as BubbleMenuExt } from '@tiptap/extension-bubble-menu'
@@ -25,39 +25,43 @@ import { Note } from "./types/note"
 import { TaskCount } from './extensions/task-count'
 import { Store } from "./store"
 
+const extensions = [
+  Blockquote,
+  Bold,
+  BubbleMenuExt,
+  BulletList,
+  CharacterCount,
+  Code,
+  CodeBlock,
+  Commands.configure({
+    suggestion
+  }),
+  Heading.configure({
+    levels: [1, 2, 3],
+  }),
+  HorizontalRule,
+  Italic,
+  Link,
+  OrderedList,
+  Placeholder.configure({
+    placeholder: "Write something, or press '/' for commands..."
+  }),
+  StarterKit,
+  Strike,
+  TaskCount,
+  TaskItem.configure({
+    nested: true
+  }),
+  TaskList,
+  Underline,
+  Youtube,
+]
+
+export const generateTextCustom = (json: any) => generateText(json, extensions)
+
 export const createEditor = (note: Note, store:Store) => new Editor({
   content: note.content,
-  extensions: [
-    Blockquote,
-    Bold,
-    BubbleMenuExt,
-    BulletList,
-    CharacterCount,
-    Code,
-    CodeBlock,
-    Commands.configure({
-      suggestion
-    }),
-    Heading.configure({
-      levels: [1, 2, 3],
-    }),
-    HorizontalRule,
-    Italic,
-    Link,
-    OrderedList,
-    Placeholder.configure({
-      placeholder: "Write something, or press '/' for commands..."
-    }),
-    StarterKit,
-    Strike,
-    TaskCount,
-    TaskItem.configure({
-      nested: true
-    }),
-    TaskList,
-    Underline,
-    Youtube,
-  ],
+  extensions: extensions,
   onUpdate({ editor }) {
     store.put({
       id: note.id,

@@ -106,3 +106,12 @@ details[open].pattern-dropdown>summary:before {
   overflow-y: hidden;
   white-space: nowrap;
 }
+.pattern-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.25);
+  transition: opacity 0.1s ease;
+}
