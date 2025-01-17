@@ -1,4 +1,4 @@
-import { reactive } from "vue"
+import { computed, reactive } from "vue"
 import { Note } from "../types/note"
 import { open } from "../repositories"
 import { NoteApplicationServiceImpl } from "../applications/noteApplicationService"
@@ -7,10 +7,12 @@ import { Theme } from "../types/theme"
 import { applyTheme, getTheme } from "../utils"
 import { SettingApplicationServiceImpl } from "../applications/settingApplicationService"
 import { SettingRepositoryImpl } from "../repositories/settingRepository"
+import { generateTextCustom } from "../editor"
 
 export interface Store {
   isLoaded: boolean,
   isOpenDialog: boolean,
+  searchQuery: string,
   theme: Theme,
   currentNote: Note | undefined,
   notes: Array<Note>,
@@ -34,6 +36,7 @@ const setttingApplicatinSerivce = new SettingApplicationServiceImpl(
 export const store: Store = reactive<Store>({
   isLoaded: false,
   isOpenDialog: false,
+  searchQuery: "",
   theme: 'light',
   currentNote: undefined,
   notes: [],
@@ -85,3 +88,9 @@ export const store: Store = reactive<Store>({
     this.recentlyVisited = newRecentlyVisited
   }
 })
+
+export const notesResult = computed(() =>
+  store.notes.filter(n =>
+    generateTextCustom(n.content).includes(store.searchQuery)
+  )
+)
