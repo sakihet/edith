@@ -4,10 +4,12 @@ import { open } from "../repositories"
 import { NoteApplicationServiceImpl } from "../applications/noteApplicationService"
 import { NoteRepositoryImpl } from "../repositories/noteRepository"
 import { Theme } from "../types/theme"
-import { applyTheme, getTheme } from "../utils"
+import { applyTheme, getBrowser, getPlatform, getTheme } from "../utils"
 import { SettingApplicationServiceImpl } from "../applications/settingApplicationService"
 import { SettingRepositoryImpl } from "../repositories/settingRepository"
 import { generateTextCustom } from "../editor"
+
+export const commandMenuModifier = getPlatform() === 'macOS' && ['Chrome', 'Safari'].includes(getBrowser()) ? 'Meta' : 'Control'
 
 export interface Store {
   isLoaded: boolean,
@@ -17,6 +19,7 @@ export interface Store {
   currentNote: Note | undefined,
   notes: Array<Note>,
   recentlyVisited: Array<string>,
+  pressingCommandMenuModifier: boolean,
   init: () => Promise<void>,
   add: (note: Note) => void,
   clear: () => void,
@@ -41,6 +44,7 @@ export const store: Store = reactive<Store>({
   currentNote: undefined,
   notes: [],
   recentlyVisited: [],
+  pressingCommandMenuModifier: false,
   async init() {
     await open()
     const results = await noteApplicationService.getAll()
