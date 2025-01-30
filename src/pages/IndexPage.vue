@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { v4 } from 'uuid'
-import { nextTick, onMounted, onUpdated, useTemplateRef, watch } from 'vue'
+import { onMounted, onUpdated, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { Editor } from '@tiptap/vue-3'
 
+import AppDialog from '../components/AppDialog.vue'
 import AppEditor from '../components/AppEditor.vue'
 import { Note } from '../types/note'
-import { notesResult, store } from '../store'
+import { store } from '../store'
 import IconEditSquare from '../components/IconEditSquare.vue'
 import NoteItem from '../components/NoteItem.vue'
 import IconMoreHoriz from '../components/IconMoreHoriz.vue'
@@ -15,14 +16,12 @@ import IconLightMode from '../components/IconLightMode.vue'
 import IconDarkMode from '../components/IconDarkMode.vue'
 import { applyTheme, setTheme } from '../utils'
 import RecentlyVisited from '../components/RecentlyVisited.vue'
-import { createEditor, generateTextCustom } from '../editor'
+import { createEditor } from '../editor'
 
 const route = useRoute()
 const router = useRouter()
 
 let editor: Editor | null
-
-const search = useTemplateRef('search')
 
 onMounted(() => {
   if (route.params.noteId) {
@@ -38,13 +37,10 @@ onUpdated(() => {
 
 const closeDialog = () => {
   store.isOpenDialog = false
-  store.searchQuery = ""
 }
 
 const openDialog = async () => {
   store.isOpenDialog = true
-  await nextTick()
-  search.value?.focus()
 }
 
 watch (() => route.params.noteId, (noteIdAfter, noteIdBefore) => {
@@ -276,41 +272,7 @@ const handleClickSearch = () => {
           </div>
         </div>
       </div>
-      <div class="" v-if="store.isOpenDialog">
-        <div class="pattern-mask" @click="store.isOpenDialog = false" />
-        <dialog
-          :open="store.isOpenDialog"
-          class="layout-center w-128 border-solid border-1 border-color-default drop-shadow my-16"
-        >
-          <div class="p-8 layout-stack-4">
-            <div>
-              <input
-                type="text"
-                class="h-8 border-solid border-1 border-color-default w-full px-2"
-                placeholder="Search..."
-                v-model="store.searchQuery"
-                ref="search"
-              />
-            </div>
-            <div>
-              <ul class="list-style-none layout-stack-2 p-0">
-                <li v-for="note in notesResult" :key="note.id" class="">
-                  <router-link class="text-decoration-none text-secondary" :to="`/${note.id}`">
-                    <div class="layout-stack-1 px-4 py-2 hover">
-                      <div class="overflow-hidden text-secondary">
-                        {{ note.content.content && note.content.content[0]?.content && note.content.content[0].content[0].text || "Empty" }}
-                      </div>
-                      <div class="overflow-hidden text-tertiary text-small max-h-12">
-                        {{ generateTextCustom(note.content) }}
-                      </div>
-                    </div>
-                  </router-link>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </dialog>
-      </div>
+      <AppDialog v-if="store.isOpenDialog" />
     </div>
   </div>
 </template>
