@@ -1,9 +1,17 @@
+/// <reference types="vitest" />
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  test: {
+    environment: 'jsdom',
+    setupFiles: [
+      "fake-indexeddb/auto",
+      "./tests/setup.ts"
+    ],
+  },
   plugins: [
     VitePWA({
       includeAssets: ['favicon.ico', 'apple-touch-icon.png'],
