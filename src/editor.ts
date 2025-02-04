@@ -6,18 +6,21 @@ import BulletList from '@tiptap/extension-bullet-list'
 import CharacterCount from '@tiptap/extension-character-count'
 import Code from '@tiptap/extension-code'
 import CodeBlock from '@tiptap/extension-code-block'
+import Document from "@tiptap/extension-document"
 import Heading from '@tiptap/extension-heading'
 import HorizontalRule from '@tiptap/extension-horizontal-rule'
 import Italic from '@tiptap/extension-italic'
 import Link from '@tiptap/extension-link'
+import ListItem from "@tiptap/extension-list-item"
 import OrderedList from '@tiptap/extension-ordered-list'
+import Paragraph from "@tiptap/extension-paragraph"
 import Placeholder from '@tiptap/extension-placeholder'
-import StarterKit from '@tiptap/starter-kit'
 import Strike from '@tiptap/extension-strike'
 import TaskItem from '@tiptap/extension-task-item'
 import TaskList from '@tiptap/extension-task-list'
 import Underline from '@tiptap/extension-underline'
 import Youtube from "@tiptap/extension-youtube"
+import Text from '@tiptap/extension-text'
 
 import Commands from './commands'
 import suggestion from './suggestion'
@@ -36,23 +39,26 @@ const extensions = [
   Commands.configure({
     suggestion
   }),
+  Document,
   Heading.configure({
     levels: [1, 2, 3],
   }),
   HorizontalRule,
   Italic,
   Link,
+  ListItem,
   OrderedList,
+  Paragraph,
   Placeholder.configure({
     placeholder: "Write something, or press '/' for commands..."
   }),
-  StarterKit,
   Strike,
   TaskCount,
   TaskItem.configure({
     nested: true
   }),
   TaskList,
+  Text,
   Underline,
   Youtube,
 ]
