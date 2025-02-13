@@ -33,6 +33,7 @@
     "@tiptap/suggestion": "^2.11.3",
     "@tiptap/vue-3": "^2.11.3",
     "idb": "^8.0.1",
+    "minisearch": "^7.1.1",
     "tippy.js": "^6.3.7",
     "uuid": "^10.0.0",
     "vue": "^3.4.21",
