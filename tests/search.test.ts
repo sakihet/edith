@@ -146,6 +146,10 @@ describe('search', () => {
     expect(results.length).toBe(0)
   })
   it('', () => {
+    const results = miniSearch.search('raaaamen', { fuzzy: 0.4 })
+    expect(results.length).toBe(4)
+  })
+  it('', () => {
     const results = miniSearch.search('seafood')
     expect(results.length).toBe(2)
   })
@@ -184,5 +188,30 @@ describe('search', () => {
   it('', () => {
     const results = miniSearch.search('snow')
     expect(results.length).toBe(1)
+  })
+  it('', () => {
+    const before = miniSearch.search('naha')
+    expect(before.length).toBe(0)
+    const newNote = {
+      id: v4(),
+      content: `Naha is the capital city of Okinawa Prefecture, Japan, and is known for its unique blend of Japanese and Okinawan cultures. It is a vibrant city with a rich history, beautiful beaches, and a bustling shopping street called Kokusai Street. Naha is also home to the historic Shurijo Castle, a UNESCO World Heritage Site.`
+    }
+    miniSearch.add(newNote)
+    const after = miniSearch.search('naha')
+    expect(after.length).toBe(1)
+  })
+  it('', () => {
+    const before = miniSearch.search('sapporo')
+    expect(before.length).toBe(1)
+    const id = before[0].id
+    miniSearch.discard(id)
+    const after = miniSearch.search('sapporo')
+    expect(after.length).toBe(0)
+  })
+  it('', () => {
+    const json = miniSearch.toJSON()
+    expect(json.documentCount).toBe(30)
+    expect(json.index.length).toBeGreaterThan(500)
+    expect(json.serializationVersion).toBe(2)
   })
 })
