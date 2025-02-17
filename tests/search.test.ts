@@ -214,4 +214,13 @@ describe('search', () => {
     expect(json.index.length).toBeGreaterThan(500)
     expect(json.serializationVersion).toBe(2)
   })
+  it('', () => {
+    const before = miniSearch.search('shinjuku')
+    expect(before.length).toBe(0)
+    const id = notes[0].id
+    const updated = {id: id, content: `Tokyo, Japan's bustling capital, is a mesmerizing blend of ultramodern skyscrapers and traditional temples. It's a city where neon-lit nightlife districts like Shibuya coexist with serene gardens and historic sites such as the Imperial Palace.  Shinjuku, a major commercial and administrative center, is also home to the Tokyo Metropolitan Government Building and offers stunning panoramic views of the city. Tokyo is also a global culinary hotspot, offering everything from Michelin-starred restaurants to tiny ramen shops, making it a truly captivating and diverse metropolis.`}
+    miniSearch.replace(updated)
+    const after = miniSearch.search('shinjuku')
+    expect(after.length).toBe(1)
+  })
 })
