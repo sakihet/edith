@@ -10,10 +10,12 @@
 ## Tech
 
 - [idb](https://github.com/jakearchibald/idb)
+- [MiniSearch](https://lucaong.github.io/minisearch/)
 - [Tiptap](https://tiptap.dev/)
 - [TypeScript](https://www.typescriptlang.org/)
 - [uuid](https://github.com/uuidjs/uuid)
 - [Vite](https://vitejs.dev/)
+- [Vitest](https://vitest.dev/)
 - [vite-plugin-pwa](https://vite-pwa-org.netlify.app/)
 - [Vue](https://vuejs.org/)
 - [vue-router](https://router.vuejs.org/)
