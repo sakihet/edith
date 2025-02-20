@@ -1,4 +1,6 @@
-import { computed, reactive } from "vue"
+import { reactive } from "vue"
+import MiniSearch from "minisearch"
+
 import { Note } from "../types/note"
 import { open } from "../repositories"
 import { NoteApplicationServiceImpl } from "../applications/noteApplicationService"
@@ -11,7 +13,13 @@ import { generateTextCustom } from "../editor"
 
 export const commandMenuModifier = getPlatform() === 'macOS' && ['Chrome', 'Safari'].includes(getBrowser()) ? 'Meta' : 'Control'
 
+const miniSearch = new MiniSearch({
+  fields: ['content'],
+  storeFields: ['content']
+})
+
 export interface Store {
+  isIndexed: boolean,
   isLoaded: boolean,
   isOpenDialog: boolean,
   searchQuery: string,
@@ -20,11 +28,13 @@ export interface Store {
   notes: Array<Note>,
   recentlyVisited: Array<string>,
   pressingCommandMenuModifier: boolean,
+  searchResults: Array<Note>,
   init: () => Promise<void>,
   add: (note: Note) => void,
   clear: () => void,
   delete: (id: string) => void,
   put: (note: Note) => void,
+  search: () => void,
   sort: (sortKey: string) => void,
   updateRecentlyVisited: (id: string) => void,
 }
@@ -35,8 +45,15 @@ const noteApplicationService = new NoteApplicationServiceImpl(
 const setttingApplicatinSerivce = new SettingApplicationServiceImpl(
   new SettingRepositoryImpl()
 )
+const transformForSearch = (notes: Note[]) => {
+  return notes.map(({ id, content }) => ({
+    id: id,
+    content: generateTextCustom(content),
+  }))
+}
 
 export const store: Store = reactive<Store>({
+  isIndexed: false,
   isLoaded: false,
   isOpenDialog: false,
   searchQuery: "",
@@ -45,6 +62,7 @@ export const store: Store = reactive<Store>({
   notes: [],
   recentlyVisited: [],
   pressingCommandMenuModifier: false,
+  searchResults: [],
   async init() {
     await open()
     const results = await noteApplicationService.getAll()
@@ -58,6 +76,10 @@ export const store: Store = reactive<Store>({
     this.theme = getTheme()
     applyTheme(this.theme)
     this.isLoaded = true
+    console.log('indexing started')
+    miniSearch.addAll(transformForSearch(results))
+    this.isIndexed = true
+    console.log('indexing completed', miniSearch.documentCount)
   },
   async add(note: Note) {
     await noteApplicationService.add(note)
@@ -68,16 +90,37 @@ export const store: Store = reactive<Store>({
   async clear() {
     await noteApplicationService.clear()
     this.notes = await noteApplicationService.getAll()
+    miniSearch.removeAll()
   },
   async delete(id: string) {
     await noteApplicationService.delete(id)
+    miniSearch.discard(id)
     this.notes = await noteApplicationService.getAll()
     this.sort('updated')
   },
   async put(note: Note) {
     await noteApplicationService.put(note)
+    if (miniSearch.has(note.id)) {
+      miniSearch.replace({
+        id: note.id,
+        content: generateTextCustom(note.content)
+      })
+    } else {
+      miniSearch.add({
+        id: note.id,
+        content: generateTextCustom(note.content)
+      })
+    }
     this.notes = await noteApplicationService.getAll()
     this.sort('updated')
+  },
+  search () {
+    if (store.searchQuery === "") {
+      store.searchResults = store.notes
+    } else {
+      const ids = miniSearch.search(store.searchQuery, { prefix: true, fuzzy: 0.1 }).map(x => x.id)
+      store.searchResults = store.notes.filter(n => ids.includes(n.id))
+    }
   },
   sort (sortKey: string) {
     if (sortKey === 'updated') {
@@ -92,9 +135,3 @@ export const store: Store = reactive<Store>({
     this.recentlyVisited = newRecentlyVisited
   }
 })
-
-export const notesResult = computed(() =>
-  store.notes.filter(n =>
-    generateTextCustom(n.content).includes(store.searchQuery)
-  )
-)

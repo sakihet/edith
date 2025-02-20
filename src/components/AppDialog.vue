@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { notesResult, store } from '../store'
+import { store } from '../store'
 import { generateTextCustom } from '../editor'
 import { onUnmounted, onMounted, useTemplateRef } from 'vue';
 
@@ -12,6 +12,11 @@ onMounted(() => {
 onUnmounted(() => {
   store.searchQuery = ""
 })
+
+const handleSubmit = (e: Event) => {
+  e.preventDefault()
+  store.search()
+}
 </script>
 
 <template>
@@ -23,22 +28,24 @@ onUnmounted(() => {
     >
       <div class="p-8 layout-stack-4">
         <div>
-          <input
-            type="text"
-            class="h-8 border-solid border-1 border-color-default w-full px-2"
-            placeholder="Search..."
-            v-model="store.searchQuery"
-            ref="search"
-          />
+          <form @submit="handleSubmit">
+            <input
+              type="text"
+              class="h-8 border-solid border-1 border-color-default w-full px-2"
+              placeholder="Search..."
+              v-model="store.searchQuery"
+              ref="search"
+            />
+          </form>
         </div>
-        <div v-if="notesResult.length === 0">
+        <div v-if="store.searchResults.length === 0">
           <div class="px-4 py-2 text-secondary">
             Not Found
           </div>
         </div>
         <div v-else>
           <ul class="list-style-none layout-stack-2 p-0">
-            <li v-for="note in notesResult" :key="note.id" class="">
+            <li v-for="note in store.searchResults" :key="note.id" class="">
               <router-link class="text-decoration-none text-secondary" :to="`/${note.id}`">
                 <div class="layout-stack-1 px-4 py-2 hover">
                   <div class="overflow-hidden text-secondary">

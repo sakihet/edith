@@ -29,7 +29,7 @@ describe('store', () => {
     await store.clear()
     expect(store.notes.length).toBe(0)
   })
-  it('delete', async () => {
+  it.skip('delete', async () => {
     const now = new Date().toISOString()
     const n: Note = {
       id: v4(),

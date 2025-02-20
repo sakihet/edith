@@ -1,4 +1,4 @@
-import { generateText } from "@tiptap/vue-3"
+import { Editor, generateText } from "@tiptap/vue-3"
 import Blockquote from '@tiptap/extension-blockquote'
 import Bold from '@tiptap/extension-bold'
 import { BubbleMenu as BubbleMenuExt } from '@tiptap/extension-bubble-menu'
@@ -22,7 +22,7 @@ import Underline from '@tiptap/extension-underline'
 import Youtube from "@tiptap/extension-youtube"
 import Text from '@tiptap/extension-text'
 import { useDebounceFn } from '@vueuse/core'
-import { Editor } from '@tiptap/core'
+import { Editor as TiptapEditor } from '@tiptap/core'
 
 import Commands from './commands'
 import suggestion from './suggestion'
@@ -67,7 +67,7 @@ const extensions = [
 
 export const generateTextCustom = (json: any) => generateText(json, extensions)
 
-const debouncedFn = useDebounceFn((store: Store, note: Note, editor: Editor) => {
+const debouncedFn = useDebounceFn((store: Store, note: Note, editor: TiptapEditor) => {
   store.put({
     id: note.id,
     content: editor.getJSON(),
