@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import { onUnmounted, onMounted, useTemplateRef } from 'vue'
+import { useDebounceFn } from '@vueuse/core'
+
 import { store } from '../store'
 import { generateTextCustom } from '../editor'
-import { onUnmounted, onMounted, useTemplateRef } from 'vue';
 
 const search = useTemplateRef('search')
 
@@ -13,7 +15,15 @@ onUnmounted(() => {
   store.searchQuery = ""
 })
 
-const handleSubmit = (e: Event) => {
+const debouncedFn = useDebounceFn(() => {
+  store.search()
+}, 500)
+
+const onInput = (_e: Event) => {
+  debouncedFn()
+}
+
+const onSubmit = (e: Event) => {
   e.preventDefault()
   store.search()
 }
@@ -28,13 +38,14 @@ const handleSubmit = (e: Event) => {
     >
       <div class="p-8 layout-stack-4">
         <div>
-          <form @submit="handleSubmit">
+          <form @submit="onSubmit">
             <input
               type="text"
               class="h-8 border-solid border-1 border-color-default w-full px-2"
               placeholder="Search..."
               v-model="store.searchQuery"
               ref="search"
+              @input="onInput"
             />
           </form>
         </div>
