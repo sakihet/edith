@@ -2,6 +2,7 @@ import { createWebHistory, createRouter } from "vue-router"
 
 import IndexPage from './pages/IndexPage.vue'
 import AboutPage from './pages/AboutPage.vue'
+import DebugPage from "./pages/DebugPage.vue"
 import SandboxPage from './pages/SandboxPage.vue'
 
 const routes = [
@@ -14,6 +15,7 @@ const routes = [
     component: IndexPage,
   },
   { path: '/about', component: AboutPage },
+  { path: '/debug', component: DebugPage },
   { path: '/sandbox', component: SandboxPage }
 ]
 
