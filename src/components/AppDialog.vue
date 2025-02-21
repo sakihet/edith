@@ -34,7 +34,7 @@ const onSubmit = (e: Event) => {
     <div class="pattern-mask" @click="store.isOpenDialog = false" />
     <dialog
       :open="store.isOpenDialog"
-      class="layout-center w-128 border-solid border-1 border-color-default drop-shadow my-16"
+      class="layout-center w-256 border-solid border-1 border-color-default drop-shadow my-16"
     >
       <div class="p-8 layout-stack-4">
         <div>
@@ -59,7 +59,7 @@ const onSubmit = (e: Event) => {
             <li v-for="note in store.searchResults" :key="note.id" class="">
               <router-link class="text-decoration-none text-secondary" :to="`/${note.id}`">
                 <div class="layout-stack-1 px-4 py-2 hover">
-                  <div class="overflow-hidden text-secondary">
+                  <div class="h-6 overflow-hidden text-secondary">
                     {{ note.content.content && note.content.content[0]?.content && note.content.content[0].content[0].text || "Empty" }}
                   </div>
                   <div class="overflow-hidden text-tertiary text-small max-h-12">

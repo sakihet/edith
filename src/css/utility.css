@@ -91,6 +91,12 @@
 .w-128 {
   width: 32rem;
 }
+.w-192 {
+  width: 48rem;
+}
+.w-256 {
+  width: 64rem;
+}
 .w-full {
   width: 100%;
 }
