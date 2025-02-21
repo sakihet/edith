@@ -1,3 +1,4 @@
+import { Language } from "./types/language"
 import { Theme } from "./types/theme"
 
 export const applyTheme = (theme: Theme) => {
@@ -66,5 +67,19 @@ export const getBrowser = (): string => {
     } else {
       return 'theOtherBrowser'
     }
+  }
+}
+
+export const detectLanguage = (text: string): Language => {
+  if (/^[A-Za-z\s\d.,!?'"()\-]+$/.test(text)) {
+    return Language.English
+  } else if (/[\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Han}]/u.test(text)) {
+    if (/[\p{Script=Hiragana}\p{Script=Katakana}]/u.test(text)) {
+      return Language.Japanese
+    } else {
+      return Language.Chinese
+    }
+  } else {
+    return Language.Unknown
   }
 }
