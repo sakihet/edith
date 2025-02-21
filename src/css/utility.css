@@ -70,6 +70,9 @@
 .max-h-12 {
   max-height: 3rem;
 }
+.max-h-160 {
+  max-height: 40rem;
+}
 .w-6 {
   width: 1.5rem;
 }

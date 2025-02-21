@@ -54,8 +54,8 @@ const onSubmit = (e: Event) => {
             Not Found
           </div>
         </div>
-        <div v-else>
-          <ul class="list-style-none layout-stack-2 p-0">
+        <div v-else class="max-h-160 overflow-y-scroll pattern-scrollbar-thin">
+          <ul class="list-style-none layout-stack-1 p-0">
             <li v-for="note in store.searchResults" :key="note.id" class="">
               <router-link class="text-decoration-none text-secondary" :to="`/${note.id}`">
                 <div class="layout-stack-1 px-4 py-2 hover">
