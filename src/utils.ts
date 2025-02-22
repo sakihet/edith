@@ -71,7 +71,7 @@ export const getBrowser = (): string => {
 }
 
 export const detectLanguage = (text: string): Language => {
-  if (/^[A-Za-z\s\d.,!?'"()\-]+$/.test(text)) {
+  if (/^[A-Za-z\s\d.,!?'"()-]+$/.test(text)) {
     return Language.English
   } else if (/[\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Han}]/u.test(text)) {
     if (/[\p{Script=Hiragana}\p{Script=Katakana}]/u.test(text)) {

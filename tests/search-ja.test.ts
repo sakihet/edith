@@ -1,4 +1,3 @@
-import { v4 } from 'uuid'
 import { describe, expect, it } from 'vitest'
 import MiniSearch from 'minisearch'
 

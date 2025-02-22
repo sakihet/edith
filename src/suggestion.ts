@@ -5,7 +5,7 @@ import CommandsList from './components/CommandsList.vue'
 
 export interface SuggestionItem {
   title: string
-  command: ({}) => {}
+  command: () => {}
 }
 
 export default {
