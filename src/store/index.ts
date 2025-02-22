@@ -77,9 +77,12 @@ export const store: Store = reactive<Store>({
     applyTheme(this.theme)
     this.isLoaded = true
     console.log('indexing started')
+    const start = performance.now()
     miniSearch.addAll(transformForSearch(results))
+    const end = performance.now()
+    const time = end - start
     this.isIndexed = true
-    console.log('indexing completed', miniSearch.documentCount)
+    console.log('indexing completed', `${miniSearch.documentCount}docs`, `${time}ms`)
   },
   async add(note: Note) {
     await noteApplicationService.add(note)
