@@ -121,7 +121,11 @@ export const store: Store = reactive<Store>({
     if (store.searchQuery === "") {
       store.searchResults = store.notes
     } else {
+      const start = performance.now()
       const ids = miniSearch.search(store.searchQuery, { prefix: true, fuzzy: 0.1 }).map(x => x.id)
+      const end = performance.now()
+      const time = end - start
+      console.log('search', `${time}ms`)
       store.searchResults = store.notes.filter(n => ids.includes(n.id))
     }
   },
