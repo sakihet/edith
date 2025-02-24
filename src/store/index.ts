@@ -1,5 +1,5 @@
 import { reactive } from "vue"
-import MiniSearch from "minisearch"
+import MiniSearch, { Suggestion } from "minisearch"
 
 import { Note } from "../types/note"
 import { open } from "../repositories"
@@ -22,6 +22,7 @@ export interface Store {
   isIndexed: boolean,
   isLoaded: boolean,
   isOpenDialog: boolean,
+  enableSuggestions: boolean,
   searchQuery: string,
   searchFuzziness: number,
   theme: Theme,
@@ -30,6 +31,7 @@ export interface Store {
   recentlyVisited: Array<string>,
   pressingCommandMenuModifier: boolean,
   searchResults: Array<Note>,
+  searchSuggestions: Array<Suggestion>,
   init: () => Promise<void>,
   add: (note: Note) => void,
   clear: () => void,
@@ -57,6 +59,7 @@ export const store: Store = reactive<Store>({
   isIndexed: false,
   isLoaded: false,
   isOpenDialog: false,
+  enableSuggestions: false,
   searchQuery: "",
   searchFuzziness: 0,
   theme: 'light',
@@ -65,6 +68,7 @@ export const store: Store = reactive<Store>({
   recentlyVisited: [],
   pressingCommandMenuModifier: false,
   searchResults: [],
+  searchSuggestions: [],
   async init() {
     await open()
     const results = await noteApplicationService.getAll()
@@ -120,10 +124,18 @@ export const store: Store = reactive<Store>({
     this.sort('updated')
   },
   search () {
+    if (!store.enableSuggestions) {
+      store.searchSuggestions = []
+    }
     if (store.searchQuery === "") {
       store.searchResults = store.notes
+      store.searchSuggestions = []
     } else {
       const start = performance.now()
+      if (store.enableSuggestions) {
+        const suggestions = miniSearch.autoSuggest(store.searchQuery, { fuzzy: store.searchFuzziness })
+        store.searchSuggestions = suggestions
+      }
       const ids = miniSearch.search(store.searchQuery, { prefix: true, fuzzy: store.searchFuzziness }).map(x => x.id)
       const end = performance.now()
       const time = end - start

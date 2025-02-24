@@ -27,6 +27,10 @@ const onChangeRange = (_e: Event) => {
   store.search()
 }
 
+const onChangeSuggestions = (_e: Event) => {
+  store.search()
+}
+
 const onSubmit = (e: Event) => {
   e.preventDefault()
   store.search()
@@ -53,7 +57,7 @@ const onSubmit = (e: Event) => {
                 @input="onInput"
               />
             </div>
-            <div class="text-right text-secondary">
+            <div class="text-right text-secondary layout-stack-h-1">
               <label>
                 <span class="text-small h-6">
                   Fuzzy:
@@ -71,6 +75,19 @@ const onSubmit = (e: Event) => {
                   />
                 </div>
               </label>
+              <label>
+                <span class="text-small h-6">
+                  Enable suggestions
+                </span>
+                <div class="inline-block">
+                  <input
+                    class="align-middle"
+                    type="checkbox"
+                    v-model="store.enableSuggestions"
+                    @change="onChangeSuggestions"
+                  />
+                </div>
+              </label>
             </div>
           </form>
         </div>
@@ -79,7 +96,19 @@ const onSubmit = (e: Event) => {
             Not Found
           </div>
         </div>
-        <div v-else class="max-h-160 overflow-y-scroll pattern-scrollbar-thin">
+        <div v-else class="max-h-160 overflow-y-scroll pattern-scrollbar-thin layout-stack-1">
+          <div v-if="store.searchSuggestions.length >= 1" class="">
+            <div class="py-1">
+              <span class="text-small text-secondary">Suggestions ({{ store.searchSuggestions.length }})</span>
+              <ul class="px-2 list-style-none layout-stack-1 text-secondary p-0 layout-stack-h-2">
+                <li class="inline-block" v-for="suggestion in store.searchSuggestions" :key="suggestion.suggestion">
+                  {{ suggestion.suggestion }}
+                </li>
+              </ul>
+            </div>
+            <hr class="border-color-default border-solid border-t-1" />
+          </div>
+          <span class="text-small text-secondary">Notes ({{ store.searchResults.length }})</span>
           <ul class="list-style-none layout-stack-1 p-0">
             <li v-for="note in store.searchResults" :key="note.id" class="">
               <router-link class="text-decoration-none text-secondary" :to="`/${note.id}`">
