@@ -23,6 +23,10 @@ const onInput = (_e: Event) => {
   debouncedFn()
 }
 
+const onChangeRange = (_e: Event) => {
+  store.search()
+}
+
 const onSubmit = (e: Event) => {
   e.preventDefault()
   store.search()
@@ -38,15 +42,36 @@ const onSubmit = (e: Event) => {
     >
       <div class="p-8 layout-stack-4">
         <div>
-          <form @submit="onSubmit">
-            <input
-              type="text"
-              class="h-8 border-solid border-1 border-color-default w-full px-2"
-              placeholder="Search..."
-              v-model="store.searchQuery"
-              ref="search"
-              @input="onInput"
-            />
+          <form @submit="onSubmit" class="layout-stack-1">
+            <div>
+              <input
+                type="text"
+                class="h-8 border-solid border-1 border-color-default w-full px-2"
+                placeholder="Search..."
+                v-model="store.searchQuery"
+                ref="search"
+                @input="onInput"
+              />
+            </div>
+            <div class="text-right text-secondary">
+              <label>
+                <span class="text-small h-6">
+                  Fuzzy:
+                </span>
+                <div class="inline-block">
+                  <input
+                    class="w-16 align-middle pattern-range"
+                    type="range"
+                    min="0"
+                    max="0.3"
+                    step="0.1"
+                    value="0"
+                    v-model="store.searchFuzziness"
+                    @change="onChangeRange"
+                  />
+                </div>
+              </label>
+            </div>
           </form>
         </div>
         <div v-if="store.searchResults.length === 0">

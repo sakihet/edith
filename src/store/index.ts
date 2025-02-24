@@ -23,6 +23,7 @@ export interface Store {
   isLoaded: boolean,
   isOpenDialog: boolean,
   searchQuery: string,
+  searchFuzziness: number,
   theme: Theme,
   currentNote: Note | undefined,
   notes: Array<Note>,
@@ -57,6 +58,7 @@ export const store: Store = reactive<Store>({
   isLoaded: false,
   isOpenDialog: false,
   searchQuery: "",
+  searchFuzziness: 0,
   theme: 'light',
   currentNote: undefined,
   notes: [],
@@ -122,7 +124,7 @@ export const store: Store = reactive<Store>({
       store.searchResults = store.notes
     } else {
       const start = performance.now()
-      const ids = miniSearch.search(store.searchQuery, { prefix: true, fuzzy: 0.1 }).map(x => x.id)
+      const ids = miniSearch.search(store.searchQuery, { prefix: true, fuzzy: store.searchFuzziness }).map(x => x.id)
       const end = performance.now()
       const time = end - start
       console.log('search', `${time}ms`)

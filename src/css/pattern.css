@@ -115,3 +115,6 @@ details[open].pattern-dropdown>summary:before {
   background-color: rgba(0, 0, 0, 0.25);
   transition: opacity 0.1s ease;
 }
+input[type="range"].pattern-range {
+  accent-color: var(--color-bg-range-secondary);
+}
