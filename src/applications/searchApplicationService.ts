@@ -1,6 +1,10 @@
 import MiniSearch, { SearchOptions } from "minisearch"
 import { Note } from "../types/note"
-import { transformForSearch } from "../utils"
+import { detectLanguage, transformForSearch } from "../utils"
+import { Language } from "../types/language"
+import { generateTextCustom } from "../editor"
+
+const segmenterJa = new Intl.Segmenter('ja', { granularity: 'word' })
 
 export class SearchApplicationService {
   engine: MiniSearch
@@ -8,8 +12,18 @@ export class SearchApplicationService {
   constructor() {
     this.engine = new MiniSearch({
       fields: ['content'],
-      storeFields: ['content']
+      storeFields: ['content'],
+      tokenize: (string: string, _fieldName) => this.tokenize(string)
     })
+  }
+
+  tokenize(string: string) {
+    const language = detectLanguage(string)
+    if (language === Language.Japanese) {
+      return Array.from(segmenterJa.segment(string), ({ segment }) => segment)
+    } else {
+      return MiniSearch.getDefault('tokenize')(string)
+    }
   }
 
   add(note: Note) {
@@ -40,12 +54,12 @@ export class SearchApplicationService {
     if (this.engine.has(note.id)) {
       this.engine.replace({
         id: note.id,
-        content: note.content
+        content: generateTextCustom(note.content)
       })
     } else {
       this.engine.add({
         id: note.id,
-        content: note.content
+        content: generateTextCustom(note.content)
       })
     }
   }
