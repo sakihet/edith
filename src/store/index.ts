@@ -6,10 +6,9 @@ import { open } from "../repositories"
 import { NoteApplicationServiceImpl } from "../applications/noteApplicationService"
 import { NoteRepositoryImpl } from "../repositories/noteRepository"
 import { Theme } from "../types/theme"
-import { applyTheme, getBrowser, getPlatform, getTheme, transformForSearch } from "../utils"
+import { applyTheme, getBrowser, getPlatform, getTheme} from "../utils"
 import { SettingApplicationServiceImpl } from "../applications/settingApplicationService"
 import { SettingRepositoryImpl } from "../repositories/settingRepository"
-import { generateTextCustom } from "../editor"
 import { SearchApplicationService } from "../applications/searchApplicationService"
 
 export const commandMenuModifier = getPlatform() === 'macOS' && ['Chrome', 'Safari'].includes(getBrowser()) ? 'Meta' : 'Control'
