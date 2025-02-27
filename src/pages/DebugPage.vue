@@ -2,12 +2,26 @@
 import { v4 } from "uuid"
 
 import { Note } from '../types/note'
-import { japaneseCitiesWithDescriptions } from '../data'
+import { japaneseCitiesWithDescriptions, japaneseCitiesWithDescriptionsJa } from '../data'
 import { store } from "../store"
 import { generateNoteContent } from "../utils"
 
-const onClick = (_e: Event) => {
+const addNotes = (_e: Event) => {
   const dataForDebug: Note[] = japaneseCitiesWithDescriptions.map(n => {
+    const now = new Date().toISOString()
+    return {
+      id: v4(),
+      content: generateNoteContent(n.description),
+      createdAt: now,
+      updatedAt: now,
+    }
+  })
+  dataForDebug.map(x => {
+    store.add(x)
+  })
+}
+const addNotesJa = (_e: Event) => {
+  const dataForDebug: Note[] = japaneseCitiesWithDescriptionsJa.map(n => {
     const now = new Date().toISOString()
     return {
       id: v4(),
@@ -27,7 +41,10 @@ const onClick = (_e: Event) => {
     <div class="layout-stack-4">
       <h1>Debug</h1>
       <div>
-        <button type="button" @click="onClick">Add data</button>
+        <button type="button" @click="addNotes">Add notes</button>
+      </div>
+      <div>
+        <button type="button" @click="addNotesJa">Add notes(ja)</button>
       </div>
     </div>
   </div>
