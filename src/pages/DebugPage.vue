@@ -2,16 +2,16 @@
 import { v4 } from "uuid"
 
 import { Note } from '../types/note'
-import { notes } from '../data'
+import { japaneseCitiesWithDescriptions } from '../data'
 import { store } from "../store"
 import { generateNoteContent } from "../utils"
 
 const onClick = (_e: Event) => {
-  const dataForDebug: Note[] = notes.map(n => {
+  const dataForDebug: Note[] = japaneseCitiesWithDescriptions.map(n => {
     const now = new Date().toISOString()
     return {
       id: v4(),
-      content: generateNoteContent(n.content),
+      content: generateNoteContent(n.description),
       createdAt: now,
       updatedAt: now,
     }
