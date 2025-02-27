@@ -4,23 +4,7 @@ import { v4 } from "uuid"
 import { Note } from '../types/note'
 import { notes } from '../data'
 import { store } from "../store"
-
-const generateNoteContent = (str: string) => {
-  return {
-    "type": "doc",
-    "content": [
-      {
-        "type": "paragraph",
-        "content": [
-          {
-            "type": "text",
-            "text": str
-          }
-        ]
-      },
-    ]
-  }
-}
+import { generateNoteContent } from "../utils"
 
 const onClick = (_e: Event) => {
   const dataForDebug: Note[] = notes.map(n => {

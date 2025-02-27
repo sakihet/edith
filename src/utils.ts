@@ -1,4 +1,6 @@
+import { generateTextCustom } from "./editor"
 import { Language } from "./types/language"
+import { Note } from "./types/note"
 import { Theme } from "./types/theme"
 
 export const applyTheme = (theme: Theme) => {
@@ -82,4 +84,28 @@ export const detectLanguage = (text: string): Language => {
   } else {
     return Language.Unknown
   }
+}
+
+export const generateNoteContent = (str: string) => {
+  return {
+    "type": "doc",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [
+          {
+            "type": "text",
+            "text": str
+          }
+        ]
+      },
+    ]
+  }
+}
+
+export const transformForSearch = (notes: Note[]) => {
+  return notes.map(({ id, content }) => ({
+    id: id,
+    content: generateTextCustom(content),
+  }))
 }

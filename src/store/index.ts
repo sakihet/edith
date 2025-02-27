@@ -1,22 +1,18 @@
 import { reactive } from "vue"
-import MiniSearch, { Suggestion } from "minisearch"
+import { Suggestion } from "minisearch"
 
 import { Note } from "../types/note"
 import { open } from "../repositories"
 import { NoteApplicationServiceImpl } from "../applications/noteApplicationService"
 import { NoteRepositoryImpl } from "../repositories/noteRepository"
 import { Theme } from "../types/theme"
-import { applyTheme, getBrowser, getPlatform, getTheme } from "../utils"
+import { applyTheme, getBrowser, getPlatform, getTheme, transformForSearch } from "../utils"
 import { SettingApplicationServiceImpl } from "../applications/settingApplicationService"
 import { SettingRepositoryImpl } from "../repositories/settingRepository"
 import { generateTextCustom } from "../editor"
+import { SearchApplicationService } from "../applications/searchApplicationService"
 
 export const commandMenuModifier = getPlatform() === 'macOS' && ['Chrome', 'Safari'].includes(getBrowser()) ? 'Meta' : 'Control'
-
-const miniSearch = new MiniSearch({
-  fields: ['content'],
-  storeFields: ['content']
-})
 
 export interface Store {
   isIndexed: boolean,
@@ -48,12 +44,8 @@ const noteApplicationService = new NoteApplicationServiceImpl(
 const setttingApplicatinSerivce = new SettingApplicationServiceImpl(
   new SettingRepositoryImpl()
 )
-const transformForSearch = (notes: Note[]) => {
-  return notes.map(({ id, content }) => ({
-    id: id,
-    content: generateTextCustom(content),
-  }))
-}
+
+const searchApplicationService = new SearchApplicationService()
 
 export const store: Store = reactive<Store>({
   isIndexed: false,
@@ -84,11 +76,11 @@ export const store: Store = reactive<Store>({
     this.isLoaded = true
     console.log('indexing started')
     const start = performance.now()
-    miniSearch.addAll(transformForSearch(results))
+    searchApplicationService.addAll(results)
     const end = performance.now()
     const time = end - start
     this.isIndexed = true
-    console.log('indexing completed', `${miniSearch.documentCount}docs`, `${time}ms`)
+    console.log('indexing completed', `${searchApplicationService.count()}docs`, `${time}ms`)
   },
   async add(note: Note) {
     await noteApplicationService.add(note)
@@ -99,27 +91,17 @@ export const store: Store = reactive<Store>({
   async clear() {
     await noteApplicationService.clear()
     this.notes = await noteApplicationService.getAll()
-    miniSearch.removeAll()
+    searchApplicationService.removeAll()
   },
   async delete(id: string) {
     await noteApplicationService.delete(id)
-    miniSearch.discard(id)
+    searchApplicationService.discard(id)
     this.notes = await noteApplicationService.getAll()
     this.sort('updated')
   },
   async put(note: Note) {
     await noteApplicationService.put(note)
-    if (miniSearch.has(note.id)) {
-      miniSearch.replace({
-        id: note.id,
-        content: generateTextCustom(note.content)
-      })
-    } else {
-      miniSearch.add({
-        id: note.id,
-        content: generateTextCustom(note.content)
-      })
-    }
+    searchApplicationService.update(note)
     this.notes = await noteApplicationService.getAll()
     this.sort('updated')
   },
@@ -133,10 +115,10 @@ export const store: Store = reactive<Store>({
     } else {
       const start = performance.now()
       if (store.enableSuggestions) {
-        const suggestions = miniSearch.autoSuggest(store.searchQuery, { fuzzy: store.searchFuzziness })
+        const suggestions = searchApplicationService.suggest(store.searchQuery, { fuzzy: store.searchFuzziness })
         store.searchSuggestions = suggestions
       }
-      const ids = miniSearch.search(store.searchQuery, { prefix: true, fuzzy: store.searchFuzziness }).map(x => x.id)
+      const ids = searchApplicationService.search(store.searchQuery, { prefix: true, fuzzy: store.searchFuzziness }).map(x => x.id)
       const end = performance.now()
       const time = end - start
       console.log('search', `${time}ms`)
