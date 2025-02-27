@@ -4,6 +4,7 @@ import { detectLanguage, transformForSearch } from "../utils"
 import { Language } from "../types/language"
 import { generateTextCustom } from "../editor"
 
+// @ts-expect-error
 const segmenterJa = new Intl.Segmenter('ja', { granularity: 'word' })
 
 export class SearchApplicationService {
