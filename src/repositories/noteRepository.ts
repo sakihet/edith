@@ -6,6 +6,7 @@ export interface NoteRepository {
   add: (note: Note) => Promise<IDBValidKey>
   clear: () => Promise<void>
   delete: (id: string) => Promise<void>
+  get: (id: string) => Promise<Note>
   getAll: () => Promise<Note[]>
   put: (note: Note) => Promise<IDBValidKey>
 }
@@ -24,6 +25,9 @@ export class NoteRepositoryImpl implements NoteRepository {
   }
   async delete(id: string) {
     return (await getStore()).delete(id)
+  }
+  async get(id: string) {
+    return (await getStore()).get(id)
   }
   async getAll() {
     return (await getStore()).getAll()

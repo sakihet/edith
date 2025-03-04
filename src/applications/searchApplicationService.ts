@@ -39,8 +39,8 @@ export class SearchApplicationService {
   count() {
     return this.engine.documentCount
   }
-  discard(id: string) {
-    this.engine.remove(id)
+  discard(note: Note) {
+    this.engine.remove(transformForSearch([note])[0])
   }
   has(id: string) {
     return this.engine.has(id)

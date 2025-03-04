@@ -93,8 +93,9 @@ export const store: Store = reactive<Store>({
     searchApplicationService.removeAll()
   },
   async delete(id: string) {
+    const note = await noteApplicationService.get(id)
     await noteApplicationService.delete(id)
-    searchApplicationService.discard(id)
+    searchApplicationService.discard(note)
     this.notes = await noteApplicationService.getAll()
     this.sort('updated')
   },
