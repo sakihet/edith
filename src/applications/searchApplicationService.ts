@@ -1,11 +1,14 @@
-import MiniSearch, { SearchOptions } from "minisearch"
+import MiniSearch, { SearchOptions, SearchResult, Suggestion } from "minisearch"
 import { Note } from "../types/note"
-import { detectLanguage, transformForSearch } from "../utils"
+import { detectLanguage, getFirstItems, transformForSearch } from "../utils"
 import { Language } from "../types/language"
 import { generateTextCustom } from "../editor"
 
 // @ts-expect-error
 const segmenterJa = new Intl.Segmenter('ja', { granularity: 'word' })
+
+const SEARCH_RESULT_LIMIT = 100
+const SEARCH_SUGGEST_LIMIT = 30
 
 export class SearchApplicationService {
   engine: MiniSearch
@@ -46,10 +49,10 @@ export class SearchApplicationService {
     this.engine.removeAll()
   }
   search(query: string, searchOptions?: SearchOptions) {
-    return this.engine.search(query, searchOptions)
+    return getFirstItems<SearchResult>(this.engine.search(query, searchOptions), SEARCH_RESULT_LIMIT)
   }
   suggest(query: string, searchOptions?: SearchOptions) {
-    return this.engine.autoSuggest(query, searchOptions)
+    return getFirstItems<Suggestion>(this.engine.autoSuggest(query, searchOptions), SEARCH_SUGGEST_LIMIT)
   }
   update(note: Note) {
     if (this.engine.has(note.id)) {

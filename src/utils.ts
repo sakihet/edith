@@ -109,3 +109,7 @@ export const transformForSearch = (notes: Note[]) => {
     content: generateTextCustom(content),
   }))
 }
+
+export const getFirstItems = <T>(arr: Array<T>, max: number): Array<T> => {
+  return arr.slice(0, max)
+}
