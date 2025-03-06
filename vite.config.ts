@@ -11,6 +11,9 @@ export default defineConfig({
       "fake-indexeddb/auto",
       "./tests/setup.ts"
     ],
+    benchmark: {
+      include: ['tests/**/*.bench.ts']
+    }
   },
   plugins: [
     VitePWA({
