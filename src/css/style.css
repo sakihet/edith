@@ -15,6 +15,12 @@ a {
   color: var(--color-fg-link);
 }
 
+button {
+  font: inherit;
+}
+button:active {
+}
+
 svg {
   fill: currentColor;
 }

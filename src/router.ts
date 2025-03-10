@@ -3,6 +3,7 @@ import { createWebHistory, createRouter } from "vue-router"
 import IndexPage from './pages/IndexPage.vue'
 import AboutPage from './pages/AboutPage.vue'
 import DebugPage from "./pages/DebugPage.vue"
+import LayoutPage from "./pages/LayoutPage.vue"
 import SandboxPage from './pages/SandboxPage.vue'
 
 const routes = [
@@ -16,7 +17,8 @@ const routes = [
   },
   { path: '/about', component: AboutPage },
   { path: '/debug', component: DebugPage },
-  { path: '/sandbox', component: SandboxPage }
+  { path: '/layout', component: LayoutPage },
+  { path: '/sandbox', component: SandboxPage },
 ]
 
 const router = createRouter({
