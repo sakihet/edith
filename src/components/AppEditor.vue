@@ -96,7 +96,7 @@ const props = defineProps<{
       </div>
     </BubbleMenu>
     <div class="overflow-y-auto pattern-height-editor-content pattern-scrollbar-thick">
-      <div class="layout-center">
+      <div class="layout-center px-6">
         <EditorContent
           :editor="props.editor"
         />

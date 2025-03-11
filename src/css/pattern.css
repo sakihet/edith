@@ -1,8 +1,8 @@
 .pattern-height-note-list {
-  max-height: calc(100vh - 9rem);
+  max-height: calc(100vh - 11rem);
 }
 .pattern-height-editor-content {
-  max-height: calc(100vh - 5.5rem);
+  max-height: calc(100vh - 3.5rem);
 }
 .pattern-button-base {
   padding-left: 0.5rem;

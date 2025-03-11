@@ -28,12 +28,12 @@ const handleDelete = (e: Event) => {
     :to="`/${props.note.id}`"
   >
     <div class="p-2 layout-stack-1 hover pattern-hiding-child">
-      <div class="h-8 flex-row">
+      <div class="h-8 flex-row layout-stack-h-2">
         <div class="f-1 overflow-hidden nowrap">
           {{ props.note.content.content && props.note.content.content[0]?.content && props.note.content.content[0].content[0].text || "Empty"}}
         </div>
         <details
-          class="pattern-dropdown pattern-hidden-child"
+          class="pattern-dropdown pattern-hidden-child text-small"
           @click="handleClickDetails"
         >
           <summary class="w-6 h-6">
