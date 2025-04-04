@@ -6,6 +6,7 @@
 
 - Rich text editor
 - Slash commands
+- Client-side search
 
 ## Tech
 
