@@ -124,6 +124,11 @@ const onSubmit = (e: Event) => {
             </li>
           </ul>
         </div>
+        <div>
+          <div class="font-mono text-small text-secondary">
+            <code>esc</code> to close
+          </div>
+        </div>
       </div>
     </dialog>
   </div>

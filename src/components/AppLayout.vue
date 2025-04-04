@@ -8,7 +8,7 @@ import IconMoreHoriz from '../components/IconMoreHoriz.vue'
 import NoteItem from '../components/NoteItem.vue'
 import AppDialog from '../components/AppDialog.vue'
 import { Note } from '../types/note'
-import { store } from '../store'
+import { commandMenuModifier, store } from '../store'
 
 const router = useRouter()
 
@@ -46,6 +46,9 @@ const handleDelete = (id: string) => {
     store.delete(id)
   }
 }
+
+const modifiler = commandMenuModifier === 'Meta' ? '⌘' : 'Ctrl'
+
 </script>
 
 <template>
@@ -75,9 +78,10 @@ const handleDelete = (id: string) => {
           class="w-full px-2 border-none text-secondary flex-row pointer bg-transparent hover"
           @click="handleClickSearch"
         >
-          <div class="">
+          <div class="f-1 text-left">
             Search
           </div>
+          <div class="font-mono flex align-items-center">{{ modifiler }} + k</div>
         </button>
       </div>
       <div class="pl-6 pr-4 pt-2 text-secondary flex-row layout-stack-h-2">

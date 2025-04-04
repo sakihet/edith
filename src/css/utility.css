@@ -28,6 +28,11 @@
 .grid {
   display: grid;
 }
+/* flex */
+.align-items-center {
+  align-items: center;
+}
+
 /* place-items */
 .place-items-center {
   place-items: center;
