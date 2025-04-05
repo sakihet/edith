@@ -29,6 +29,7 @@ import suggestion from './suggestion'
 import { Note } from "../types/note"
 import { TaskCount } from '../extensions/task-count'
 import { Store } from "../store"
+import { shallowRef } from "vue"
 
 const extensions = [
   Blockquote,
@@ -76,10 +77,30 @@ const debouncedFn = useDebounceFn((store: Store, note: Note, editor: TiptapEdito
   })
 }, 1000)
 
-export const createEditor = (note: Note, store:Store) => new Editor({
-  content: note.content,
-  extensions: extensions,
-  onUpdate({ editor }) {
-    debouncedFn(store, note, editor)
+export function useEditor() {
+  const editor = shallowRef<Editor>()
+
+  const updateEditor = (note: Note, store: Store) => {
+    editor.value = new Editor ({
+      content: note.content,
+      extensions: extensions,
+      onUpdate({ editor }) {
+        debouncedFn(store, note, editor)
+      }
+    })
   }
-})
+
+  const focusEditor = () => {
+    if (editor.value) {
+      editor.value.chain().focus().run()
+    }
+  }
+
+  const destroyEditor = () => {
+    if (editor.value) {
+      editor.value.destroy()
+    }
+  }
+
+  return { editor, updateEditor, focusEditor, destroyEditor }
+}

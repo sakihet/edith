@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { Editor } from '@tiptap/vue-3'
 
 import AppEditor from '../components/AppEditor.vue'
 import { store } from '../store'
@@ -10,18 +9,17 @@ import IconDarkMode from '../components/IconDarkMode.vue'
 import IconMoreHoriz from '../components/IconMoreHoriz.vue'
 import { applyTheme, setTheme } from '../utils'
 import RecentlyVisited from '../components/RecentlyVisited.vue'
-import { createEditor } from '../editor/editor'
+import { useEditor } from '../editor/editor'
 
 const route = useRoute()
-
-let editor: Editor | null
+const { editor, updateEditor, focusEditor, destroyEditor } = useEditor()
 
 onMounted(() => {
   if (route.params.noteId) {
     store.currentNote = store.notes.find(n => n.id === route.params.noteId)
     if (store.currentNote) {
-      editor = createEditor(store.currentNote, store)
-      editor.chain().focus().run()
+      updateEditor(store.currentNote, store)
+      focusEditor()
     }
   }
 })
@@ -38,22 +36,22 @@ watch (() => route.params.noteId, (noteIdAfter, noteIdBefore) => {
       store.updateRecentlyVisited(store.currentNote?.id)
     }
     if (store.currentNote) {
-      editor = createEditor(store.currentNote, store)
-      editor.chain().focus().run()
+      updateEditor(store.currentNote, store)
+      focusEditor()
     }
   } else if (noteIdAfter && noteIdBefore && (noteIdAfter !== noteIdBefore)) {
-    editor?.destroy()
+    destroyEditor()
     store.currentNote = store.notes.find(n => n.id === noteIdAfter)
     if (store.currentNote?.id) {
       store.updateRecentlyVisited(store.currentNote?.id)
     }
     if (store.currentNote) {
-      editor = createEditor(store.currentNote, store)
-      editor.chain().focus().run()
+      updateEditor(store.currentNote, store)
+      focusEditor()
     }
   } else if (!noteIdAfter) {
     store.currentNote = undefined
-    editor?.destroy()
+    destroyEditor()
   }
 })
 
