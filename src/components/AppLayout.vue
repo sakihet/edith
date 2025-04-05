@@ -137,7 +137,7 @@ const modifiler = commandMenuModifier === 'Meta' ? '⌘' : 'Ctrl'
           </li>
         </ul>
       </div>
-      <div class="pl-6 pr-4 h-14 text-tertiary text-small font-mono">
+      <div class="pl-6 pr-4 text-tertiary text-small font-mono">
         <span class="px-2">v {{ version }}</span>
       </div>
     </div>
