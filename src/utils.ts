@@ -1,4 +1,4 @@
-import { generateTextCustom } from "./editor"
+import { generateTextCustom } from "./editor/editor"
 import { Language } from "./types/language"
 import { Note } from "./types/note"
 import { Theme } from "./types/theme"

@@ -3,7 +3,7 @@ import { onUnmounted, onMounted, useTemplateRef } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 
 import { store } from '../store'
-import { generateTextCustom } from '../editor'
+import { generateTextCustom } from '../editor/editor'
 
 const search = useTemplateRef('search')
 

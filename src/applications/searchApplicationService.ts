@@ -2,7 +2,7 @@ import MiniSearch, { SearchOptions, SearchResult, Suggestion } from "minisearch"
 import { Note } from "../types/note"
 import { detectLanguage, getFirstItems, transformForSearch } from "../utils"
 import { Language } from "../types/language"
-import { generateTextCustom } from "../editor"
+import { generateTextCustom } from "../editor/editor"
 
 // @ts-expect-error
 const segmenterJa = new Intl.Segmenter('ja', { granularity: 'word' })

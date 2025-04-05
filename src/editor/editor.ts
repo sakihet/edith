@@ -26,9 +26,9 @@ import { Editor as TiptapEditor } from '@tiptap/core'
 
 import Commands from './commands'
 import suggestion from './suggestion'
-import { Note } from "./types/note"
-import { TaskCount } from './extensions/task-count'
-import { Store } from "./store"
+import { Note } from "../types/note"
+import { TaskCount } from '../extensions/task-count'
+import { Store } from "../store"
 
 const extensions = [
   Blockquote,

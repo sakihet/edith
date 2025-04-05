@@ -1,7 +1,7 @@
 import { Editor, Range, VueRenderer } from '@tiptap/vue-3'
 import tippy from 'tippy.js'
 
-import CommandsList from './components/CommandsList.vue'
+import CommandsList from '../components/CommandsList.vue'
 
 export interface SuggestionItem {
   title: string

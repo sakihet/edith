@@ -10,7 +10,7 @@ import IconDarkMode from '../components/IconDarkMode.vue'
 import IconMoreHoriz from '../components/IconMoreHoriz.vue'
 import { applyTheme, setTheme } from '../utils'
 import RecentlyVisited from '../components/RecentlyVisited.vue'
-import { createEditor } from '../editor'
+import { createEditor } from '../editor/editor'
 
 const route = useRoute()
 
