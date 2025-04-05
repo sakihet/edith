@@ -33,7 +33,7 @@
   background-color: var(--color-bg-hover);
 }
 .pattern-button-selected {
-  background-color: var(--color-blue-100);
+  background-color: var(--color-bg-selected);
 }
 .pattern-button-icon {
   display: block;
@@ -49,7 +49,7 @@
   background-color: var(--color-bg-hover);
 }
 .pattern-selected {
-  background-color: var(--color-blue-100);
+  background-color: var(--color-bg-selected);
 }
 .pattern-dropdown {
   position: relative;

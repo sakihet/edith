@@ -55,13 +55,13 @@ defineExpose({
 </script>
 
 <template>
-  <div class="flex-column bg-primary">
-    <ul v-if="items.length" class="list-style-none px-0">
+  <div class="w-48 flex-column bg-primary drop-shadow p-1 border-solid border-1 border-color-default">
+    <ul v-if="items.length" class="list-style-none px-0 layout-stack-1">
       <li
         v-for="(item, index) in props.items"
         :class="{
           'pattern-selected': index === selectedIndex,
-          'pattern-button-base': true
+          'px-2 h-6': true
         }"
         :key="index"
         @click="selectItem(index)"

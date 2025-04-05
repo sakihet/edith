@@ -31,6 +31,7 @@ body {
   --color-bg-secondary: var(--color-gray-100);
   --color-border-primary: var(--color-gray-300);
   --color-bg-range-secondary: var(--color-gray-600);
+  --color-bg-selected: var(--color-blue-100);
   --color-bg-scrollbar: var(--color-gray-300);
   --color-bg-scrollbar-thumb: var(--color-gray-500);
   --color-bg-mask: var(--color-gray-300);
@@ -53,6 +54,7 @@ body {
   --color-bg-secondary: var(--color-gray-800);
   --color-border-primary: var(--color-gray-500);
   --color-bg-range-secondary: var(--color-gray-500);
+  --color-bg-selected: var(--color-blue-700);
   --color-bg-scrollbar: var(--color-gray-600);
   --color-bg-scrollbar-thumb: var(--color-gray-400);
   --color-bg-mask: var(--color-gray-600);
