@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { v4 } from 'uuid'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 import { version } from '../../package.json'
 import IconEditSquare from '../components/IconEditSquare.vue'
@@ -10,6 +10,7 @@ import AppDialog from '../components/AppDialog.vue'
 import { Note } from '../types/note'
 import { commandMenuModifier, store } from '../store'
 
+const route = useRoute()
 const router = useRouter()
 
 const openDialog = async () => {
@@ -44,6 +45,9 @@ const handleClear = async () => {
 const handleDelete = (id: string) => {
   if(window.confirm('Do you really want to delete?')) {
     store.delete(id)
+    if (id === route.params.noteId) {
+      router.push('/')
+    }
   }
 }
 
