@@ -78,7 +78,7 @@ const props = defineProps<{
         <button
           @click="editor?.chain().focus().unsetLink().run()"
           :class="{
-            'bg-primary border-none hover pointer px-2 py-1': true,
+            'h-6 bg-primary border-none hover pointer px-2 py-1': true,
             'text-selected': props.editor?.isActive('code'),
           }"
           :disabled="!editor?.isActive('link')"
@@ -88,7 +88,7 @@ const props = defineProps<{
         <button
           @click="editor?.chain().focus().clearNodes().run()"
           :class="{
-            'bg-primary border-none hover pointer px-2 py-1': true,
+            'h-6 bg-primary border-none hover pointer px-2 py-1': true,
           }"
         >
           Clear Format
