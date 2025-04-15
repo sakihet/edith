@@ -9,7 +9,7 @@ const props = defineProps<{
 <template>
   <div class="layout-stack-4">
     <div class="flex-row">
-      <div class="f-1 bold text-secondary">Recently visited</div>
+      <div class="f-1 text-secondary text-small">Recently visited</div>
     </div>
     <div class="text-secondary" v-if="props.notes.length >= 1">
       <ul class="list-style-none px-0 pattern-horizontal-scroll pattern-scrollbar-thin">

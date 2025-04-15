@@ -89,7 +89,7 @@ const modifiler = commandMenuModifier === 'Meta' ? '⌘' : 'Ctrl'
         </button>
       </div>
       <div class="pl-6 pr-4 pt-2 text-secondary flex-row layout-stack-h-2">
-        <div class="f-1 px-2 text-tertiary bold">Notes</div>
+        <div class="f-1 px-2 py-1 text-secondary text-small">Notes</div>
         <div class="text-tertiary h-6 text-center">{{ store.notes.length }}</div>
         <details
           class="pattern-dropdown pattern-hidden-child text-small"
