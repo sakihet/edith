@@ -75,7 +75,7 @@ const handleToggleMode = () => {
           <div class="f-1">
           </div>
           <div>
-            <span class="text-tertiary text-small">
+            <!-- <span class="text-tertiary text-small">
               characters: {{ editor?.storage.characterCount.characters() || 0 }},
             </span>
             <span class="text-tertiary text-small">
@@ -83,7 +83,7 @@ const handleToggleMode = () => {
             </span>
             <span class="text-tertiary text-small">
               tasks: {{ editor?.storage.taskCount.tasks().filter((t: any) => t.attrs.checked === true).length }} / {{ editor?.storage.taskCount.tasks().length }}
-            </span>
+            </span> -->
           </div>
           <div class="flex-row layout-stack-h-2">
             <div>
