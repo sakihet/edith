@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { onMounted, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import { useSpeechRecognition } from '@vueuse/core'
 
 import AppEditor from '../components/AppEditor.vue'
 import { store } from '../store'
@@ -13,6 +14,8 @@ import { useEditor } from '../editor/editor'
 
 const route = useRoute()
 const { editor, updateEditor, focusEditor, destroyEditor } = useEditor()
+const enableSpeechInput = ref(false)
+const speechText = ref('')
 
 onMounted(() => {
   if (route.params.noteId) {
@@ -65,6 +68,40 @@ const handleToggleMode = () => {
   setTheme(store.theme)
 }
 
+const handleClickSpeech = () => {
+  enableSpeechInput.value = !enableSpeechInput.value
+  const {
+    isSupported,
+    // isListening,
+    isFinal,
+    result,
+    start,
+    stop,
+  } = useSpeechRecognition({
+    lang: 'ja-JP',
+    continuous: true,
+    interimResults: false,
+  })
+
+  if (enableSpeechInput.value) {
+    if (isSupported) {
+      start()
+      watch(result, () => {
+        speechText.value = result.value
+        if (isFinal) {
+          if (editor) {
+            editor.value?.commands.insertContent(speechText.value)
+          }
+          speechText.value = ''
+        }
+      })
+    }
+  } else {
+    stop()
+    speechText.value = ''
+  }
+}
+
 </script>
 
 <template>
@@ -86,6 +123,20 @@ const handleToggleMode = () => {
             </span> -->
           </div>
           <div class="flex-row layout-stack-h-2">
+            <div>
+              <button
+                type="button"
+                class="pattern-button-icon"
+                @click="handleClickSpeech()"
+              >
+                <s v-if="!enableSpeechInput">
+                  Speech
+                </s>
+                <span v-else>
+                  Speech
+                </span>
+              </button>
+            </div>
             <div>
               <button
                 class="pattern-button-icon"
