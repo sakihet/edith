@@ -38,7 +38,30 @@ const handleTranslate = async () => {
     })
     const translated = await translator.translate(selectedText)
     props.editor?.chain().focus().setTextSelection({ from, to })
-    .insertContentAt(to, `\nTranslate: ${translated}`).run()
+    .insertContentAt(to, `\nTranslated: ${translated}`).run()
+  }
+}
+
+const handleSummarize = async () => {
+  const { from ,to } = props.editor.state.selection
+  const selectedText = props.editor.state.doc.textBetween(from, to)
+  if ('Summarizer' in self) {
+    console.log('Summarizer is available')
+    // @ts-ignore
+    const summarizer = await Summarizer.create({
+      // @ts-ignore
+      monitor(m) {
+        // @ts-ignore
+        m.addEventListener('downloadprogress', (e) => {
+          console.log(`Progress: ${e.loaded} / ${e.total}`)
+        })
+      }
+    })
+    const summarized = await summarizer.summarize(selectedText, {
+      'context': "Summarize in the original language",
+    })
+    props.editor?.chain().focus().setTextSelection({ from, to })
+    .insertContentAt(to, `\nSummarized: ${summarized}`).run()
   }
 }
 </script>
@@ -124,11 +147,15 @@ const handleTranslate = async () => {
         </button>
         <button
           @click="handleTranslate"
-          :class="{
-            'h-6 bg-primary border-none hover pointer px-2 py-1': true,
-          }"
+          class="h-6 bg-primary border-none hover pointer px-2 py-1"
         >
           Translate
+        </button>
+        <button
+          @click="handleSummarize"
+          class="h-6 bg-primary border-none hover pointer px-2 py-1"
+        >
+          Summarize
         </button>
       </div>
     </BubbleMenu>
