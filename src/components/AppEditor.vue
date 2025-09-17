@@ -12,6 +12,35 @@ const props = defineProps<{
   editor: Editor,
   note: Note
 }>()
+
+const handleTranslate = async () => {
+  const { from ,to } = props.editor.state.selection
+  const selectedText = props.editor.state.doc.textBetween(from, to)
+  if ('Translator' in self) {
+    console.log('Translator is available')
+    // @ts-ignore
+    const availability = await Translator.availability({
+      sourceLanguage: 'ja',
+      targetLanguage: 'en',
+    })
+    console.log(availability)
+    // @ts-ignore
+    const translator = await Translator.create({
+      sourceLanguage: 'ja',
+      targetLanguage: 'en',
+      // @ts-ignore
+      monitor(m) {
+        // @ts-ignore
+        m.addEventListener('downloadprogress', (e) => {
+          console.log(`Progress: ${e.loaded} / ${e.total}`)
+        })
+      }
+    })
+    const translated = await translator.translate(selectedText)
+    props.editor?.chain().focus().setTextSelection({ from, to })
+    .insertContentAt(to, `\nTranslate: ${translated}`).run()
+  }
+}
 </script>
 
 <template>
@@ -92,6 +121,14 @@ const props = defineProps<{
           }"
         >
           Clear Format
+        </button>
+        <button
+          @click="handleTranslate"
+          :class="{
+            'h-6 bg-primary border-none hover pointer px-2 py-1': true,
+          }"
+        >
+          Translate
         </button>
       </div>
     </BubbleMenu>
