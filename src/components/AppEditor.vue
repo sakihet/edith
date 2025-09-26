@@ -13,10 +13,13 @@ const props = defineProps<{
   note: Note
 }>()
 
+const isTranslatorAvailable = 'Translator' in self
+const isSummarizerAvailable = 'Summarizer' in self
+
 const handleTranslate = async () => {
   const { from ,to } = props.editor.state.selection
   const selectedText = props.editor.state.doc.textBetween(from, to)
-  if ('Translator' in self) {
+  if (isTranslatorAvailable) {
     console.log('Translator is available')
     // @ts-ignore
     const availability = await Translator.availability({
@@ -45,7 +48,7 @@ const handleTranslate = async () => {
 const handleSummarize = async () => {
   const { from ,to } = props.editor.state.selection
   const selectedText = props.editor.state.doc.textBetween(from, to)
-  if ('Summarizer' in self) {
+  if (isSummarizerAvailable) {
     console.log('Summarizer is available')
     // @ts-ignore
     const summarizer = await Summarizer.create({
@@ -146,12 +149,14 @@ const handleSummarize = async () => {
           Clear Format
         </button>
         <button
+          v-if="isTranslatorAvailable"
           @click="handleTranslate"
           class="h-6 bg-primary border-none hover pointer px-2 py-1"
         >
           Translate
         </button>
         <button
+          v-if="isSummarizerAvailable"
           @click="handleSummarize"
           class="h-6 bg-primary border-none hover pointer px-2 py-1"
         >
