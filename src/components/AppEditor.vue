@@ -7,6 +7,8 @@ import IconFormatBold from './IconFormatBold.vue';
 import IconFormatItalic from './IconFormatItalic.vue';
 import IconFormatStrikethrough from './IconFormatStrikethrough.vue';
 import IconFormatUnderlined from './IconFormatUnderlined.vue';
+import { detectLanguage } from '../utils';
+import { Language } from '../types/language';
 
 const props = defineProps<{
   editor: Editor,
@@ -16,21 +18,40 @@ const props = defineProps<{
 const isTranslatorAvailable = 'Translator' in self
 const isSummarizerAvailable = 'Summarizer' in self
 
+const getSourceLanguageByDetectedLanguage = (detectLanguage: Language) => {
+  switch (detectLanguage) {
+    case Language.Japanese:
+      return 'ja'
+    case Language.English:
+      return 'en'
+  }
+}
+
+const getTargetLanguageByDetectedLanguage = (detectLanguage: Language) => {
+  switch (detectLanguage) {
+    case Language.Japanese:
+      return 'en'
+    case Language.English:
+      return 'ja'
+  }
+}
+
 const handleTranslate = async () => {
   const { from ,to } = props.editor.state.selection
   const selectedText = props.editor.state.doc.textBetween(from, to)
+  const language = detectLanguage(selectedText)
   if (isTranslatorAvailable) {
     console.log('Translator is available')
     // @ts-ignore
     const availability = await Translator.availability({
-      sourceLanguage: 'ja',
-      targetLanguage: 'en',
+      sourceLanguage: getSourceLanguageByDetectedLanguage(language),
+      targetLanguage: getTargetLanguageByDetectedLanguage(language),
     })
     console.log(availability)
     // @ts-ignore
     const translator = await Translator.create({
-      sourceLanguage: 'ja',
-      targetLanguage: 'en',
+      sourceLanguage: getSourceLanguageByDetectedLanguage(language),
+      targetLanguage: getTargetLanguageByDetectedLanguage(language),
       // @ts-ignore
       monitor(m) {
         // @ts-ignore
