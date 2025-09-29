@@ -46,7 +46,7 @@
   "devDependencies": {
     "@types/uuid": "^10.0.0",
     "@vitejs/plugin-vue": "6.0.1",
-    "fake-indexeddb": "^6.0.1",
+    "fake-indexeddb": "6.2.2",
     "jsdom": "27.0.0",
     "oxlint": "1.19.0",
     "typescript": "5.9.2",
