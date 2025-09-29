@@ -48,7 +48,7 @@
     "@vitejs/plugin-vue": "6.0.1",
     "fake-indexeddb": "^6.0.1",
     "jsdom": "^26.1.0",
-    "oxlint": "^0.16.12",
+    "oxlint": "1.19.0",
     "typescript": "5.9.2",
     "vite": "7.1.7",
     "vite-plugin-pwa": "1.0.3",
