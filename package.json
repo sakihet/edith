@@ -40,7 +40,7 @@
     "minisearch": "^7.1.2",
     "tippy.js": "^6.3.7",
     "uuid": "^11.1.0",
-    "vue": "^3.4.21",
+    "vue": "3.5.22",
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
