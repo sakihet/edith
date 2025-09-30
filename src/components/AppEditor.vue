@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { EditorContent, BubbleMenu, Editor } from '@tiptap/vue-3'
+import { EditorContent, Editor } from '@tiptap/vue-3'
+import { BubbleMenu } from '@tiptap/vue-3/menus'
 
 import { Note } from '../types/note';
 import IconCode from './IconCode.vue';
