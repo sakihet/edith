@@ -113,3 +113,12 @@ export const transformForSearch = (notes: Note[]) => {
 export const getFirstItems = <T>(arr: Array<T>, max: number): Array<T> => {
   return arr.slice(0, max)
 }
+
+export const initialContent = {
+  "type": "doc",
+  "content": [
+    {
+      "type": "paragraph"
+    }
+  ]
+}
