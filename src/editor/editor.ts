@@ -1,4 +1,4 @@
-import { Editor, generateText } from "@tiptap/vue-3"
+import { generateText, useEditor } from "@tiptap/vue-3"
 import Blockquote from '@tiptap/extension-blockquote'
 import Bold from '@tiptap/extension-bold'
 import { BubbleMenu as BubbleMenuExt } from '@tiptap/extension-bubble-menu'
@@ -29,7 +29,6 @@ import suggestion from './suggestion'
 import { Note } from "../types/note"
 import { TaskCount } from '../extensions/task-count'
 import { Store } from "../store"
-import { shallowRef } from "vue"
 
 const extensions = [
   Blockquote,
@@ -77,30 +76,25 @@ const debouncedFn = useDebounceFn((store: Store, note: Note, editor: TiptapEdito
   })
 }, 1000)
 
-export function useEditor() {
-  const editor = shallowRef<Editor>()
-
-  const updateEditor = (note: Note, store: Store) => {
-    editor.value = new Editor ({
-      content: note.content,
-      extensions: extensions,
-      onUpdate({ editor }) {
-        debouncedFn(store, note, editor)
-      }
-    })
-  }
-
-  const focusEditor = () => {
-    if (editor.value) {
-      editor.value.chain().focus().run()
+export function useEditorWrapper(note: Note, store: Store) {
+  const editor = useEditor({
+    extensions: extensions,
+    content: note.content,
+    onUpdate({ editor }) {
+      debouncedFn(store, note, editor)
+    },
+    onDestroy() {
+      // console.log('editor destroyed')
+    },
+    onCreate() {
+      // editor.commands.focus()
+      // editor.commands.setContent(note.content)
     }
+  })
+
+  const focus = async () => {
+    editor.value?.commands.focus()
   }
 
-  const destroyEditor = () => {
-    if (editor.value) {
-      editor.value.destroy()
-    }
-  }
-
-  return { editor, updateEditor, focusEditor, destroyEditor }
+  return { editor, focus }
 }

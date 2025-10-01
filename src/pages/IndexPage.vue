@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
+// import { onMounted, ref, watch } from 'vue'
+import { onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { useSpeechRecognition } from '@vueuse/core'
+// import { useSpeechRecognition } from '@vueuse/core'
 
 import AppEditor from '../components/AppEditor.vue'
 import { store } from '../store'
@@ -10,20 +11,14 @@ import IconDarkMode from '../components/IconDarkMode.vue'
 import IconMoreHoriz from '../components/IconMoreHoriz.vue'
 import { applyTheme, setTheme } from '../utils'
 import RecentlyVisited from '../components/RecentlyVisited.vue'
-import { useEditor } from '../editor/editor'
 
 const route = useRoute()
-const { editor, updateEditor, focusEditor, destroyEditor } = useEditor()
-const enableSpeechInput = ref(false)
-const speechText = ref('')
+// const enableSpeechInput = ref(false)
+// const speechText = ref('')
 
 onMounted(() => {
   if (route.params.noteId) {
     store.currentNote = store.notes.find(n => n.id === route.params.noteId)
-    if (store.currentNote) {
-      updateEditor(store.currentNote, store)
-      focusEditor()
-    }
   }
 })
 
@@ -38,23 +33,13 @@ watch (() => route.params.noteId, (noteIdAfter, noteIdBefore) => {
     if (store.currentNote?.id) {
       store.updateRecentlyVisited(store.currentNote?.id)
     }
-    if (store.currentNote) {
-      updateEditor(store.currentNote, store)
-      focusEditor()
-    }
   } else if (noteIdAfter && noteIdBefore && (noteIdAfter !== noteIdBefore)) {
-    destroyEditor()
     store.currentNote = store.notes.find(n => n.id === noteIdAfter)
     if (store.currentNote?.id) {
       store.updateRecentlyVisited(store.currentNote?.id)
     }
-    if (store.currentNote) {
-      updateEditor(store.currentNote, store)
-      focusEditor()
-    }
   } else if (!noteIdAfter) {
     store.currentNote = undefined
-    destroyEditor()
   }
 })
 
@@ -68,39 +53,38 @@ const handleToggleMode = () => {
   setTheme(store.theme)
 }
 
-const handleClickSpeech = () => {
-  enableSpeechInput.value = !enableSpeechInput.value
-  const {
-    isSupported,
-    // isListening,
-    isFinal,
-    result,
-    start,
-    stop,
-  } = useSpeechRecognition({
-    lang: 'ja-JP',
-    continuous: true,
-    interimResults: false,
-  })
-
-  if (enableSpeechInput.value) {
-    if (isSupported) {
-      start()
-      watch(result, () => {
-        speechText.value = result.value
-        if (isFinal) {
-          if (editor) {
-            editor.value?.commands.insertContent(speechText.value)
-          }
-          speechText.value = ''
-        }
-      })
-    }
-  } else {
-    stop()
-    speechText.value = ''
-  }
-}
+// const handleClickSpeech = () => {
+//   enableSpeechInput.value = !enableSpeechInput.value
+//   const {
+//     isSupported,
+//     // isListening,
+//     isFinal,
+//     result,
+//     start,
+//     stop,
+//   } = useSpeechRecognition({
+//     lang: 'ja-JP',
+//     continuous: true,
+//     interimResults: false,
+//   })
+//   if (enableSpeechInput.value) {
+//     if (isSupported) {
+//       start()
+//       watch(result, () => {
+//         speechText.value = result.value
+//         if (isFinal) {
+//           if (editor) {
+//             editor.value?.commands.insertContent(speechText.value)
+//           }
+//           speechText.value = ''
+//         }
+//       })
+//     }
+//   } else {
+//     stop()
+//     speechText.value = ''
+//   }
+// }
 
 </script>
 
@@ -123,7 +107,7 @@ const handleClickSpeech = () => {
             </span> -->
           </div>
           <div class="flex-row layout-stack-h-2">
-            <div>
+            <!-- <div>
               <button
                 type="button"
                 class="pattern-button-icon"
@@ -136,7 +120,7 @@ const handleClickSpeech = () => {
                   Speech
                 </span>
               </button>
-            </div>
+            </div> -->
             <div>
               <button
                 class="pattern-button-icon"
@@ -173,8 +157,8 @@ const handleClickSpeech = () => {
         </div>
         <div class="f-1 flex-column">
           <AppEditor
-            v-if="store.currentNote && editor"
-            :editor="editor"
+            v-if="store.currentNote"
+            :key="store.currentNote.id"
             :note="store.currentNote"
           />
           <div

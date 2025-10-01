@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { EditorContent, Editor } from '@tiptap/vue-3'
+import { onMounted } from 'vue'
+import { EditorContent } from '@tiptap/vue-3'
 import { BubbleMenu } from '@tiptap/vue-3/menus'
 
 import { Note } from '../types/note';
@@ -10,14 +11,22 @@ import IconFormatStrikethrough from './IconFormatStrikethrough.vue';
 import IconFormatUnderlined from './IconFormatUnderlined.vue';
 import { detectLanguage } from '../utils';
 import { Language } from '../types/language';
+import { useEditorWrapper } from '../editor/editor';
+import { store } from '../store';
 
 const props = defineProps<{
-  editor: Editor,
   note: Note
 }>()
 
 const isTranslatorAvailable = 'Translator' in self
 const isSummarizerAvailable = 'Summarizer' in self
+
+const { editor, focus } = useEditorWrapper(props.note, store)
+
+onMounted(() => {
+  // console.log('mounted', editor.value)
+  focus()
+})
 
 const getSourceLanguageByDetectedLanguage = (detectLanguage: Language) => {
   switch (detectLanguage) {
@@ -38,8 +47,11 @@ const getTargetLanguageByDetectedLanguage = (detectLanguage: Language) => {
 }
 
 const handleTranslate = async () => {
-  const { from ,to } = props.editor.state.selection
-  const selectedText = props.editor.state.doc.textBetween(from, to)
+  if (!editor?.value) {
+    return
+  }
+  const { from ,to } = editor.value.state.selection
+  const selectedText = editor.value.state.doc.textBetween(from, to)
   const language = detectLanguage(selectedText)
   if (isTranslatorAvailable) {
     console.log('Translator is available')
@@ -62,14 +74,17 @@ const handleTranslate = async () => {
       }
     })
     const translated = await translator.translate(selectedText)
-    props.editor?.chain().focus().setTextSelection({ from, to })
+    editor.value.chain().focus().setTextSelection({ from, to })
     .insertContentAt(to, `\nTranslated: ${translated}`).run()
   }
 }
 
 const handleSummarize = async () => {
-  const { from ,to } = props.editor.state.selection
-  const selectedText = props.editor.state.doc.textBetween(from, to)
+  if (!editor?.value) {
+    return
+  }
+  const { from ,to } = editor.value.state.selection
+  const selectedText = editor.value.state.doc.textBetween(from, to)
   if (isSummarizerAvailable) {
     console.log('Summarizer is available')
     // @ts-ignore
@@ -85,7 +100,7 @@ const handleSummarize = async () => {
     const summarized = await summarizer.summarize(selectedText, {
       'context': "Summarize in the original language",
     })
-    props.editor?.chain().focus().setTextSelection({ from, to })
+    editor.value.chain().focus().setTextSelection({ from, to })
     .insertContentAt(to, `\nSummarized: ${summarized}`).run()
   }
 }
@@ -94,8 +109,8 @@ const handleSummarize = async () => {
 <template>
   <div class="layout-stack-2 flex-column">
     <BubbleMenu
-      :editor="props.editor"
-      v-if="props.editor"
+      :editor="editor"
+      v-if="editor"
       class="bg-primary drop-shadow p-1 flex-row layout-stack-h-1"
       style="line-height: 0;"
     >
@@ -104,7 +119,7 @@ const handleSummarize = async () => {
           @click="editor?.chain().focus().toggleBold().run()"
           :class="{
             'bg-primary border-none hover pointer': true,
-            'text-selected': props.editor?.isActive('bold')
+            'text-selected': editor?.isActive('bold')
           }"
           title="Bold"
         >
@@ -114,7 +129,7 @@ const handleSummarize = async () => {
           @click="editor?.chain().focus().toggleItalic().run()"
           :class="{
             'bg-primary border-none hover pointer': true,
-            'text-selected': props.editor?.isActive('italic')
+            'text-selected': editor?.isActive('italic')
           }"
           title="Italic"
         >
@@ -124,7 +139,7 @@ const handleSummarize = async () => {
           @click="editor?.chain().focus().toggleUnderline().run()"
           :class="{
             'bg-primary border-none hover pointer': true,
-            'text-selected': props.editor?.isActive('underline')
+            'text-selected': editor?.isActive('underline')
           }"
           title="Underline"
         >
@@ -134,7 +149,7 @@ const handleSummarize = async () => {
           @click="editor?.chain().focus().toggleStrike().run()"
           :class="{
             'bg-primary border-none hover pointer': true,
-            'text-selected': props.editor?.isActive('strike')
+            'text-selected': editor?.isActive('strike')
           }"
           title="Strikethrough"
         >
@@ -144,7 +159,7 @@ const handleSummarize = async () => {
           @click="editor?.chain().focus().toggleCode().run()"
           :class="{
             'bg-primary border-none hover pointer': true,
-            'text-selected': props.editor?.isActive('code')
+            'text-selected': editor?.isActive('code')
           }"
           title="Code"
         >
@@ -156,7 +171,7 @@ const handleSummarize = async () => {
           @click="editor?.chain().focus().unsetLink().run()"
           :class="{
             'h-6 bg-primary border-none hover pointer px-2 py-1': true,
-            'text-selected': props.editor?.isActive('code'),
+            'text-selected': editor?.isActive('link'),
           }"
           :disabled="!editor?.isActive('link')"
         >
@@ -189,7 +204,8 @@ const handleSummarize = async () => {
     <div class="overflow-y-auto pattern-height-editor-content pattern-scrollbar-thick">
       <div class="layout-center px-6">
         <EditorContent
-          :editor="props.editor"
+          v-if="editor"
+          :editor="editor"
         />
       </div>
     </div>
