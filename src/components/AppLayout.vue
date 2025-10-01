@@ -22,7 +22,17 @@ const handleAdd = async () => {
     id: v4(),
     content: {
       "type": "doc",
-      "content": []
+      "content": [
+        {
+          type: "paragraph",
+          content: [
+            {
+              text: "",
+              type: "text"
+            }
+          ]
+        }
+      ]
     },
     createdAt: now,
     updatedAt: now
