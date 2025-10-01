@@ -39,7 +39,6 @@
     "@vueuse/core": "13.9.0",
     "idb": "^8.0.3",
     "minisearch": "7.2.0",
-    "tippy.js": "^6.3.7",
     "uuid": "13.0.0",
     "vue": "3.5.22",
     "vue-router": "^4.5.1"
