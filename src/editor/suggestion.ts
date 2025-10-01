@@ -1,7 +1,25 @@
-import { Editor, Range, VueRenderer } from '@tiptap/vue-3'
-import tippy from 'tippy.js'
+import { computePosition, flip, shift } from '@floating-ui/dom'
+import { Editor, Range, VueRenderer, posToDOMRect } from '@tiptap/vue-3'
 
 import CommandsList from '../components/CommandsList.vue'
+
+// @ts-ignore
+const updatePosition = (editor, element) => {
+  const virtualElement = {
+    getBoundingClientRect: () => posToDOMRect(editor.view, editor.state.selection.from, editor.state.selection.to),
+  }
+
+  computePosition(virtualElement, element, {
+    placement: 'bottom-start',
+    strategy: 'absolute',
+    middleware: [shift(), flip()],
+  }).then(({ x, y, strategy }) => {
+    element.style.width = 'max-content'
+    element.style.position = strategy
+    element.style.left = `${x}px`
+    element.style.top = `${y}px`
+  })
+}
 
 export interface SuggestionItem {
   title: string
@@ -68,9 +86,7 @@ export default {
     ].filter(item => item.title.toLowerCase().startsWith(query.toLowerCase())).slice(0, 10)
   },
   render: () => {
-    let component: VueRenderer
-    // @ts-ignore
-    let popup
+    let component: any
 
     return {
       // @ts-ignore
@@ -82,15 +98,9 @@ export default {
         if (!props.clientRect) {
           return
         }
-        popup = tippy('body', {
-          getReferenceClientRect: props.clientRect,
-          appendTo: () => document.body,
-          content: component.element || undefined,
-          showOnCreate: true,
-          interactive: true,
-          trigger: 'manual',
-          placement: 'bottom-start',
-        })
+        component.element.style.position = 'absolute'
+        document.body.appendChild(component.element)
+        updatePosition(props.editor, component.element)
       },
       // @ts-ignore
       onUpdate(props) {
@@ -98,24 +108,21 @@ export default {
         if (!props.clientRect) {
           return
         }
-        // @ts-ignore
-        popup[0].setProps({
-          getReferenceClientRect: props.clientRect,
-        })
+        updatePosition(props.editor, component.element)
       },
       // @ts-ignore
       onKeyDown(props) {
         if (props.event.key === 'Escape') {
-          // @ts-ignore
-          popup[0].hide()
+          component.destroy()
+          component.element.remove()
+
           return true
         }
         return component.ref?.onKeyDown(props)
       },
       onExit() {
-        // @ts-ignore
-        popup[0].destroy()
         component.destroy()
+        component.element.remove()
       },
     }
   },
