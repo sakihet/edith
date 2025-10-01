@@ -20,6 +20,7 @@ const props = defineProps<{
 
 const isTranslatorAvailable = 'Translator' in self
 const isSummarizerAvailable = 'Summarizer' in self
+const isProofreaderAvailable = 'Proofreader' in self
 
 const { editor, focus } = useEditorWrapper(props.note, store)
 
@@ -75,7 +76,7 @@ const handleTranslate = async () => {
     })
     const translated = await translator.translate(selectedText)
     editor.value.chain().focus().setTextSelection({ from, to })
-    .insertContentAt(to, `\nTranslated: ${translated}`).run()
+    .insertContentAt(to, `\nTranslated: \n${translated}`).run()
   }
 }
 
@@ -101,7 +102,33 @@ const handleSummarize = async () => {
       'context': "Summarize in the original language",
     })
     editor.value.chain().focus().setTextSelection({ from, to })
-    .insertContentAt(to, `\nSummarized: ${summarized}`).run()
+    .insertContentAt(to, `\nSummarized: \n${summarized}`).run()
+  }
+}
+
+const handleProofread = async () => {
+  if (!editor?.value) {
+    return
+  }
+  const { from ,to } = editor.value.state.selection
+  const selectedText = editor.value.state.doc.textBetween(from, to)
+  if (isProofreaderAvailable) {
+    console.log('Proofreader is available')
+    // @ts-ignore
+    const proofreader = await Proofreader.create({
+      // @ts-ignore
+      monitor(m) {
+        // @ts-ignore
+        m.addEventListener('downloadprogress', (e) => {
+          console.log(`Progress: ${e.loaded} / ${e.total}`)
+        })
+      }
+    })
+    const proofreaded = await proofreader.proofread(selectedText, {
+      'context': "Proofread in the original language",
+    })
+    editor.value.chain().focus().setTextSelection({ from, to })
+    .insertContentAt(to, `\nProofreaded: \n${proofreaded.correctedInput}`).run()
   }
 }
 </script>
@@ -198,6 +225,13 @@ const handleSummarize = async () => {
           class="h-6 bg-primary border-none hover pointer px-2 py-1"
         >
           Summarize
+        </button>
+        <button
+          v-if="isProofreaderAvailable"
+          @click="handleProofread"
+          class="h-6 bg-primary border-none hover pointer px-2 py-1"
+        >
+          Proofread
         </button>
       </div>
     </BubbleMenu>
