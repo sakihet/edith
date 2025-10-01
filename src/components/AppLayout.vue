@@ -9,6 +9,7 @@ import NoteItem from '../components/NoteItem.vue'
 import AppDialog from '../components/AppDialog.vue'
 import { Note } from '../types/note'
 import { commandMenuModifier, store } from '../store'
+import { initialContent } from '../utils'
 
 const route = useRoute()
 const router = useRouter()
@@ -20,20 +21,7 @@ const handleAdd = async () => {
   const now = new Date().toISOString()
   const note: Note = {
     id: v4(),
-    content: {
-      "type": "doc",
-      "content": [
-        {
-          type: "paragraph",
-          content: [
-            {
-              text: "",
-              type: "text"
-            }
-          ]
-        }
-      ]
-    },
+    content: initialContent,
     createdAt: now,
     updatedAt: now
   }
