@@ -76,7 +76,7 @@ const handleTranslate = async () => {
     })
     const translated = await translator.translate(selectedText)
     editor.value.chain().focus().setTextSelection({ from, to })
-    .insertContentAt(to, `\nTranslated: ${translated}`).run()
+    .insertContentAt(to, `\nTranslated: \n${translated}`).run()
   }
 }
 
@@ -102,7 +102,7 @@ const handleSummarize = async () => {
       'context': "Summarize in the original language",
     })
     editor.value.chain().focus().setTextSelection({ from, to })
-    .insertContentAt(to, `\nSummarized: ${summarized}`).run()
+    .insertContentAt(to, `\nSummarized: \n${summarized}`).run()
   }
 }
 
@@ -128,7 +128,7 @@ const handleProofread = async () => {
       'context': "Proofread in the original language",
     })
     editor.value.chain().focus().setTextSelection({ from, to })
-    .insertContentAt(to, `\nProofreaded: ${proofreaded.correctedInput}`).run()
+    .insertContentAt(to, `\nProofreaded: \n${proofreaded.correctedInput}`).run()
   }
 }
 </script>
