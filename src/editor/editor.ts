@@ -29,6 +29,7 @@ import suggestion from './suggestion'
 import { Note } from "../types/note"
 import { TaskCount } from '../extensions/task-count'
 import { Store } from "../store"
+import { detectLanguage } from "../utils"
 
 const extensions = [
   Blockquote,
@@ -89,7 +90,16 @@ export function useEditorWrapper(note: Note, store: Store) {
     onCreate() {
       // editor.commands.focus()
       // editor.commands.setContent(note.content)
-    }
+    },
+    onSelectionUpdate({ editor }) {
+      const { from, to } = editor.state.selection
+      if (from === to) {
+        return
+      }
+      const selectedText = editor.state.doc.textBetween(from, to)
+      const language = detectLanguage(selectedText)
+      store.selectedTextLanguage = language
+    },
   })
 
   const focus = async () => {
