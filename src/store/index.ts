@@ -10,6 +10,7 @@ import { applyTheme, getBrowser, getPlatform, getTheme} from "../utils"
 import { SettingApplicationServiceImpl } from "../applications/settingApplicationService"
 import { SettingRepositoryImpl } from "../repositories/settingRepository"
 import { SearchApplicationService } from "../applications/searchApplicationService"
+import { Language } from "../types/language"
 
 export const commandMenuModifier = getPlatform() === 'macOS' && ['Chrome', 'Safari'].includes(getBrowser()) ? 'Meta' : 'Control'
 
@@ -20,6 +21,7 @@ export interface Store {
   enableSuggestions: boolean,
   searchQuery: string,
   searchFuzziness: number,
+  selectedTextLanguage: Language | null,
   theme: Theme,
   currentNote: Note | undefined,
   notes: Array<Note>,
@@ -53,6 +55,7 @@ export const store: Store = reactive<Store>({
   enableSuggestions: false,
   searchQuery: "",
   searchFuzziness: 0,
+  selectedTextLanguage: null,
   theme: 'light',
   currentNote: undefined,
   notes: [],

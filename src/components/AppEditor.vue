@@ -9,7 +9,6 @@ import IconFormatBold from './IconFormatBold.vue';
 import IconFormatItalic from './IconFormatItalic.vue';
 import IconFormatStrikethrough from './IconFormatStrikethrough.vue';
 import IconFormatUnderlined from './IconFormatUnderlined.vue';
-import { detectLanguage } from '../utils';
 import { Language } from '../types/language';
 import { useEditorWrapper } from '../editor/editor';
 import { store } from '../store';
@@ -48,24 +47,23 @@ const getTargetLanguageByDetectedLanguage = (detectLanguage: Language) => {
 }
 
 const handleTranslate = async () => {
-  if (!editor?.value) {
+  if (!editor?.value || !store.selectedTextLanguage) {
     return
   }
   const { from ,to } = editor.value.state.selection
   const selectedText = editor.value.state.doc.textBetween(from, to)
-  const language = detectLanguage(selectedText)
   if (isTranslatorAvailable) {
     console.log('Translator is available')
     // @ts-ignore
     const availability = await Translator.availability({
-      sourceLanguage: getSourceLanguageByDetectedLanguage(language),
-      targetLanguage: getTargetLanguageByDetectedLanguage(language),
+      sourceLanguage: getSourceLanguageByDetectedLanguage(store.selectedTextLanguage),
+      targetLanguage: getTargetLanguageByDetectedLanguage(store.selectedTextLanguage),
     })
     console.log(availability)
     // @ts-ignore
     const translator = await Translator.create({
-      sourceLanguage: getSourceLanguageByDetectedLanguage(language),
-      targetLanguage: getTargetLanguageByDetectedLanguage(language),
+      sourceLanguage: getSourceLanguageByDetectedLanguage(store.selectedTextLanguage),
+      targetLanguage: getTargetLanguageByDetectedLanguage(store.selectedTextLanguage),
       // @ts-ignore
       monitor(m) {
         // @ts-ignore
@@ -217,7 +215,7 @@ const handleProofread = async () => {
           @click="handleTranslate"
           class="h-6 bg-primary border-none hover pointer px-2 py-1"
         >
-          Translate
+          Translate<span v-if="store.selectedTextLanguage"> to {{ store.selectedTextLanguage === Language.English ? 'ja' : 'en'}}</span>
         </button>
         <button
           v-if="isSummarizerAvailable"
