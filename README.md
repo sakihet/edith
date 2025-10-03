@@ -7,6 +7,13 @@
 - Rich text editor
 - Slash commands
 - Client-side search
+- Built-in AI
+  - Translator
+  - Summarizer
+  - Proofreader
+
+To use AI features, you may need to update Chrome to the latest version or enable settings. Please read below for details.
+https://developer.chrome.com/docs/ai/built-in
 
 ## Tech
 
