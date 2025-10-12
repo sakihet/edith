@@ -4,8 +4,10 @@ import AppLayout from "./components/AppLayout.vue"
 import IndexPage from './pages/IndexPage.vue'
 import AboutPage from './pages/AboutPage.vue'
 import DebugPage from "./pages/DebugPage.vue"
+import DemoPage from "./pages/DemoPage.vue"
 import LayoutPage from "./pages/LayoutPage.vue"
 import SandboxPage from './pages/SandboxPage.vue'
+import TranslationPage from './pages/TranslationPage.vue'
 
 const routes = [
   {
@@ -27,6 +29,14 @@ const routes = [
       {
         path: '/debug',
         component: DebugPage
+      },
+      {
+        path: '/demo',
+        component: DemoPage
+      },
+      {
+        path: '/translation',
+        component: TranslationPage
       },
     ]
   },
