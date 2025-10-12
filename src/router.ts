@@ -6,6 +6,7 @@ import AboutPage from './pages/AboutPage.vue'
 import DebugPage from "./pages/DebugPage.vue"
 import DemoPage from "./pages/DemoPage.vue"
 import LayoutPage from "./pages/LayoutPage.vue"
+import PromptPage from "./pages/PromptPage.vue"
 import SandboxPage from './pages/SandboxPage.vue'
 import TranslationPage from './pages/TranslationPage.vue'
 
@@ -34,9 +35,14 @@ const routes = [
         path: '/demo',
         component: DemoPage
       },
+      // demos
       {
         path: '/translation',
         component: TranslationPage
+      },
+      {
+        path: '/prompt',
+        component: PromptPage
       },
     ]
   },
