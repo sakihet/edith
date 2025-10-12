@@ -9,6 +9,9 @@
         <li>
           <RouterLink to="/translation">Translation</RouterLink>
         </li>
+        <li>
+          <RouterLink to="/prompt">Prompt</RouterLink>
+        </li>
       </ul>
     </div>
   </div>
