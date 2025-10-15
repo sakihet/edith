@@ -10,6 +10,9 @@
           <RouterLink to="/translation">Translation</RouterLink>
         </li>
         <li>
+          <RouterLink to="/proofreading">Proofreading</RouterLink>
+        </li>
+        <li>
           <RouterLink to="/prompt">Prompt</RouterLink>
         </li>
       </ul>
