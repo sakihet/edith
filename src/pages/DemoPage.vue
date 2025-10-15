@@ -15,10 +15,10 @@
         <li>
           <RouterLink to="/prompt">Prompt</RouterLink>
         </li>
+        <li>
+          <RouterLink to="/completion">Text Completion</RouterLink>
+        </li>
       </ul>
     </div>
   </div>
 </template>
-
-<style scoped>
-</style>
