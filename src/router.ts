@@ -8,6 +8,7 @@ import DemoPage from "./pages/DemoPage.vue"
 import LayoutPage from "./pages/LayoutPage.vue"
 import PromptPage from "./pages/PromptPage.vue"
 import ProofreadingPage from "./pages/ProofreadingPage.vue"
+import CompletionPage from "./pages/TextCompletionPage.vue"
 import SandboxPage from './pages/SandboxPage.vue'
 import TranslationPage from './pages/TranslationPage.vue'
 
@@ -49,6 +50,10 @@ const routes = [
         path: '/proofreading',
         component: ProofreadingPage
       },
+      {
+        path: '/completion',
+        component: CompletionPage
+      }
     ]
   },
   { path: '/layout', component: LayoutPage },
