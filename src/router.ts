@@ -11,6 +11,7 @@ import ProofreadingPage from "./pages/ProofreadingPage.vue"
 import CompletionPage from "./pages/TextCompletionPage.vue"
 import SandboxPage from './pages/SandboxPage.vue'
 import TranslationPage from './pages/TranslationPage.vue'
+import SummarizationPage from "./pages/SummarizationPage.vue"
 
 const routes = [
   {
@@ -53,6 +54,10 @@ const routes = [
       {
         path: '/completion',
         component: CompletionPage
+      },
+      {
+        path: '/summarization',
+        component: SummarizationPage
       }
     ]
   },

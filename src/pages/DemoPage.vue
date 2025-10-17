@@ -18,6 +18,9 @@
         <li>
           <RouterLink to="/completion">Text Completion</RouterLink>
         </li>
+        <li>
+          <RouterLink to="/summarization">Summarization</RouterLink>
+        </li>
       </ul>
     </div>
   </div>
