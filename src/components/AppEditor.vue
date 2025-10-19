@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
-import { EditorContent } from '@tiptap/vue-3'
+import { onMounted, inject, Ref, onUnmounted } from 'vue'
+import { Editor, EditorContent } from '@tiptap/vue-3'
 import { BubbleMenu } from '@tiptap/vue-3/menus'
 
 import { Note } from '../types/note';
@@ -20,12 +20,21 @@ const props = defineProps<{
 const isTranslatorAvailable = 'Translator' in self
 const isSummarizerAvailable = 'Summarizer' in self
 const isProofreaderAvailable = 'Proofreader' in self
+const editorInstance = inject('editorInstance') as Ref<Editor | undefined>
 
 const { editor, focus } = useEditorWrapper(props.note, store)
 
 onMounted(() => {
-  // console.log('mounted', editor.value)
   focus()
+  if (editorInstance) {
+    editorInstance.value = editor.value
+  }
+})
+
+onUnmounted(() => {
+  if (editorInstance) {
+    editorInstance.value = undefined
+  }
 })
 
 const getSourceLanguageByDetectedLanguage = (detectLanguage: Language) => {

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { v4 } from 'uuid'
+import { provide, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { Editor } from '@tiptap/vue-3'
 
 import { version } from '../../package.json'
 import IconEditSquare from '../components/IconEditSquare.vue'
@@ -13,6 +15,10 @@ import { initialContent } from '../utils'
 
 const route = useRoute()
 const router = useRouter()
+
+const editorInstance = ref<Editor | undefined>(undefined)
+
+provide('editorInstance', editorInstance)
 
 const openDialog = async () => {
   store.isOpenDialog = true
@@ -161,7 +167,11 @@ const modifiler = commandMenuModifier === 'Meta' ? '⌘' : 'Ctrl'
           <div class="text-secondary">
             Built-in AI
           </div>
-          <div>
+          <div v-if="!editorInstance">
+            <!-- <p class="text-tertiary">No editor</p> -->
+          </div>
+          <div v-else>
+            <!-- <p class="text-tertiary">Editor is available</p> -->
             <select class="border-solid border-1 border-color-default bg-primary text-secondary w-full px-1 py-1">
               <option value="translator">Translator</option>
             </select>

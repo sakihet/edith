@@ -1,4 +1,4 @@
-import { generateText, useEditor } from "@tiptap/vue-3"
+import { generateText, useEditor, Editor } from "@tiptap/vue-3"
 import Blockquote from '@tiptap/extension-blockquote'
 import Bold from '@tiptap/extension-bold'
 import { BubbleMenu as BubbleMenuExt } from '@tiptap/extension-bubble-menu'
@@ -23,6 +23,7 @@ import Youtube from "@tiptap/extension-youtube"
 import Text from '@tiptap/extension-text'
 import { useDebounceFn } from '@vueuse/core'
 import { Editor as TiptapEditor } from '@tiptap/core'
+import { Ref } from "vue"
 
 import Commands from './commands'
 import suggestion from './suggestion'
@@ -78,7 +79,7 @@ const debouncedFn = useDebounceFn((store: Store, note: Note, editor: TiptapEdito
 }, 1000)
 
 export function useEditorWrapper(note: Note, store: Store) {
-  const editor = useEditor({
+  const editor: Ref<Editor | undefined> = useEditor({
     extensions: extensions,
     content: note.content,
     onUpdate({ editor }) {
