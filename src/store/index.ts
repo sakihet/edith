@@ -17,6 +17,7 @@ export const commandMenuModifier = getPlatform() === 'macOS' && ['Chrome', 'Safa
 export interface Store {
   isIndexed: boolean,
   isLoaded: boolean,
+  isOpenAiPanel: boolean,
   isOpenDialog: boolean,
   enableSuggestions: boolean,
   searchQuery: string,
@@ -51,6 +52,7 @@ const searchApplicationService = new SearchApplicationService()
 export const store: Store = reactive<Store>({
   isIndexed: false,
   isLoaded: false,
+  isOpenAiPanel: false,
   isOpenDialog: false,
   enableSuggestions: false,
   searchQuery: "",

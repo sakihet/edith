@@ -48,9 +48,10 @@ const handleDelete = (id: string) => {
     }
   }
 }
-
+const toggleAiPanel = () => {
+  store.isOpenAiPanel = !store.isOpenAiPanel
+}
 const modifiler = commandMenuModifier === 'Meta' ? '⌘' : 'Ctrl'
-
 </script>
 
 <template>
@@ -139,11 +140,37 @@ const modifiler = commandMenuModifier === 'Meta' ? '⌘' : 'Ctrl'
           </li>
         </ul>
       </div>
+      <div class="pl-6 pr-4">
+        <button
+          class="w-full pattern-button-base h-8 text-small"
+          @click="toggleAiPanel"
+        >
+          Built-in AI
+        </button>
+      </div>
       <div class="pl-6 pr-4 text-tertiary text-small font-mono">
         <span class="px-2">v {{ version }}</span>
       </div>
     </div>
-    <router-view />
+    <div class="f-1 flex-row">
+      <div class="f-1">
+        <router-view />
+      </div>
+      <div class="w-80 bg-secondary" v-if="store.isOpenAiPanel">
+        <div class="py-6 pl-4 pr-6 layout-stack-2">
+          <div class="text-secondary">
+            Built-in AI
+          </div>
+          <div>
+            <select class="border-solid border-1 border-color-default bg-primary text-secondary w-full px-1 py-1">
+              <option value="translator">Translator</option>
+            </select>
+          </div>
+          <div>
+          </div>
+        </div>
+      </div>
+    </div>
     <AppDialog v-if="store.isOpenDialog" />
   </div>
 </template>
