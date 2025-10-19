@@ -9,6 +9,7 @@ import IconEditSquare from '../components/IconEditSquare.vue'
 import IconMoreHoriz from '../components/IconMoreHoriz.vue'
 import NoteItem from '../components/NoteItem.vue'
 import AppDialog from '../components/AppDialog.vue'
+import TheAiPanel from '../components/TheAiPanel.vue'
 import { Note } from '../types/note'
 import { commandMenuModifier, store } from '../store'
 import { initialContent } from '../utils'
@@ -162,24 +163,11 @@ const modifiler = commandMenuModifier === 'Meta' ? '⌘' : 'Ctrl'
       <div class="f-1">
         <router-view />
       </div>
-      <div class="w-80 bg-secondary" v-if="store.isOpenAiPanel">
-        <div class="py-6 pl-4 pr-6 layout-stack-2">
-          <div class="text-secondary">
-            Built-in AI
-          </div>
-          <div v-if="!editorInstance">
-            <!-- <p class="text-tertiary">No editor</p> -->
-          </div>
-          <div v-else>
-            <!-- <p class="text-tertiary">Editor is available</p> -->
-            <select class="border-solid border-1 border-color-default bg-primary text-secondary w-full px-1 py-1">
-              <option value="translator">Translator</option>
-            </select>
-          </div>
-          <div>
-          </div>
-        </div>
-      </div>
+      <!-- @vue-ignore -->
+      <TheAiPanel
+        v-if="store.isOpenAiPanel"
+        :editor="editorInstance"
+      />
     </div>
     <AppDialog v-if="store.isOpenDialog" />
   </div>
