@@ -1,1 +1,1 @@
-export type AiMode = 'translator'
+export type AiMode = 'translator' | 'summarizer' | 'proofreader'

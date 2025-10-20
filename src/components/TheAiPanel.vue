@@ -6,17 +6,35 @@ import { useDebounceFn } from '@vueuse/core';
 import { AiMode } from '../types/aiMode';
 import { useRoute } from 'vue-router';
 
+type SummaryType = 'key-points' | 'tldr' | 'teaser' | 'headline'
+type SummaryLength = 'short' | 'medium' | 'long'
+type SummaryFormat = 'markdown' | 'plain-text'
+
 const props = defineProps<{
   editor?: Ref<Editor | undefined>
 }>()
 
 const aiMode = ref<AiMode>('translator')
+
+// translation
 const translated = ref('')
 const translationDirection = ref('ja-en')
+
+// summarization
+const summarized = ref('')
+const summaryType = ref<SummaryType>('key-points')
+const summaryLength = ref<SummaryLength>('medium')
+const summaryFormat = ref<SummaryFormat>('markdown')
+const isGeneratingSummary = ref(false)
+
 const route = useRoute()
 
 const debouncedFn = useDebounceFn((editor: Editor) => {
-  translate(editor.getText())
+  if (aiMode.value === 'translator') {
+    translate(editor.getText())
+  } else if (aiMode.value === 'summarizer') {
+    summarize(editor.getText())
+  }
 }, 1000)
 
 const translate = async (text: string) => {
@@ -32,8 +50,44 @@ const translate = async (text: string) => {
   }
 }
 
+const summarize = async (text: string) => {
+  isGeneratingSummary.value = true
+  if ('Summarizer' in self) {
+    const options = {
+      sharedContext: 'Always produce summaries in the same language as the input text.',
+      type: summaryType.value,
+      length: summaryLength.value,
+      format: summaryFormat.value,
+    }
+    // @ts-ignore
+    const summarizer = await Summarizer.create(options)
+    const result = await summarizer.summarize(text)
+    summarized.value = result
+    isGeneratingSummary.value = false
+  }
+}
+
 const updateHandler = ({ editor }: { editor: Editor }) => {
   debouncedFn(editor)
+}
+
+const handleChangeSummaryParams = () => {
+  // @ts-ignore
+  summarize(props.editor.getText() || '')
+}
+
+const handleChangeAiMode = () => {
+  if (aiMode.value === 'translator') {
+    // console.log('translator selected')
+    // @ts-ignore
+    translate(props.editor?.getText() || '')
+  } else if (aiMode.value === 'summarizer') {
+    // console.log('summarizer selected')
+    // @ts-ignore
+    summarize(props.editor?.getText() || '')
+  } else if (aiMode.value === 'proofreader') {
+    // console.log('proofreader selected')
+  }
 }
 
 onMounted(async () => {
@@ -78,12 +132,15 @@ onUnmounted(() => {
         <select
           class="border-solid border-1 border-color-default bg-primary text-secondary w-full px-1 py-1"
           v-model="aiMode"
+          @change="handleChangeAiMode"
         >
           <option value="translator">Translator</option>
+          <option value="summarizer">Summarizer</option>
+          <option value="proofreader">Proofreader</option>
         </select>
       </div>
       <div>
-        <form class="layout-stack-h-2">
+        <form class="layout-stack-h-2" v-if="aiMode === 'translator'">
           <input
             type="radio"
             name="translation-direction"
@@ -102,8 +159,54 @@ onUnmounted(() => {
           <label for="en-ja" class="font-mono">en → ja</label>
         </form>
       </div>
-      <div v-if="props.editor">
+      <div v-if="props.editor && aiMode === 'translator'">
         {{ translated }}
+      </div>
+      <div v-if="props.editor && aiMode === 'summarizer'">
+        <div class="layout-stack-1">
+          <label class="block text-secondary text-small">
+            Type
+            <select
+              v-model="summaryType"
+              @change="handleChangeSummaryParams"
+              class="border-solid border-1 border-color-default bg-primary text-secondary text-small"
+            >
+              <option value="key-points">Key Points</option>
+              <option value="tldr">TL;DR</option>
+              <option value="teaser">Teaser</option>
+              <option value="headline">Headline</option>
+            </select>
+          </label>
+          <label class="block text-secondary text-small">
+            Length
+            <select
+              v-model="summaryLength"
+              @change="handleChangeSummaryParams"
+              class="border-solid border-1 border-color-default bg-primary text-secondary text-small"
+            >
+              <option value="short">Short</option>
+              <option value="medium">Medium</option>
+              <option value="long">Long</option>
+            </select>
+          </label>
+          <label class="block text-secondary text-small">
+            Format
+            <select
+              v-model="summaryFormat"
+              @change="handleChangeSummaryParams"
+              class="border-solid border-1 border-color-default bg-primary text-secondary text-small"
+            >
+              <option value="markdown">Markdown</option>
+              <option value="plain-text">Plain text</option>
+            </select>
+          </label>
+        </div>
+      </div>
+      <div v-if="props.editor && aiMode === 'summarizer'">
+        <div v-if="isGeneratingSummary" class="text-secondary">Generating summary...</div>
+        <div v-else>
+          {{ summarized }}
+        </div>
       </div>
     </div>
   </div>
