@@ -230,7 +230,8 @@ onUnmounted(() => {
           <!-- @vue-ignore -->
           {{ proofreaded.correctedInput }}
         </div>
-        <div class="text-secondary">
+        <!-- @vue-ignore -->
+        <div class="text-secondary" v-if="proofreaded?.corrections?.length > 0">
           <p>Corrections:</p>
           <p>
             <!-- @vue-ignore -->
