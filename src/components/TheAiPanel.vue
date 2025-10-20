@@ -10,6 +10,9 @@ type SummaryType = 'key-points' | 'tldr' | 'teaser' | 'headline'
 type SummaryLength = 'short' | 'medium' | 'long'
 type SummaryFormat = 'markdown' | 'plain-text'
 
+type WriterTone = 'formal' | 'neutral' | 'casual'
+type WriterLength = 'short' | 'medium' | 'long'
+
 const props = defineProps<{
   editor?: Ref<Editor | undefined>
 }>()
@@ -29,6 +32,14 @@ const isGeneratingSummary = ref(false)
 
 // proofreading
 const proofreaded = ref({})
+
+// writer
+const writerPrompt = ref('')
+const writerContext = ref('')
+const writerTone = ref<WriterTone>('neutral')
+const writerLength = ref<WriterLength>('medium')
+const writerResult = ref('')
+const isGeneratingByWriter = ref(false)
 
 const route = useRoute()
 
@@ -82,6 +93,22 @@ const proofread = async (text: string) => {
   }
 }
 
+const write = async () => {
+  if ('Writer' in self) {
+    isGeneratingByWriter.value = true
+    const writerOptions = {
+      tone: writerTone.value,
+      format: 'plain-text',
+      length: writerLength.value
+    }
+    // @ts-ignore
+    const writer = await Writer.create(writerOptions)
+    const result = await writer.write(writerPrompt.value, { context: writerContext.value })
+    isGeneratingByWriter.value = false
+    return result
+  }
+}
+
 const updateHandler = ({ editor }: { editor: Editor }) => {
   debouncedFn(editor)
 }
@@ -105,6 +132,18 @@ const handleChangeAiMode = () => {
     // @ts-ignore
     proofread(props.editor?.getText() || '')
   }
+}
+
+const handleClickGenerate = async (_e: Event) => {
+  const result = await write()
+  writerResult.value = result as string
+}
+
+const handleClickInsert = async () => {
+  // @ts-ignore
+  const endPos = props.editor?.state.doc.content.size || 0
+  // @ts-ignore
+  props.editor?.chain().focus().insertContentAt(endPos, writerResult.value + '\n').run()
 }
 
 onMounted(async () => {
@@ -154,6 +193,7 @@ onUnmounted(() => {
           <option value="translator">Translator</option>
           <option value="summarizer">Summarizer</option>
           <option value="proofreader">Proofreader</option>
+          <option value="writer">Writer</option>
         </select>
       </div>
       <div>
@@ -225,6 +265,7 @@ onUnmounted(() => {
           {{ summarized }}
         </div>
       </div>
+      <!-- proofreader -->
       <div v-if="props.editor && aiMode === 'proofreader'" class="layout-stack-2">
         <div>
           <!-- @vue-ignore -->
@@ -236,6 +277,70 @@ onUnmounted(() => {
           <p>
             <!-- @vue-ignore -->
             {{ proofreaded.corrections.map(c => c.correction).join(', ') }}
+          </p>
+        </div>
+      </div>
+      <!-- writer -->
+      <div v-if="props.editor && aiMode === 'writer'" class="layout-stack-2">
+        <form
+          class="layout-stack-2"
+        >
+          <label
+            for="writer-prompt"
+            class="block text-secondary text-small"
+          >
+            Prompt:
+          </label>
+          <textarea
+            id="writer-prompt"
+            class="w-full h-14 p-2 border-solid border-1 border-color-default bg-primary text-secondary"
+            v-model="writerPrompt"
+          ></textarea>
+          <label
+            for="writer-context"
+            class="block text-secondary text-small"
+          >
+            Context:
+          </label>
+          <input
+            type="text"
+            id="writer-context"
+            class="w-full h-6 px-2 border-solid border-1 border-color-default bg-primary text-secondary"
+            v-model="writerContext"
+          />
+          <div class="flex-row">
+            <select v-model="writerTone" class="f-1 border-solid border-1 border-color-default bg-primary text-secondary text-moderate">
+              <option value="formal">Formal</option>
+              <option value="neutral">Neutral</option>
+              <option value="casual">Casual</option>
+            </select>
+            <select v-model="writerLength" class="f-1 border-solid border-1 border-color-default bg-primary text-secondary text-moderate">
+              <option value="short">Short</option>
+              <option value="medium">Medium</option>
+              <option value="long">Long</option>
+            </select>
+          </div>
+          <div class="flex-row">
+            <button
+              class="f-1 pattern-button-base w-full h-6 text-small"
+              type="button"
+              @click="handleClickGenerate"
+            >
+              Generate
+            </button>
+            <button
+              class="f-1 pattern-button-base w-full h-6 text-small"
+              type="button"
+              @click="handleClickInsert"
+            >
+              Insert
+            </button>
+          </div>
+        </form>
+        <div class="text-secondary text-moderate">
+          <p v-if="isGeneratingByWriter">Generating...</p>
+          <p v-else>
+            {{ writerResult }}
           </p>
         </div>
       </div>
