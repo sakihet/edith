@@ -27,6 +27,9 @@ const summaryLength = ref<SummaryLength>('medium')
 const summaryFormat = ref<SummaryFormat>('markdown')
 const isGeneratingSummary = ref(false)
 
+// proofreading
+const proofreaded = ref({})
+
 const route = useRoute()
 
 const debouncedFn = useDebounceFn((editor: Editor) => {
@@ -34,6 +37,8 @@ const debouncedFn = useDebounceFn((editor: Editor) => {
     translate(editor.getText())
   } else if (aiMode.value === 'summarizer') {
     summarize(editor.getText())
+  } else if (aiMode.value === 'proofreader') {
+    proofread(editor.getText())
   }
 }, 1000)
 
@@ -67,6 +72,16 @@ const summarize = async (text: string) => {
   }
 }
 
+const proofread = async (text: string) => {
+  if ('Proofreader' in self) {
+    // @ts-ignore
+    const proofreader = await Proofreader.create({})
+    const result = await proofreader.proofread(text)
+    console.log('result', result)
+    proofreaded.value = result
+  }
+}
+
 const updateHandler = ({ editor }: { editor: Editor }) => {
   debouncedFn(editor)
 }
@@ -87,6 +102,8 @@ const handleChangeAiMode = () => {
     summarize(props.editor?.getText() || '')
   } else if (aiMode.value === 'proofreader') {
     // console.log('proofreader selected')
+    // @ts-ignore
+    proofread(props.editor?.getText() || '')
   }
 }
 
@@ -206,6 +223,19 @@ onUnmounted(() => {
         <div v-if="isGeneratingSummary" class="text-secondary">Generating summary...</div>
         <div v-else>
           {{ summarized }}
+        </div>
+      </div>
+      <div v-if="props.editor && aiMode === 'proofreader'" class="layout-stack-2">
+        <div>
+          <!-- @vue-ignore -->
+          {{ proofreaded.correctedInput }}
+        </div>
+        <div class="text-secondary">
+          <p>Corrections:</p>
+          <p>
+            <!-- @vue-ignore -->
+            {{ proofreaded.corrections.map(c => c.correction).join(', ') }}
+          </p>
         </div>
       </div>
     </div>
