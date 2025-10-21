@@ -13,6 +13,11 @@ type SummaryFormat = 'markdown' | 'plain-text'
 type WriterTone = 'formal' | 'neutral' | 'casual'
 type WriterLength = 'short' | 'medium' | 'long'
 
+type Prompt = {
+  role: string
+  content: string
+}
+
 const props = defineProps<{
   editor?: Ref<Editor | undefined>
 }>()
@@ -40,6 +45,12 @@ const writerTone = ref<WriterTone>('neutral')
 const writerLength = ref<WriterLength>('medium')
 const writerResult = ref('')
 const isGeneratingByWriter = ref(false)
+
+// prompt
+const promptInput = ref('')
+const session = ref()
+const rawResponse = ref('')
+const prompts = ref<Prompt[]>([])
 
 const route = useRoute()
 
@@ -146,6 +157,50 @@ const handleClickInsert = async () => {
   props.editor?.chain().focus().insertContentAt(endPos, writerResult.value + '\n').run()
 }
 
+const updateSession = async () => {
+  // @ts-ignore
+  if (self.LanguageModel) {
+    // @ts-ignore
+    session.value = await LanguageModel.create({
+      temperature: 1,
+      topK: 3,
+      initialPrompts: [
+        {
+          role: 'system',
+          content: 'You are a helpful and friendly assistant.'
+        }
+      ]
+    })
+  }
+}
+
+const promptModel = async () => {
+  // @ts-ignore
+  const stream = await session.value.promptStreaming(promptInput.value)
+  for await (const chunk of stream) {
+    // console.log(chunk)
+    rawResponse.value += chunk
+  }
+  // @ts-ignore
+  prompts.value.push({
+    role: 'assistant',
+    content: rawResponse.value
+  })
+  rawResponse.value = ''
+}
+
+const handleSubmitPrompt = async (e: Event) => {
+  e.preventDefault()
+  console.log('submit prompt:', promptInput.value)
+  // @ts-ignore
+  prompts.value.push({
+    role: 'user',
+    content: promptInput.value
+  })
+  await updateSession()
+  await promptModel()
+}
+
 onMounted(async () => {
   // @ts-ignore
   props.editor?.on('update', updateHandler)
@@ -194,6 +249,7 @@ onUnmounted(() => {
           <option value="summarizer">Summarizer</option>
           <option value="proofreader">Proofreader</option>
           <option value="writer">Writer</option>
+          <option value="prompt">Prompt</option>
         </select>
       </div>
       <div>
@@ -342,6 +398,24 @@ onUnmounted(() => {
           <p v-else>
             {{ writerResult }}
           </p>
+        </div>
+      </div>
+      <!-- prompt -->
+      <div v-if="props.editor && aiMode === 'prompt'" class="layout-stack-2">
+        <div>
+          <form @submit="handleSubmitPrompt" class="flex-column layout-stack-2">
+            <textarea v-model="promptInput" class="p-1 border-solid border-1 border-color-default bg-primary text-secondary" rows="3" />
+            <button type="submit" class="w-full border-solid border-1 border-color-default text-secondary text-moderate">Submit</button>
+          </form>
+        </div>
+        <div
+          class="overflow-y-scroll pattern-scrollbar-thin"
+          style="max-height: calc(100vh - 12rem);"
+        >
+          <div v-for="c in prompts" class="text-small text-secondary layout-stack-1">
+            <div class="">{{ c.role }}</div>
+            <pre class="p-1">{{ c.content }}</pre>
+          </div>
         </div>
       </div>
     </div>
