@@ -13,6 +13,9 @@ type SummaryFormat = 'markdown' | 'plain-text'
 type WriterTone = 'formal' | 'neutral' | 'casual'
 type WriterLength = 'short' | 'medium' | 'long'
 
+type RewriterTone = 'more-formal' | 'as-is' | 'more-casual'
+type RewriterLength = 'shorter' | 'as-is' | 'longer'
+
 type Prompt = {
   role: string
   content: string
@@ -45,6 +48,12 @@ const writerTone = ref<WriterTone>('neutral')
 const writerLength = ref<WriterLength>('medium')
 const writerResult = ref('')
 const isGeneratingByWriter = ref(false)
+
+// rewriter
+const rewriterTone = ref<RewriterTone>('as-is')
+const rewriterLength = ref<RewriterLength>('as-is')
+const rewriterResult = ref('')
+const isGeneratingByRewriter = ref(false)
 
 // prompt
 const promptInput = ref('')
@@ -120,6 +129,24 @@ const write = async () => {
   }
 }
 
+const rewrite = async () => {
+  if ('Rewriter' in self) {
+    isGeneratingByRewriter.value = true
+    const rewriterOptions = {
+      tone: rewriterTone.value,
+      length: rewriterLength.value,
+      format: 'plain-text',
+      outputLanguage: 'ja'
+    }
+    // @ts-ignore
+    const rewriter = await Rewriter.create(rewriterOptions)
+    // @ts-ignore
+    const result = await rewriter.rewrite(props.editor?.getText() || '')
+    isGeneratingByRewriter.value = false
+    return result
+  }
+}
+
 const updateHandler = ({ editor }: { editor: Editor }) => {
   debouncedFn(editor)
 }
@@ -155,6 +182,17 @@ const handleClickInsert = async () => {
   const endPos = props.editor?.state.doc.content.size || 0
   // @ts-ignore
   props.editor?.chain().focus().insertContentAt(endPos, writerResult.value + '\n').run()
+}
+
+const handleClickRewriter = async () => {
+  const result = await rewrite()
+  console.log('rewriter result:', result)
+  rewriterResult.value = result as string
+}
+
+const handleClickReplace = async () => {
+  // @ts-ignore
+  props.editor?.chain().focus().setContent(rewriterResult.value).run() 
 }
 
 const updateSession = async () => {
@@ -249,6 +287,7 @@ onUnmounted(() => {
           <option value="summarizer">Summarizer</option>
           <option value="proofreader">Proofreader</option>
           <option value="writer">Writer</option>
+          <option value="rewriter">Rewriter</option>
           <option value="prompt">Prompt</option>
         </select>
       </div>
@@ -394,9 +433,50 @@ onUnmounted(() => {
           </div>
         </form>
         <div class="text-secondary text-moderate">
-          <p v-if="isGeneratingByWriter">Generating...</p>
-          <p v-else>
+          <p v-if="isGeneratingByWriter" class="text-secondary">Generating...</p>
+          <p v-else class="text-moderate">
             {{ writerResult }}
+          </p>
+        </div>
+      </div>
+      <!-- rewriter -->
+      <div v-if="props.editor && aiMode === 'rewriter'" class="layout-stack-2">
+        <div>
+          <form class="flex-column layout-stack-2">
+            <div class="flex-row">
+              <select v-model="rewriterTone" class="f-1 border-solid border-1 border-color-default bg-primary text-secondary text-moderate">
+                <option value="more-formal">More formal</option>
+                <option value="as-is">As is</option>
+                <option value="more-casual">More casual</option>
+              </select>
+              <select v-model="rewriterLength" class="f-1 border-solid border-1 border-color-default bg-primary text-secondary text-moderate">
+                <option value="shorter">Shorter</option>
+                <option value="as-is">As is</option>
+                <option value="longer">Longer</option>
+              </select>
+            </div>
+            <div class="flex-row">
+              <button
+                type="button"
+                @click="handleClickRewriter"
+                class="f-1 pattern-button-base w-full h-6 text-small"
+              >
+                Rewrite
+              </button>
+              <button
+                type="button"
+                @click="handleClickReplace"
+                class="f-1 pattern-button-base w-full h-6 text-small"
+              >
+                Replace
+              </button>
+            </div>
+          </form>
+        </div>
+        <div>
+          <p v-if="isGeneratingByRewriter" class="text-secondary">Generating...</p>
+          <p v-else class="text-moderate">
+            {{ rewriterResult }}
           </p>
         </div>
       </div>
