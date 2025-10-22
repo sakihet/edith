@@ -276,9 +276,7 @@ onUnmounted(() => {
       <div class="text-secondary">
         Built-in AI
       </div>
-      <div v-if="!props.editor">
-      </div>
-      <div v-else>
+      <div>
         <select
           class="border-solid border-1 border-color-default bg-primary text-secondary w-full px-1 py-1"
           v-model="aiMode"
