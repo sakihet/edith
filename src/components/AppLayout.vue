@@ -1,18 +1,25 @@
 <script setup lang="ts">
 import { v4 } from 'uuid'
+import { provide, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { Editor } from '@tiptap/vue-3'
 
 import { version } from '../../package.json'
 import IconEditSquare from '../components/IconEditSquare.vue'
 import IconMoreHoriz from '../components/IconMoreHoriz.vue'
 import NoteItem from '../components/NoteItem.vue'
 import AppDialog from '../components/AppDialog.vue'
+import TheAiPanel from '../components/TheAiPanel.vue'
 import { Note } from '../types/note'
 import { commandMenuModifier, store } from '../store'
 import { initialContent } from '../utils'
 
 const route = useRoute()
 const router = useRouter()
+
+const editorInstance = ref<Editor | undefined>(undefined)
+
+provide('editorInstance', editorInstance)
 
 const openDialog = async () => {
   store.isOpenDialog = true
@@ -48,9 +55,10 @@ const handleDelete = (id: string) => {
     }
   }
 }
-
+const toggleAiPanel = () => {
+  store.isOpenAiPanel = !store.isOpenAiPanel
+}
 const modifiler = commandMenuModifier === 'Meta' ? '⌘' : 'Ctrl'
-
 </script>
 
 <template>
@@ -139,11 +147,28 @@ const modifiler = commandMenuModifier === 'Meta' ? '⌘' : 'Ctrl'
           </li>
         </ul>
       </div>
+      <div class="pl-6 pr-4">
+        <button
+          class="w-full pattern-button-base h-8 text-small"
+          @click="toggleAiPanel"
+        >
+          Built-in AI
+        </button>
+      </div>
       <div class="pl-6 pr-4 text-tertiary text-small font-mono">
         <span class="px-2">v {{ version }}</span>
       </div>
     </div>
-    <router-view />
+    <div class="f-1 flex-row">
+      <div class="f-1">
+        <router-view />
+      </div>
+      <!-- @vue-ignore -->
+      <TheAiPanel
+        v-if="store.isOpenAiPanel"
+        :editor="editorInstance"
+      />
+    </div>
     <AppDialog v-if="store.isOpenDialog" />
   </div>
 </template>

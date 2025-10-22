@@ -1,5 +1,5 @@
 .pattern-height-note-list {
-  max-height: calc(100vh - 11rem);
+  max-height: calc(100vh - 13rem);
 }
 .pattern-height-editor-content {
   max-height: calc(100vh - 3.5rem);
