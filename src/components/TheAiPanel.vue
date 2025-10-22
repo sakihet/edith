@@ -94,6 +94,7 @@ const summarize = async (text: string) => {
       type: summaryType.value,
       length: summaryLength.value,
       format: summaryFormat.value,
+      outputLanguage: 'ja',
     }
     // @ts-ignore
     const summarizer = await Summarizer.create(options)
