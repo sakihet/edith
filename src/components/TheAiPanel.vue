@@ -2,24 +2,9 @@
 import { Editor } from '@tiptap/vue-3'
 import { nextTick, onMounted, onUnmounted, ref, Ref, watch } from 'vue';
 import { useDebounceFn } from '@vueuse/core';
-
-import { AiMode } from '../types/aiMode';
 import { useRoute } from 'vue-router';
 
-type SummaryType = 'key-points' | 'tldr' | 'teaser' | 'headline'
-type SummaryLength = 'short' | 'medium' | 'long'
-type SummaryFormat = 'markdown' | 'plain-text'
-
-type WriterTone = 'formal' | 'neutral' | 'casual'
-type WriterLength = 'short' | 'medium' | 'long'
-
-type RewriterTone = 'more-formal' | 'as-is' | 'more-casual'
-type RewriterLength = 'shorter' | 'as-is' | 'longer'
-
-type Prompt = {
-  role: string
-  content: string
-}
+import { AiMode, Prompt, RewriterLength, RewriterTone, SummaryFormat, SummaryLength, SummaryType, WriterLength, WriterTone } from '../types/ai';
 
 const props = defineProps<{
   editor?: Ref<Editor | undefined>
@@ -491,9 +476,9 @@ onUnmounted(() => {
           class="overflow-y-scroll pattern-scrollbar-thin"
           style="max-height: calc(100vh - 12rem);"
         >
-          <div v-for="c in prompts" class="text-small text-secondary layout-stack-1">
-            <div class="">{{ c.role }}</div>
-            <pre class="p-1">{{ c.content }}</pre>
+          <div v-for="p in prompts" class="text-small text-secondary layout-stack-1">
+            <div class="">{{ p.role }}</div>
+            <pre class="p-1">{{ p.content }}</pre>
           </div>
         </div>
       </div>
