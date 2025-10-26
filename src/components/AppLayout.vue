@@ -13,6 +13,7 @@ import TheAiPanel from '../components/TheAiPanel.vue'
 import { Note } from '../types/note'
 import { commandMenuModifier, store } from '../store'
 import { initialContent } from '../utils'
+import { useSearchDialog } from '../composables/useSearchDialog'
 
 const route = useRoute()
 const router = useRouter()
@@ -21,9 +22,8 @@ const editorInstance = ref<Editor | undefined>(undefined)
 
 provide('editorInstance', editorInstance)
 
-const openDialog = async () => {
-  store.isOpenDialog = true
-}
+const { isOpenSearchDialog, openSearchDialog } = useSearchDialog()
+
 const handleAdd = async () => {
   const now = new Date().toISOString()
   const note: Note = {
@@ -36,7 +36,7 @@ const handleAdd = async () => {
   router.push(`/${note.id}`)
 }
 const handleClickSearch = () => {
-  openDialog()
+  openSearchDialog()
 }
 const handleSort = (sortKey: string) => {
   store.sort(sortKey)
@@ -169,6 +169,6 @@ const modifiler = commandMenuModifier === 'Meta' ? '⌘' : 'Ctrl'
         :editor="editorInstance"
       />
     </div>
-    <AppDialog v-if="store.isOpenDialog" />
+    <AppDialog v-if="isOpenSearchDialog" />
   </div>
 </template>

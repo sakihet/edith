@@ -11,10 +11,13 @@ import IconDarkMode from '../components/icons/IconDarkMode.vue'
 import IconMoreHoriz from '../components/icons/IconMoreHoriz.vue'
 import { applyTheme, setTheme } from '../utils'
 import RecentlyVisited from '../components/RecentlyVisited.vue'
+import { useSearchDialog } from '../composables/useSearchDialog'
 
 const route = useRoute()
 // const enableSpeechInput = ref(false)
 // const speechText = ref('')
+
+const { closeSearchDialog } = useSearchDialog()
 
 onMounted(() => {
   if (route.params.noteId) {
@@ -22,12 +25,8 @@ onMounted(() => {
   }
 })
 
-const closeDialog = () => {
-  store.isOpenDialog = false
-}
-
 watch (() => route.params.noteId, (noteIdAfter, noteIdBefore) => {
-  closeDialog()
+  closeSearchDialog()
   if (noteIdBefore === undefined && noteIdAfter) {
     store.currentNote = store.notes.find(n => n.id === noteIdAfter)
     if (store.currentNote?.id) {

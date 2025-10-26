@@ -2,11 +2,13 @@
 import { onMounted } from 'vue'
 import { store, commandMenuModifier } from './store'
 import { useRoute } from 'vue-router'
+import { useSearchDialog } from './composables/useSearchDialog'
 
 const route = useRoute()
+const { isOpenSearchDialog, closeSearchDialog, openSearchDialog } = useSearchDialog()
 
 const closeDialog = () => {
-  store.isOpenDialog = false
+  closeSearchDialog()
   if (route.params.noteId) {
     // TODO: focus editor
   }
@@ -22,10 +24,10 @@ onMounted(async () => {
       store.pressingCommandMenuModifier = true
     }
     if (e.key === 'k' && store.pressingCommandMenuModifier) {
-      if (store.isOpenDialog) {
+      if (isOpenSearchDialog.value) {
         closeDialog()
       } else {
-        store.isOpenDialog = true
+        openSearchDialog()
       }
     }
   }

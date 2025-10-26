@@ -4,8 +4,11 @@ import { useDebounceFn } from '@vueuse/core'
 
 import { store } from '../store'
 import { generateTextCustom } from '../editor/editor'
+import { useSearchDialog } from '../composables/useSearchDialog'
 
 const search = useTemplateRef('search')
+
+const { isOpenSearchDialog, closeSearchDialog } = useSearchDialog()
 
 onMounted(() => {
   search.value?.focus()
@@ -39,9 +42,9 @@ const onSubmit = (e: Event) => {
 
 <template>
   <div>
-    <div class="pattern-mask" @click="store.isOpenDialog = false" />
+    <div class="pattern-mask" @click="closeSearchDialog" />
     <dialog
-      :open="store.isOpenDialog"
+      :open="isOpenSearchDialog"
       class="layout-center w-256 border-solid border-1 border-color-default drop-shadow my-16"
     >
       <div class="p-8 layout-stack-4">
