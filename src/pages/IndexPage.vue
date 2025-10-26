@@ -6,9 +6,9 @@ import { useRoute } from 'vue-router'
 
 import AppEditor from '../components/AppEditor.vue'
 import { store } from '../store'
-import IconLightMode from '../components/IconLightMode.vue'
-import IconDarkMode from '../components/IconDarkMode.vue'
-import IconMoreHoriz from '../components/IconMoreHoriz.vue'
+import IconLightMode from '../components/icons/IconLightMode.vue'
+import IconDarkMode from '../components/icons/IconDarkMode.vue'
+import IconMoreHoriz from '../components/icons/IconMoreHoriz.vue'
 import { applyTheme, setTheme } from '../utils'
 import RecentlyVisited from '../components/RecentlyVisited.vue'
 

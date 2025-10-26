@@ -1,6 +1,6 @@
 <!-- WIP -->
 <script setup lang="ts">
-import IconMoreHoriz from '../components/IconMoreHoriz.vue'
+import IconMoreHoriz from './icons/IconMoreHoriz.vue'
 import { Note } from '../types/note'
 
 const props = defineProps<{

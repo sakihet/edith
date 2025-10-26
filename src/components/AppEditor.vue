@@ -4,11 +4,11 @@ import { Editor, EditorContent } from '@tiptap/vue-3'
 import { BubbleMenu } from '@tiptap/vue-3/menus'
 
 import { Note } from '../types/note';
-import IconCode from './IconCode.vue';
-import IconFormatBold from './IconFormatBold.vue';
-import IconFormatItalic from './IconFormatItalic.vue';
-import IconFormatStrikethrough from './IconFormatStrikethrough.vue';
-import IconFormatUnderlined from './IconFormatUnderlined.vue';
+import IconCode from './icons/IconCode.vue';
+import IconFormatBold from './icons/IconFormatBold.vue';
+import IconFormatItalic from './icons/IconFormatItalic.vue';
+import IconFormatStrikethrough from './icons/IconFormatStrikethrough.vue';
+import IconFormatUnderlined from './icons/IconFormatUnderlined.vue';
 import { Language } from '../types/language';
 import { useEditorWrapper } from '../editor/editor';
 import { store } from '../store';
