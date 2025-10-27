@@ -5,6 +5,7 @@ import { useDebounceFn } from '@vueuse/core';
 import { useRoute } from 'vue-router';
 
 import { AiMode, Prompt, RewriterLength, RewriterTone, SummaryFormat, SummaryLength, SummaryType, WriterLength, WriterTone } from '../types/ai';
+import { useBuiltInAi } from '../composables/useBuiltInAi';
 
 const props = defineProps<{
   editor?: Ref<Editor | undefined>
@@ -47,6 +48,7 @@ const rawResponse = ref('')
 const prompts = ref<Prompt[]>([])
 
 const route = useRoute()
+const { isTranslatorAvailable, isSummarizerAvailable, isProofreaderAvailable, isWriterAvailable, isRewriterAvailable } = useBuiltInAi()
 
 const debouncedFn = useDebounceFn((editor: Editor) => {
   if (aiMode.value === 'translator') {
@@ -60,7 +62,7 @@ const debouncedFn = useDebounceFn((editor: Editor) => {
 
 const translate = async (text: string) => {
   const [ source, target ] = translationDirection.value.split('-')
-  if ('Translator' in self) {
+  if (isTranslatorAvailable) {
     // @ts-ignore
     const translator = await Translator.create({
       sourceLanguage: source,
@@ -73,7 +75,7 @@ const translate = async (text: string) => {
 
 const summarize = async (text: string) => {
   isGeneratingSummary.value = true
-  if ('Summarizer' in self) {
+  if (isSummarizerAvailable) {
     const options = {
       sharedContext: 'Always produce summaries in the same language as the input text.',
       type: summaryType.value,
@@ -90,7 +92,7 @@ const summarize = async (text: string) => {
 }
 
 const proofread = async (text: string) => {
-  if ('Proofreader' in self) {
+  if (isProofreaderAvailable) {
     // @ts-ignore
     const proofreader = await Proofreader.create({})
     const result = await proofreader.proofread(text)
@@ -100,7 +102,7 @@ const proofread = async (text: string) => {
 }
 
 const write = async () => {
-  if ('Writer' in self) {
+  if (isWriterAvailable) {
     isGeneratingByWriter.value = true
     const writerOptions = {
       tone: writerTone.value,
@@ -116,7 +118,7 @@ const write = async () => {
 }
 
 const rewrite = async () => {
-  if ('Rewriter' in self) {
+  if (isRewriterAvailable) {
     isGeneratingByRewriter.value = true
     const rewriterOptions = {
       tone: rewriterTone.value,

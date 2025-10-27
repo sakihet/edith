@@ -12,17 +12,17 @@ import IconFormatUnderlined from './icons/IconFormatUnderlined.vue';
 import { Language } from '../types/language';
 import { useEditorWrapper } from '../editor/editor';
 import { store } from '../store';
+import { useBuiltInAi } from '../composables/useBuiltInAi';
 
 const props = defineProps<{
   note: Note
 }>()
 
-const isTranslatorAvailable = 'Translator' in self
-const isSummarizerAvailable = 'Summarizer' in self
-const isProofreaderAvailable = 'Proofreader' in self
 const editorInstance = inject('editorInstance') as Ref<Editor | undefined>
 
 const { editor, focus } = useEditorWrapper(props.note, store)
+
+const { isTranslatorAvailable, isSummarizerAvailable, isProofreaderAvailable } = useBuiltInAi()
 
 onMounted(() => {
   focus()
