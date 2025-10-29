@@ -1,4 +1,5 @@
 import { ref } from "vue"
+import { SummaryOptions } from "../types/ai"
 
 declare global {
   interface Window {
@@ -15,6 +16,13 @@ declare global {
       monitor?(monitor: any): void
     }): Promise<{
       translate(text: string): Promise<string>
+    }>
+  }
+  const Summarizer: {
+    create(options: SummaryOptions & {
+      monitor?(monitor: any): void
+    }): Promise<{
+      summarize(text: string): Promise<string>
     }>
   }
 }
@@ -52,6 +60,20 @@ export const useBuiltInAi = () => {
       return result
     }
   }
+  const summarize = async (text: string, options: SummaryOptions): Promise<string | undefined> => {
+    if (isSummarizerAvailable) {
+      const summarizer = await Summarizer.create({
+        ...options,
+        monitor(m) {
+          m.addEventListener('downloadprogress', (e: any) => {
+            console.log(`Summarizer downloaded ${e.loaded * 100}%`)
+          })
+        }
+      })
+      const result = await summarizer.summarize(text)
+      return result
+    }
+  }
 
   return {
     isOpenBuiltInAiPanel,
@@ -63,6 +85,7 @@ export const useBuiltInAi = () => {
     isSummarizerAvailable,
     isTranslatorAvailable,
     isWriterAvailable,
-    translate
+    translate,
+    summarize
   }
 }

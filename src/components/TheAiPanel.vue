@@ -4,8 +4,10 @@ import { nextTick, onMounted, onUnmounted, ref, Ref, watch } from 'vue';
 import { useDebounceFn } from '@vueuse/core';
 import { useRoute } from 'vue-router';
 
-import { AiMode, Prompt, RewriterLength, RewriterTone, SummaryFormat, SummaryLength, SummaryType, WriterLength, WriterTone } from '../types/ai';
+import { AiMode, Prompt, RewriterLength, RewriterTone, SummaryFormat, SummaryLength, SummaryOptions, SummaryType, WriterLength, WriterTone } from '../types/ai';
 import { useBuiltInAi } from '../composables/useBuiltInAi';
+import { detectLanguage } from '../utils';
+import { Language } from '../types/language';
 
 const props = defineProps<{
   editor?: Ref<Editor | undefined>
@@ -48,13 +50,13 @@ const rawResponse = ref('')
 const prompts = ref<Prompt[]>([])
 
 const route = useRoute()
-const { isSummarizerAvailable, isProofreaderAvailable, isWriterAvailable, isRewriterAvailable, translate } = useBuiltInAi()
+const { isProofreaderAvailable, isWriterAvailable, isRewriterAvailable, translate, summarize } = useBuiltInAi()
 
 const debouncedFn = useDebounceFn((editor: Editor) => {
   if (aiMode.value === 'translator') {
     handleTranslate(editor.getText())
   } else if (aiMode.value === 'summarizer') {
-    summarize(editor.getText())
+    handleSummarize(editor.getText())
   } else if (aiMode.value === 'proofreader') {
     proofread(editor.getText())
   }
@@ -73,22 +75,21 @@ const handleChangeLanguageDirection = () => {
   handleTranslate(props.editor.getText() || '')
 }
 
-const summarize = async (text: string) => {
+const handleSummarize = async (text: string) => {
   isGeneratingSummary.value = true
-  if (isSummarizerAvailable) {
-    const options = {
-      sharedContext: 'Always produce summaries in the same language as the input text.',
-      type: summaryType.value,
-      length: summaryLength.value,
-      format: summaryFormat.value,
-      outputLanguage: 'ja',
-    }
-    // @ts-ignore
-    const summarizer = await Summarizer.create(options)
-    const result = await summarizer.summarize(text)
-    summarized.value = result
-    isGeneratingSummary.value = false
+  const language = detectLanguage(text)
+  const options: SummaryOptions = {
+    sharedContext: 'Always produce summaries in the same language as the input text.',
+    type: summaryType.value,
+    length: summaryLength.value,
+    format: summaryFormat.value,
+    outputLanguage: language === Language.English ? 'en' : 'ja',
   }
+  const result = await summarize(text, options)
+  if (result) {
+    summarized.value = result
+  }
+  isGeneratingSummary.value = false
 }
 
 const proofread = async (text: string) => {
@@ -141,7 +142,7 @@ const updateHandler = ({ editor }: { editor: Editor }) => {
 
 const handleChangeSummaryParams = () => {
   // @ts-ignore
-  summarize(props.editor.getText() || '')
+  handleSummarize(props.editor.getText() || '')
 }
 
 const handleChangeAiMode = () => {
@@ -152,7 +153,7 @@ const handleChangeAiMode = () => {
   } else if (aiMode.value === 'summarizer') {
     // console.log('summarizer selected')
     // @ts-ignore
-    summarize(props.editor?.getText() || '')
+    handleSummarize(props.editor?.getText() || '')
   } else if (aiMode.value === 'proofreader') {
     // console.log('proofreader selected')
     // @ts-ignore

@@ -22,7 +22,7 @@ const editorInstance = inject('editorInstance') as Ref<Editor | undefined>
 
 const { editor, focus } = useEditorWrapper(props.note, store)
 
-const { isTranslatorAvailable, isSummarizerAvailable, isProofreaderAvailable, translate } = useBuiltInAi()
+const { isTranslatorAvailable, isSummarizerAvailable, isProofreaderAvailable, translate, summarize } = useBuiltInAi()
 
 onMounted(() => {
   focus()
@@ -78,24 +78,11 @@ const handleSummarize = async () => {
   }
   const { from ,to } = editor.value.state.selection
   const selectedText = editor.value.state.doc.textBetween(from, to)
-  if (isSummarizerAvailable) {
-    console.log('Summarizer is available')
-    // @ts-ignore
-    const summarizer = await Summarizer.create({
-      // @ts-ignore
-      monitor(m) {
-        // @ts-ignore
-        m.addEventListener('downloadprogress', (e) => {
-          console.log(`Progress: ${e.loaded} / ${e.total}`)
-        })
-      }
-    })
-    const summarized = await summarizer.summarize(selectedText, {
-      'context': "Summarize in the original language",
-    })
-    editor.value.chain().focus().setTextSelection({ from, to })
-    .insertContentAt(to, `\nSummarized: \n${summarized}`).run()
-  }
+  const result = await summarize(selectedText, {
+    context: "Summarize in the original language."
+  })
+  editor.value.chain().focus().setTextSelection({ from, to })
+  .insertContentAt(to, `\nSummarized: \n${result}`).run()
 }
 
 const handleProofread = async () => {

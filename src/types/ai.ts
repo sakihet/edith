@@ -10,3 +10,11 @@ export type Prompt = {
   role: string
   content: string
 }
+export type SummaryOptions = {
+  context?: string
+  sharedContext?: string
+  type?: SummaryType
+  length?: SummaryLength
+  format?: SummaryFormat
+  outputLanguage?: string
+}
