@@ -22,7 +22,7 @@ const editorInstance = inject('editorInstance') as Ref<Editor | undefined>
 
 const { editor, focus } = useEditorWrapper(props.note, store)
 
-const { isTranslatorAvailable, isSummarizerAvailable, isProofreaderAvailable } = useBuiltInAi()
+const { isTranslatorAvailable, isSummarizerAvailable, isProofreaderAvailable, translate } = useBuiltInAi()
 
 onMounted(() => {
   focus()
@@ -61,29 +61,14 @@ const handleTranslate = async () => {
   }
   const { from ,to } = editor.value.state.selection
   const selectedText = editor.value.state.doc.textBetween(from, to)
-  if (isTranslatorAvailable) {
-    console.log('Translator is available')
-    // @ts-ignore
-    const availability = await Translator.availability({
-      sourceLanguage: getSourceLanguageByDetectedLanguage(store.selectedTextLanguage),
-      targetLanguage: getTargetLanguageByDetectedLanguage(store.selectedTextLanguage),
-    })
-    console.log(availability)
-    // @ts-ignore
-    const translator = await Translator.create({
-      sourceLanguage: getSourceLanguageByDetectedLanguage(store.selectedTextLanguage),
-      targetLanguage: getTargetLanguageByDetectedLanguage(store.selectedTextLanguage),
-      // @ts-ignore
-      monitor(m) {
-        // @ts-ignore
-        m.addEventListener('downloadprogress', (e) => {
-          console.log(`Progress: ${e.loaded} / ${e.total}`)
-        })
-      }
-    })
-    const translated = await translator.translate(selectedText)
+  const sourceLanguage = getSourceLanguageByDetectedLanguage(store.selectedTextLanguage)
+  const targetLanguage = getTargetLanguageByDetectedLanguage(store.selectedTextLanguage)
+  if (sourceLanguage && targetLanguage) {
+    const result = await translate(selectedText, sourceLanguage, targetLanguage)
     editor.value.chain().focus().setTextSelection({ from, to })
-    .insertContentAt(to, `\nTranslated: \n${translated}`).run()
+    .insertContentAt(to, `\nTranslated: \n${result}`).run()
+  } else {
+    console.error('source or target language is undefined')
   }
 }
 

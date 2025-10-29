@@ -48,11 +48,11 @@ const rawResponse = ref('')
 const prompts = ref<Prompt[]>([])
 
 const route = useRoute()
-const { isTranslatorAvailable, isSummarizerAvailable, isProofreaderAvailable, isWriterAvailable, isRewriterAvailable } = useBuiltInAi()
+const { isSummarizerAvailable, isProofreaderAvailable, isWriterAvailable, isRewriterAvailable, translate } = useBuiltInAi()
 
 const debouncedFn = useDebounceFn((editor: Editor) => {
   if (aiMode.value === 'translator') {
-    translate(editor.getText())
+    handleTranslate(editor.getText())
   } else if (aiMode.value === 'summarizer') {
     summarize(editor.getText())
   } else if (aiMode.value === 'proofreader') {
@@ -60,17 +60,17 @@ const debouncedFn = useDebounceFn((editor: Editor) => {
   }
 }, 1000)
 
-const translate = async (text: string) => {
+const handleTranslate = async (text: string) => {
   const [ source, target ] = translationDirection.value.split('-')
-  if (isTranslatorAvailable) {
-    // @ts-ignore
-    const translator = await Translator.create({
-      sourceLanguage: source,
-      targetLanguage: target,
-    })
-    const result = await translator.translate(text)
+  const result = await translate(text, source, target)
+  if (result) {
     translated.value = result
   }
+}
+
+const handleChangeLanguageDirection = () => {
+  // @ts-ignore
+  handleTranslate(props.editor.getText() || '')
 }
 
 const summarize = async (text: string) => {
@@ -148,7 +148,7 @@ const handleChangeAiMode = () => {
   if (aiMode.value === 'translator') {
     // console.log('translator selected')
     // @ts-ignore
-    translate(props.editor?.getText() || '')
+    handleTranslate(props.editor?.getText() || '')
   } else if (aiMode.value === 'summarizer') {
     // console.log('summarizer selected')
     // @ts-ignore
@@ -231,7 +231,7 @@ onMounted(async () => {
   // @ts-ignore
   props.editor?.on('update', updateHandler)
   // @ts-ignore
-  await translate(props.editor?.getText() || '')
+  await handleTranslate(props.editor?.getText() || '')
 })
 
 watch (() => route.params.noteId, async (noteIdAfter, noteIdBefore) => {
@@ -245,7 +245,7 @@ watch (() => route.params.noteId, async (noteIdAfter, noteIdBefore) => {
     // @ts-ignore
     props.editor?.on('update', updateHandler)
     // @ts-ignore
-    await translate(props.editor.getText() || '')
+    await handleTranslate(props.editor.getText() || '')
   } else if (!noteIdAfter) {
     translated.value = ''
   }
@@ -285,6 +285,7 @@ onUnmounted(() => {
             id="ja-en"
             v-model="translationDirection"
             :value="'ja-en'"
+            @change="handleChangeLanguageDirection"
           />
           <label for="ja-en" class="font-mono">ja → en</label>
           <input
@@ -293,6 +294,7 @@ onUnmounted(() => {
             id="en-ja"
             v-model="translationDirection"
             :value="'en-ja'"
+            @change="handleChangeLanguageDirection"
           />
           <label for="en-ja" class="font-mono">en → ja</label>
         </form>

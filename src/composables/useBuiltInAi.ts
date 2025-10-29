@@ -1,5 +1,24 @@
 import { ref } from "vue"
 
+declare global {
+  interface Window {
+    Proofreader: any
+    Rewriter: any
+    Summarizer: any
+    Translator: any
+    Writer: any
+  }
+  const Translator: {
+    create(options: {
+      sourceLanguage: string
+      targetLanguage: string
+      monitor?(monitor: any): void
+    }): Promise<{
+      translate(text: string): Promise<string>
+    }>
+  }
+}
+
 const isOpenBuiltInAiPanel = ref<boolean>(false)
 
 export const useBuiltInAi = () => {
@@ -18,6 +37,22 @@ export const useBuiltInAi = () => {
   const isTranslatorAvailable = 'Translator' in self
   const isWriterAvailable = 'Writer' in self
 
+  const translate = async (text: string, sourceLanguage: string, targetLanguage: string): Promise<string | undefined> => {
+    if (isTranslatorAvailable) {
+      const translator = await Translator.create({
+        sourceLanguage,
+        targetLanguage,
+        monitor(m) {
+          m.addEventListener('downloadprogress', (e: any) => {
+            console.log(`Translator downloaded ${e.loaded * 100}%`)
+          })
+        }
+      })
+      const result = await translator.translate(text)
+      return result
+    }
+  }
+
   return {
     isOpenBuiltInAiPanel,
     openBuiltInAiPanel,
@@ -27,6 +62,7 @@ export const useBuiltInAi = () => {
     isRewriterAvailable,
     isSummarizerAvailable,
     isTranslatorAvailable,
-    isWriterAvailable
+    isWriterAvailable,
+    translate
   }
 }
