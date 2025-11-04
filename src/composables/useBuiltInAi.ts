@@ -1,5 +1,5 @@
 import { ref } from "vue"
-import { ProofreaderOptions, ProofreaderResult, SummaryOptions } from "../types/ai"
+import { ProofreaderOptions, ProofreaderResult, SummaryOptions, WriterOptions } from "../types/ai"
 
 declare global {
   interface Window {
@@ -30,6 +30,13 @@ declare global {
       monitor?(monitor: any): void
     }): Promise<{
       translate(text: string): Promise<string>
+    }>
+  }
+  const Writer: {
+    create(options: WriterOptions & {
+      monitor?(monitor: any): void
+    }): Promise<{
+      write(text: string, { context }: { context: string }): Promise<string>
     }>
   }
 }
@@ -96,6 +103,20 @@ export const useBuiltInAi = () => {
       return result
     }
   }
+  const write = async (text: string, options: WriterOptions, context: { context: string }): Promise<string | undefined> => {
+    if (isWriterAvailable) {
+      const writer = await Writer.create({
+        ...options,
+        monitor(m) {
+          m.addEventListener('downloadprogress', (e: any) => {
+            console.log(`Writer downloaded ${e.loaded * 100}%`)
+          })
+        }
+      })
+      const result = await writer.write(text, context)
+      return result
+    }
+  }
 
   return {
     isOpenBuiltInAiPanel,
@@ -109,6 +130,7 @@ export const useBuiltInAi = () => {
     isWriterAvailable,
     proofread,
     summarize,
-    translate
+    translate,
+    write,
   }
 }

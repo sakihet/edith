@@ -51,7 +51,7 @@ const rawResponse = ref('')
 const prompts = ref<Prompt[]>([])
 
 const route = useRoute()
-const { isWriterAvailable, isRewriterAvailable, proofread, summarize, translate } = useBuiltInAi()
+const { isRewriterAvailable, proofread, summarize, translate, write } = useBuiltInAi()
 
 const debouncedFn = useDebounceFn((editor: Editor) => {
   if (aiMode.value === 'translator') {
@@ -103,20 +103,18 @@ const handleProofread = async (text: string) => {
   isGeneratingByProofreader.value = false
 }
 
-const write = async () => {
-  if (isWriterAvailable) {
-    isGeneratingByWriter.value = true
-    const writerOptions = {
-      tone: writerTone.value,
-      format: 'plain-text',
-      length: writerLength.value
-    }
-    // @ts-ignore
-    const writer = await Writer.create(writerOptions)
-    const result = await writer.write(writerPrompt.value, { context: writerContext.value })
-    isGeneratingByWriter.value = false
-    return result
+const handleWrite = async () => {
+  isGeneratingByWriter.value = true
+  const result = await write(writerPrompt.value, {
+    format: 'plain-text',
+    tone: writerTone.value,
+    length: writerLength.value,
+    outputLanguage: 'ja'
+  }, { context: writerContext.value })
+  if (result) {
+    writerResult.value = result
   }
+  isGeneratingByWriter.value = false
 }
 
 const rewrite = async () => {
@@ -163,8 +161,7 @@ const handleChangeAiMode = () => {
 }
 
 const handleClickGenerate = async (_e: Event) => {
-  const result = await write()
-  writerResult.value = result as string
+  await handleWrite()
 }
 
 const handleClickInsert = async () => {

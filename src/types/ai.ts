@@ -24,5 +24,13 @@ export type SummaryOptions = {
   format?: SummaryFormat
   outputLanguage?: string
 }
-export type WriterTone = 'formal' | 'neutral' | 'casual'
+export type WriterOptions = {
+  format?: WriterFormat
+  length?: WriterLength
+  sharedContext?: string
+  tone?: WriterTone
+  outputLanguage?: string
+}
+export type WriterFormat = 'markdown' | 'plain-text'
 export type WriterLength = 'short' | 'medium' | 'long'
+export type WriterTone = 'formal' | 'neutral' | 'casual'
