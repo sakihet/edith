@@ -11,8 +11,18 @@ export type ProofreaderResult = {
   correctedInput: string
   corrections: string[]
 }
-export type RewriterTone = 'more-formal' | 'as-is' | 'more-casual'
+export type RewriterFormat = 'markdown' | 'plain-text'
 export type RewriterLength = 'shorter' | 'as-is' | 'longer'
+export type RewriterOptions = {
+  expectedInputLanguage?: string[]
+  expectedContextLanguages?: string[]
+  format?: RewriterFormat
+  length?: RewriterLength
+  outputLanguage?: string
+  sharedContext?: string
+  tone?: RewriterTone
+}
+export type RewriterTone = 'more-formal' | 'as-is' | 'more-casual'
 export type SummaryType = 'key-points' | 'tldr' | 'teaser' | 'headline'
 export type SummaryLength = 'short' | 'medium' | 'long'
 export type SummaryFormat = 'markdown' | 'plain-text'

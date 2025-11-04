@@ -1,5 +1,5 @@
 import { ref } from "vue"
-import { ProofreaderOptions, ProofreaderResult, SummaryOptions, WriterOptions } from "../types/ai"
+import { ProofreaderOptions, ProofreaderResult, RewriterOptions, SummaryOptions, WriterOptions } from "../types/ai"
 
 declare global {
   interface Window {
@@ -14,6 +14,13 @@ declare global {
       monitor?(monitor: any): void
     }): Promise<{
       proofread(text: string): Promise<ProofreaderResult>
+    }>
+  }
+  const Rewriter: {
+    create(options: RewriterOptions & {
+      monitor?(monitor: any): void
+    }): Promise<{
+      rewrite(text: string, { context }: { context: string }): Promise<string>
     }>
   }
   const Summarizer: {
@@ -74,6 +81,20 @@ export const useBuiltInAi = () => {
       return result
     }
   }
+  const rewrite = async (text: string, options: RewriterOptions, context: { context: string }): Promise<string | undefined> => {
+    if (isRewriterAvailable) {
+      const rewriter = await Rewriter.create({
+        ...options,
+        monitor(m) {
+          m.addEventListener('downloadprogress', (e: any) => {
+            console.log(`Rewriter downloaded ${e.loaded * 100}%`)
+          })
+        }
+      })
+      const result = await rewriter.rewrite(text, context)
+      return result
+    }
+  }
   const summarize = async (text: string, options: SummaryOptions): Promise<string | undefined> => {
     if (isSummarizerAvailable) {
       const summarizer = await Summarizer.create({
@@ -129,6 +150,7 @@ export const useBuiltInAi = () => {
     isTranslatorAvailable,
     isWriterAvailable,
     proofread,
+    rewrite,
     summarize,
     translate,
     write,

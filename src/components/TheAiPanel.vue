@@ -51,7 +51,7 @@ const rawResponse = ref('')
 const prompts = ref<Prompt[]>([])
 
 const route = useRoute()
-const { isRewriterAvailable, proofread, summarize, translate, write } = useBuiltInAi()
+const { proofread, rewrite, summarize, translate, write } = useBuiltInAi()
 
 const debouncedFn = useDebounceFn((editor: Editor) => {
   if (aiMode.value === 'translator') {
@@ -117,22 +117,21 @@ const handleWrite = async () => {
   isGeneratingByWriter.value = false
 }
 
-const rewrite = async () => {
-  if (isRewriterAvailable) {
-    isGeneratingByRewriter.value = true
-    const rewriterOptions = {
-      tone: rewriterTone.value,
-      length: rewriterLength.value,
-      format: 'plain-text',
-      outputLanguage: 'ja'
-    }
-    // @ts-ignore
-    const rewriter = await Rewriter.create(rewriterOptions)
-    // @ts-ignore
-    const result = await rewriter.rewrite(props.editor?.getText() || '')
-    isGeneratingByRewriter.value = false
-    return result
+const handleRewrite = async () => {
+  isGeneratingByRewriter.value = true
+  const rewriterOptions = {
+    tone: rewriterTone.value,
+    length: rewriterLength.value,
+    format: 'plain-text',
+    outputLanguage: 'ja'
   }
+  // @ts-ignore
+  const result = await rewrite(props.editor?.getText() || '', rewriterOptions, { context: '' })
+  if (result) {
+    rewriterResult.value = result
+  }
+  isGeneratingByRewriter.value = false
+  return result
 }
 
 const updateHandler = ({ editor }: { editor: Editor }) => {
@@ -172,8 +171,7 @@ const handleClickInsert = async () => {
 }
 
 const handleClickRewriter = async () => {
-  const result = await rewrite()
-  console.log('rewriter result:', result)
+  const result = await handleRewrite()
   rewriterResult.value = result as string
 }
 
