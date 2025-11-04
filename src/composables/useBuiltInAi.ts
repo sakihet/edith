@@ -1,4 +1,5 @@
 import { ref } from "vue"
+
 import { ProofreaderOptions, ProofreaderResult, RewriterOptions, SummaryOptions, WriterOptions } from "../types/ai"
 
 declare global {
@@ -48,17 +49,34 @@ declare global {
   }
 }
 
-const isOpenBuiltInAiPanel = ref<boolean>(false)
+const STORAGE_KEY = 'isOpenBuiltInAiPanel'
+
+const getValue = (): boolean => {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY)
+    return stored ? JSON.parse(stored) as boolean : false
+  } catch {
+    return false
+  }
+}
+const setValue = (value: boolean) => {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(value))
+}
+
+const isOpenBuiltInAiPanel = ref<boolean>(getValue())
 
 export const useBuiltInAi = () => {
   const closeBuiltInAiPanel = () => {
     isOpenBuiltInAiPanel.value = false
+    setValue(false)
   }
   const openBuiltInAiPanel = () => {
     isOpenBuiltInAiPanel.value = true
+    setValue(true)
   }
   const toggleBuiltInAiPanel = () => {
     isOpenBuiltInAiPanel.value = !isOpenBuiltInAiPanel.value
+    setValue(isOpenBuiltInAiPanel.value)
   }
   const isProofreaderAvailable = 'Proofreader' in self
   const isRewriterAvailable = 'Rewriter' in self
