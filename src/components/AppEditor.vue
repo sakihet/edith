@@ -22,7 +22,7 @@ const editorInstance = inject('editorInstance') as Ref<Editor | undefined>
 
 const { editor, focus } = useEditorWrapper(props.note, store)
 
-const { isTranslatorAvailable, isSummarizerAvailable, isProofreaderAvailable, translate, summarize } = useBuiltInAi()
+const { isProofreaderAvailable, isSummarizerAvailable, isTranslatorAvailable, proofread, summarize, translate } = useBuiltInAi()
 
 onMounted(() => {
   focus()
@@ -91,23 +91,10 @@ const handleProofread = async () => {
   }
   const { from ,to } = editor.value.state.selection
   const selectedText = editor.value.state.doc.textBetween(from, to)
-  if (isProofreaderAvailable) {
-    console.log('Proofreader is available')
-    // @ts-ignore
-    const proofreader = await Proofreader.create({
-      // @ts-ignore
-      monitor(m) {
-        // @ts-ignore
-        m.addEventListener('downloadprogress', (e) => {
-          console.log(`Progress: ${e.loaded} / ${e.total}`)
-        })
-      }
-    })
-    const proofreaded = await proofreader.proofread(selectedText, {
-      'context': "Proofread in the original language",
-    })
+  const result = await proofread(selectedText)
+  if (result) {
     editor.value.chain().focus().setTextSelection({ from, to })
-    .insertContentAt(to, `\nProofreaded: \n${proofreaded.correctedInput}`).run()
+    .insertContentAt(to, `\nProofreaded: \n${result.correctedInput}`).run()
   }
 }
 </script>

@@ -1,5 +1,5 @@
 import { ref } from "vue"
-import { SummaryOptions } from "../types/ai"
+import { ProofreaderOptions, ProofreaderResult, SummaryOptions } from "../types/ai"
 
 declare global {
   interface Window {
@@ -9,13 +9,11 @@ declare global {
     Translator: any
     Writer: any
   }
-  const Translator: {
-    create(options: {
-      sourceLanguage: string
-      targetLanguage: string
+  const Proofreader: {
+    create(options: ProofreaderOptions & {
       monitor?(monitor: any): void
     }): Promise<{
-      translate(text: string): Promise<string>
+      proofread(text: string): Promise<ProofreaderResult>
     }>
   }
   const Summarizer: {
@@ -23,6 +21,15 @@ declare global {
       monitor?(monitor: any): void
     }): Promise<{
       summarize(text: string): Promise<string>
+    }>
+  }
+  const Translator: {
+    create(options: {
+      sourceLanguage: string
+      targetLanguage: string
+      monitor?(monitor: any): void
+    }): Promise<{
+      translate(text: string): Promise<string>
     }>
   }
 }
@@ -45,18 +52,18 @@ export const useBuiltInAi = () => {
   const isTranslatorAvailable = 'Translator' in self
   const isWriterAvailable = 'Writer' in self
 
-  const translate = async (text: string, sourceLanguage: string, targetLanguage: string): Promise<string | undefined> => {
-    if (isTranslatorAvailable) {
-      const translator = await Translator.create({
-        sourceLanguage,
-        targetLanguage,
+  const proofread = async (text: string, options: ProofreaderOptions = {}): Promise<ProofreaderResult | undefined> => {
+    if (isProofreaderAvailable) {
+      const proofreader = await Proofreader.create({
+        ...options,
         monitor(m) {
           m.addEventListener('downloadprogress', (e: any) => {
-            console.log(`Translator downloaded ${e.loaded * 100}%`)
+            console.log(`Proofreader downloaded ${e.loaded * 100}%`)
           })
         }
       })
-      const result = await translator.translate(text)
+      const result = await proofreader.proofread(text)
+      console.log('proofreader result:', result)
       return result
     }
   }
@@ -74,6 +81,21 @@ export const useBuiltInAi = () => {
       return result
     }
   }
+  const translate = async (text: string, sourceLanguage: string, targetLanguage: string): Promise<string | undefined> => {
+    if (isTranslatorAvailable) {
+      const translator = await Translator.create({
+        sourceLanguage,
+        targetLanguage,
+        monitor(m) {
+          m.addEventListener('downloadprogress', (e: any) => {
+            console.log(`Translator downloaded ${e.loaded * 100}%`)
+          })
+        }
+      })
+      const result = await translator.translate(text)
+      return result
+    }
+  }
 
   return {
     isOpenBuiltInAiPanel,
@@ -85,7 +107,8 @@ export const useBuiltInAi = () => {
     isSummarizerAvailable,
     isTranslatorAvailable,
     isWriterAvailable,
-    translate,
-    summarize
+    proofread,
+    summarize,
+    translate
   }
 }

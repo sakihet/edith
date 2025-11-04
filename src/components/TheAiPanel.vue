@@ -4,7 +4,7 @@ import { nextTick, onMounted, onUnmounted, ref, Ref, watch } from 'vue';
 import { useDebounceFn } from '@vueuse/core';
 import { useRoute } from 'vue-router';
 
-import { AiMode, Prompt, RewriterLength, RewriterTone, SummaryFormat, SummaryLength, SummaryOptions, SummaryType, WriterLength, WriterTone } from '../types/ai';
+import { AiMode, Prompt, ProofreaderResult, RewriterLength, RewriterTone, SummaryFormat, SummaryLength, SummaryOptions, SummaryType, WriterLength, WriterTone } from '../types/ai';
 import { useBuiltInAi } from '../composables/useBuiltInAi';
 import { detectLanguage } from '../utils';
 import { Language } from '../types/language';
@@ -27,7 +27,8 @@ const summaryFormat = ref<SummaryFormat>('markdown')
 const isGeneratingSummary = ref(false)
 
 // proofreading
-const proofreaded = ref({})
+const proofreaded = ref<ProofreaderResult | undefined>(undefined)
+const isGeneratingByProofreader = ref(false)
 
 // writer
 const writerPrompt = ref('')
@@ -50,7 +51,7 @@ const rawResponse = ref('')
 const prompts = ref<Prompt[]>([])
 
 const route = useRoute()
-const { isProofreaderAvailable, isWriterAvailable, isRewriterAvailable, translate, summarize } = useBuiltInAi()
+const { isWriterAvailable, isRewriterAvailable, proofread, summarize, translate } = useBuiltInAi()
 
 const debouncedFn = useDebounceFn((editor: Editor) => {
   if (aiMode.value === 'translator') {
@@ -92,14 +93,14 @@ const handleSummarize = async (text: string) => {
   isGeneratingSummary.value = false
 }
 
-const proofread = async (text: string) => {
-  if (isProofreaderAvailable) {
-    // @ts-ignore
-    const proofreader = await Proofreader.create({})
-    const result = await proofreader.proofread(text)
-    console.log('result', result)
+const handleProofread = async (text: string) => {
+  isGeneratingByProofreader.value = true
+  const result = await proofread(text, { expectedInputLanguages: ['en'], outputLanguage: 'en' })
+  console.log('proofreader result in handler:', result)
+  if (result?.correctedInput) {
     proofreaded.value = result
   }
+  isGeneratingByProofreader.value = false
 }
 
 const write = async () => {
@@ -157,7 +158,7 @@ const handleChangeAiMode = () => {
   } else if (aiMode.value === 'proofreader') {
     // console.log('proofreader selected')
     // @ts-ignore
-    proofread(props.editor?.getText() || '')
+    handleProofread(props.editor?.getText() || '')
   }
 }
 
@@ -351,7 +352,8 @@ onUnmounted(() => {
       </div>
       <!-- proofreader -->
       <div v-if="props.editor && aiMode === 'proofreader'" class="layout-stack-2">
-        <div>
+        <div v-if="isGeneratingByProofreader" class="text-secondary">Generating proofreaded text...</div>
+        <div v-else>
           <!-- @vue-ignore -->
           {{ proofreaded.correctedInput }}
         </div>
