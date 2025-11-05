@@ -1,4 +1,11 @@
 export type AiMode = 'translator' | 'summarizer' | 'proofreader' | 'writer' | 'rewriter' | 'prompt'
+export type LanguageModelOptions = {
+  topK?: number
+  maxTopK?: number
+  temperature?: number
+  maxTemperature?: number
+  initialPrompts: Prompt[]
+}
 export type Prompt = {
   role: string
   content: string

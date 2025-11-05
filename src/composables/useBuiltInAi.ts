@@ -1,14 +1,20 @@
 import { ref } from "vue"
 
-import { ProofreaderOptions, ProofreaderResult, RewriterOptions, SummaryOptions, WriterOptions } from "../types/ai"
+import { LanguageModelOptions, ProofreaderOptions, ProofreaderResult, RewriterOptions, SummaryOptions, WriterOptions } from "../types/ai"
 
 declare global {
   interface Window {
+    LanguageModel: any
     Proofreader: any
     Rewriter: any
     Summarizer: any
     Translator: any
     Writer: any
+  }
+  const LanguageModel: {
+    create(options: LanguageModelOptions & {
+      monitor?(monitor: any): void
+    }): Promise<any>
   }
   const Proofreader: {
     create(options: ProofreaderOptions & {
@@ -65,6 +71,8 @@ const setValue = (value: boolean) => {
 
 const isOpenBuiltInAiPanel = ref<boolean>(getValue())
 
+const session = ref()
+
 export const useBuiltInAi = () => {
   const closeBuiltInAiPanel = () => {
     isOpenBuiltInAiPanel.value = false
@@ -78,11 +86,41 @@ export const useBuiltInAi = () => {
     isOpenBuiltInAiPanel.value = !isOpenBuiltInAiPanel.value
     setValue(isOpenBuiltInAiPanel.value)
   }
+  const isLanguageModelAvailable = 'LanguageModel' in self
   const isProofreaderAvailable = 'Proofreader' in self
   const isRewriterAvailable = 'Rewriter' in self
   const isSummarizerAvailable = 'Summarizer' in self
   const isTranslatorAvailable = 'Translator' in self
   const isWriterAvailable = 'Writer' in self
+
+  // LanguageModel
+  const updateSession = async () => {
+    if (isLanguageModelAvailable) {
+      session.value = await LanguageModel.create({
+        temperature: 1,
+        topK: 3,
+        initialPrompts: [
+          {
+            role: 'system',
+            content: 'You are a helpful and friendly assistant.'
+          }
+        ],
+        monitor(m) {
+          m.addEventListener('downloadprogress', (e: any) => {
+            console.log(`LanguageModel downloaded ${e.loaded * 100}%`)
+          })
+        }
+      })
+    }
+  }
+  const promptModel = async (promptInput: string): Promise<string> => {
+    const stream = await session.value.promptStreaming(promptInput)
+    let rawResponse = ''
+    for await (const chunk of stream) {
+      rawResponse += chunk
+    }
+    return rawResponse
+  }
 
   const proofread = async (text: string, options: ProofreaderOptions = {}): Promise<ProofreaderResult | undefined> => {
     if (isProofreaderAvailable) {
@@ -162,15 +200,18 @@ export const useBuiltInAi = () => {
     openBuiltInAiPanel,
     closeBuiltInAiPanel,
     toggleBuiltInAiPanel,
+    isLanguageModelAvailable,
     isProofreaderAvailable,
     isRewriterAvailable,
     isSummarizerAvailable,
     isTranslatorAvailable,
     isWriterAvailable,
     proofread,
+    promptModel,
     rewrite,
     summarize,
     translate,
+    updateSession,
     write,
   }
 }

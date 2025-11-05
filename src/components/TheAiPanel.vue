@@ -46,12 +46,10 @@ const isGeneratingByRewriter = ref(false)
 
 // prompt
 const promptInput = ref('')
-const session = ref()
-const rawResponse = ref('')
 const prompts = ref<Prompt[]>([])
 
 const route = useRoute()
-const { proofread, rewrite, summarize, translate, write } = useBuiltInAi()
+const { proofread, promptModel, rewrite, summarize, translate, updateSession, write } = useBuiltInAi()
 
 const debouncedFn = useDebounceFn((editor: Editor) => {
   if (aiMode.value === 'translator') {
@@ -180,48 +178,18 @@ const handleClickReplace = async () => {
   props.editor?.chain().focus().setContent(rewriterResult.value).run() 
 }
 
-const updateSession = async () => {
-  // @ts-ignore
-  if (self.LanguageModel) {
-    // @ts-ignore
-    session.value = await LanguageModel.create({
-      temperature: 1,
-      topK: 3,
-      initialPrompts: [
-        {
-          role: 'system',
-          content: 'You are a helpful and friendly assistant.'
-        }
-      ]
-    })
-  }
-}
-
-const promptModel = async () => {
-  // @ts-ignore
-  const stream = await session.value.promptStreaming(promptInput.value)
-  for await (const chunk of stream) {
-    // console.log(chunk)
-    rawResponse.value += chunk
-  }
-  // @ts-ignore
-  prompts.value.push({
-    role: 'assistant',
-    content: rawResponse.value
-  })
-  rawResponse.value = ''
-}
-
 const handleSubmitPrompt = async (e: Event) => {
   e.preventDefault()
-  console.log('submit prompt:', promptInput.value)
-  // @ts-ignore
   prompts.value.push({
     role: 'user',
     content: promptInput.value
   })
   await updateSession()
-  await promptModel()
+  const result = await promptModel(promptInput.value)
+  prompts.value.push({
+    role: 'assistant',
+    content: result || ''
+  })
 }
 
 onMounted(async () => {
