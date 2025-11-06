@@ -143,15 +143,12 @@ const handleChangeSummaryParams = () => {
 
 const handleChangeAiMode = () => {
   if (aiMode.value === 'translator') {
-    // console.log('translator selected')
     // @ts-ignore
     handleTranslate(props.editor?.getText() || '')
   } else if (aiMode.value === 'summarizer') {
-    // console.log('summarizer selected')
     // @ts-ignore
     handleSummarize(props.editor?.getText() || '')
   } else if (aiMode.value === 'proofreader') {
-    // console.log('proofreader selected')
     // @ts-ignore
     handleProofread(props.editor?.getText() || '')
   }
