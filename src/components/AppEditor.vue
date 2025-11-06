@@ -12,17 +12,17 @@ import IconFormatUnderlined from './icons/IconFormatUnderlined.vue';
 import { Language } from '../types/language';
 import { useEditorWrapper } from '../editor/editor';
 import { store } from '../store';
+import { useBuiltInAi } from '../composables/useBuiltInAi';
 
 const props = defineProps<{
   note: Note
 }>()
 
-const isTranslatorAvailable = 'Translator' in self
-const isSummarizerAvailable = 'Summarizer' in self
-const isProofreaderAvailable = 'Proofreader' in self
 const editorInstance = inject('editorInstance') as Ref<Editor | undefined>
 
 const { editor, focus } = useEditorWrapper(props.note, store)
+
+const { isProofreaderAvailable, isSummarizerAvailable, isTranslatorAvailable, proofread, summarize, translate } = useBuiltInAi()
 
 onMounted(() => {
   focus()
@@ -61,29 +61,14 @@ const handleTranslate = async () => {
   }
   const { from ,to } = editor.value.state.selection
   const selectedText = editor.value.state.doc.textBetween(from, to)
-  if (isTranslatorAvailable) {
-    console.log('Translator is available')
-    // @ts-ignore
-    const availability = await Translator.availability({
-      sourceLanguage: getSourceLanguageByDetectedLanguage(store.selectedTextLanguage),
-      targetLanguage: getTargetLanguageByDetectedLanguage(store.selectedTextLanguage),
-    })
-    console.log(availability)
-    // @ts-ignore
-    const translator = await Translator.create({
-      sourceLanguage: getSourceLanguageByDetectedLanguage(store.selectedTextLanguage),
-      targetLanguage: getTargetLanguageByDetectedLanguage(store.selectedTextLanguage),
-      // @ts-ignore
-      monitor(m) {
-        // @ts-ignore
-        m.addEventListener('downloadprogress', (e) => {
-          console.log(`Progress: ${e.loaded} / ${e.total}`)
-        })
-      }
-    })
-    const translated = await translator.translate(selectedText)
+  const sourceLanguage = getSourceLanguageByDetectedLanguage(store.selectedTextLanguage)
+  const targetLanguage = getTargetLanguageByDetectedLanguage(store.selectedTextLanguage)
+  if (sourceLanguage && targetLanguage) {
+    const result = await translate(selectedText, sourceLanguage, targetLanguage)
     editor.value.chain().focus().setTextSelection({ from, to })
-    .insertContentAt(to, `\nTranslated: \n${translated}`).run()
+    .insertContentAt(to, `\nTranslated: \n${result}`).run()
+  } else {
+    console.error('source or target language is undefined')
   }
 }
 
@@ -93,24 +78,11 @@ const handleSummarize = async () => {
   }
   const { from ,to } = editor.value.state.selection
   const selectedText = editor.value.state.doc.textBetween(from, to)
-  if (isSummarizerAvailable) {
-    console.log('Summarizer is available')
-    // @ts-ignore
-    const summarizer = await Summarizer.create({
-      // @ts-ignore
-      monitor(m) {
-        // @ts-ignore
-        m.addEventListener('downloadprogress', (e) => {
-          console.log(`Progress: ${e.loaded} / ${e.total}`)
-        })
-      }
-    })
-    const summarized = await summarizer.summarize(selectedText, {
-      'context': "Summarize in the original language",
-    })
-    editor.value.chain().focus().setTextSelection({ from, to })
-    .insertContentAt(to, `\nSummarized: \n${summarized}`).run()
-  }
+  const result = await summarize(selectedText, {
+    context: "Summarize in the original language."
+  })
+  editor.value.chain().focus().setTextSelection({ from, to })
+  .insertContentAt(to, `\nSummarized: \n${result}`).run()
 }
 
 const handleProofread = async () => {
@@ -119,23 +91,10 @@ const handleProofread = async () => {
   }
   const { from ,to } = editor.value.state.selection
   const selectedText = editor.value.state.doc.textBetween(from, to)
-  if (isProofreaderAvailable) {
-    console.log('Proofreader is available')
-    // @ts-ignore
-    const proofreader = await Proofreader.create({
-      // @ts-ignore
-      monitor(m) {
-        // @ts-ignore
-        m.addEventListener('downloadprogress', (e) => {
-          console.log(`Progress: ${e.loaded} / ${e.total}`)
-        })
-      }
-    })
-    const proofreaded = await proofreader.proofread(selectedText, {
-      'context': "Proofread in the original language",
-    })
+  const result = await proofread(selectedText)
+  if (result) {
     editor.value.chain().focus().setTextSelection({ from, to })
-    .insertContentAt(to, `\nProofreaded: \n${proofreaded.correctedInput}`).run()
+    .insertContentAt(to, `\nProofreaded: \n${result.correctedInput}`).run()
   }
 }
 </script>

@@ -4,7 +4,10 @@ import { nextTick, onMounted, onUnmounted, ref, Ref, watch } from 'vue';
 import { useDebounceFn } from '@vueuse/core';
 import { useRoute } from 'vue-router';
 
-import { AiMode, Prompt, RewriterLength, RewriterTone, SummaryFormat, SummaryLength, SummaryType, WriterLength, WriterTone } from '../types/ai';
+import { AiMode, Prompt, ProofreaderResult, RewriterLength, RewriterTone, SummaryFormat, SummaryLength, SummaryOptions, SummaryType, WriterLength, WriterTone } from '../types/ai';
+import { useBuiltInAi } from '../composables/useBuiltInAi';
+import { detectLanguage } from '../utils';
+import { Language } from '../types/language';
 
 const props = defineProps<{
   editor?: Ref<Editor | undefined>
@@ -24,7 +27,8 @@ const summaryFormat = ref<SummaryFormat>('markdown')
 const isGeneratingSummary = ref(false)
 
 // proofreading
-const proofreaded = ref({})
+const proofreaded = ref<ProofreaderResult | undefined>(undefined)
+const isGeneratingByProofreader = ref(false)
 
 // writer
 const writerPrompt = ref('')
@@ -42,95 +46,90 @@ const isGeneratingByRewriter = ref(false)
 
 // prompt
 const promptInput = ref('')
-const session = ref()
-const rawResponse = ref('')
 const prompts = ref<Prompt[]>([])
 
 const route = useRoute()
+const { proofread, promptModel, rewrite, summarize, translate, updateSession, write } = useBuiltInAi()
 
 const debouncedFn = useDebounceFn((editor: Editor) => {
   if (aiMode.value === 'translator') {
-    translate(editor.getText())
+    handleTranslate(editor.getText())
   } else if (aiMode.value === 'summarizer') {
-    summarize(editor.getText())
+    handleSummarize(editor.getText())
   } else if (aiMode.value === 'proofreader') {
     proofread(editor.getText())
   }
 }, 1000)
 
-const translate = async (text: string) => {
+const handleTranslate = async (text: string) => {
   const [ source, target ] = translationDirection.value.split('-')
-  if ('Translator' in self) {
-    // @ts-ignore
-    const translator = await Translator.create({
-      sourceLanguage: source,
-      targetLanguage: target,
-    })
-    const result = await translator.translate(text)
+  const result = await translate(text, source, target)
+  if (result) {
     translated.value = result
   }
 }
 
-const summarize = async (text: string) => {
-  isGeneratingSummary.value = true
-  if ('Summarizer' in self) {
-    const options = {
-      sharedContext: 'Always produce summaries in the same language as the input text.',
-      type: summaryType.value,
-      length: summaryLength.value,
-      format: summaryFormat.value,
-      outputLanguage: 'ja',
-    }
-    // @ts-ignore
-    const summarizer = await Summarizer.create(options)
-    const result = await summarizer.summarize(text)
-    summarized.value = result
-    isGeneratingSummary.value = false
-  }
+const handleChangeLanguageDirection = () => {
+  // @ts-ignore
+  handleTranslate(props.editor.getText() || '')
 }
 
-const proofread = async (text: string) => {
-  if ('Proofreader' in self) {
-    // @ts-ignore
-    const proofreader = await Proofreader.create({})
-    const result = await proofreader.proofread(text)
-    console.log('result', result)
+const handleSummarize = async (text: string) => {
+  isGeneratingSummary.value = true
+  const language = detectLanguage(text)
+  const options: SummaryOptions = {
+    sharedContext: 'Always produce summaries in the same language as the input text.',
+    type: summaryType.value,
+    length: summaryLength.value,
+    format: summaryFormat.value,
+    outputLanguage: language === Language.English ? 'en' : 'ja',
+  }
+  const result = await summarize(text, options)
+  if (result) {
+    summarized.value = result
+  }
+  isGeneratingSummary.value = false
+}
+
+const handleProofread = async (text: string) => {
+  isGeneratingByProofreader.value = true
+  const result = await proofread(text, { expectedInputLanguages: ['en'], outputLanguage: 'en' })
+  console.log('proofreader result in handler:', result)
+  if (result?.correctedInput) {
     proofreaded.value = result
   }
+  isGeneratingByProofreader.value = false
 }
 
-const write = async () => {
-  if ('Writer' in self) {
-    isGeneratingByWriter.value = true
-    const writerOptions = {
-      tone: writerTone.value,
-      format: 'plain-text',
-      length: writerLength.value
-    }
-    // @ts-ignore
-    const writer = await Writer.create(writerOptions)
-    const result = await writer.write(writerPrompt.value, { context: writerContext.value })
-    isGeneratingByWriter.value = false
-    return result
+const handleWrite = async () => {
+  isGeneratingByWriter.value = true
+  const result = await write(writerPrompt.value, {
+    format: 'plain-text',
+    tone: writerTone.value,
+    length: writerLength.value,
+    outputLanguage: 'ja'
+  }, { context: writerContext.value })
+  if (result) {
+    writerResult.value = result
   }
+  isGeneratingByWriter.value = false
 }
 
-const rewrite = async () => {
-  if ('Rewriter' in self) {
-    isGeneratingByRewriter.value = true
-    const rewriterOptions = {
-      tone: rewriterTone.value,
-      length: rewriterLength.value,
-      format: 'plain-text',
-      outputLanguage: 'ja'
-    }
-    // @ts-ignore
-    const rewriter = await Rewriter.create(rewriterOptions)
-    // @ts-ignore
-    const result = await rewriter.rewrite(props.editor?.getText() || '')
-    isGeneratingByRewriter.value = false
-    return result
+const handleRewrite = async () => {
+  isGeneratingByRewriter.value = true
+  const rewriterOptions = {
+    tone: rewriterTone.value,
+    length: rewriterLength.value,
+    format: 'plain-text',
+    outputLanguage: 'ja'
   }
+  // @ts-ignore
+  const result = await rewrite(props.editor?.getText() || '', rewriterOptions, { context: '' })
+  if (result) {
+    rewriterResult.value = result
+  }
+  isGeneratingByRewriter.value = false
+  return result
 }
 
 const updateHandler = ({ editor }: { editor: Editor }) => {
@@ -139,28 +138,24 @@ const updateHandler = ({ editor }: { editor: Editor }) => {
 
 const handleChangeSummaryParams = () => {
   // @ts-ignore
-  summarize(props.editor.getText() || '')
+  handleSummarize(props.editor.getText() || '')
 }
 
 const handleChangeAiMode = () => {
   if (aiMode.value === 'translator') {
-    // console.log('translator selected')
     // @ts-ignore
-    translate(props.editor?.getText() || '')
+    handleTranslate(props.editor?.getText() || '')
   } else if (aiMode.value === 'summarizer') {
-    // console.log('summarizer selected')
     // @ts-ignore
-    summarize(props.editor?.getText() || '')
+    handleSummarize(props.editor?.getText() || '')
   } else if (aiMode.value === 'proofreader') {
-    // console.log('proofreader selected')
     // @ts-ignore
-    proofread(props.editor?.getText() || '')
+    handleProofread(props.editor?.getText() || '')
   }
 }
 
 const handleClickGenerate = async (_e: Event) => {
-  const result = await write()
-  writerResult.value = result as string
+  await handleWrite()
 }
 
 const handleClickInsert = async () => {
@@ -171,8 +166,7 @@ const handleClickInsert = async () => {
 }
 
 const handleClickRewriter = async () => {
-  const result = await rewrite()
-  console.log('rewriter result:', result)
+  const result = await handleRewrite()
   rewriterResult.value = result as string
 }
 
@@ -181,55 +175,25 @@ const handleClickReplace = async () => {
   props.editor?.chain().focus().setContent(rewriterResult.value).run() 
 }
 
-const updateSession = async () => {
-  // @ts-ignore
-  if (self.LanguageModel) {
-    // @ts-ignore
-    session.value = await LanguageModel.create({
-      temperature: 1,
-      topK: 3,
-      initialPrompts: [
-        {
-          role: 'system',
-          content: 'You are a helpful and friendly assistant.'
-        }
-      ]
-    })
-  }
-}
-
-const promptModel = async () => {
-  // @ts-ignore
-  const stream = await session.value.promptStreaming(promptInput.value)
-  for await (const chunk of stream) {
-    // console.log(chunk)
-    rawResponse.value += chunk
-  }
-  // @ts-ignore
-  prompts.value.push({
-    role: 'assistant',
-    content: rawResponse.value
-  })
-  rawResponse.value = ''
-}
-
 const handleSubmitPrompt = async (e: Event) => {
   e.preventDefault()
-  console.log('submit prompt:', promptInput.value)
-  // @ts-ignore
   prompts.value.push({
     role: 'user',
     content: promptInput.value
   })
   await updateSession()
-  await promptModel()
+  const result = await promptModel(promptInput.value)
+  prompts.value.push({
+    role: 'assistant',
+    content: result || ''
+  })
 }
 
 onMounted(async () => {
   // @ts-ignore
   props.editor?.on('update', updateHandler)
   // @ts-ignore
-  await translate(props.editor?.getText() || '')
+  await handleTranslate(props.editor?.getText() || '')
 })
 
 watch (() => route.params.noteId, async (noteIdAfter, noteIdBefore) => {
@@ -243,7 +207,7 @@ watch (() => route.params.noteId, async (noteIdAfter, noteIdBefore) => {
     // @ts-ignore
     props.editor?.on('update', updateHandler)
     // @ts-ignore
-    await translate(props.editor.getText() || '')
+    await handleTranslate(props.editor.getText() || '')
   } else if (!noteIdAfter) {
     translated.value = ''
   }
@@ -283,6 +247,7 @@ onUnmounted(() => {
             id="ja-en"
             v-model="translationDirection"
             :value="'ja-en'"
+            @change="handleChangeLanguageDirection"
           />
           <label for="ja-en" class="font-mono">ja → en</label>
           <input
@@ -291,6 +256,7 @@ onUnmounted(() => {
             id="en-ja"
             v-model="translationDirection"
             :value="'en-ja'"
+            @change="handleChangeLanguageDirection"
           />
           <label for="en-ja" class="font-mono">en → ja</label>
         </form>
@@ -346,7 +312,8 @@ onUnmounted(() => {
       </div>
       <!-- proofreader -->
       <div v-if="props.editor && aiMode === 'proofreader'" class="layout-stack-2">
-        <div>
+        <div v-if="isGeneratingByProofreader" class="text-secondary">Generating proofreaded text...</div>
+        <div v-else>
           <!-- @vue-ignore -->
           {{ proofreaded.correctedInput }}
         </div>

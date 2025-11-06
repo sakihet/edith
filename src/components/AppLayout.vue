@@ -14,6 +14,7 @@ import { Note } from '../types/note'
 import { commandMenuModifier, store } from '../store'
 import { initialContent } from '../utils'
 import { useSearchDialog } from '../composables/useSearchDialog'
+import { useBuiltInAi } from '../composables/useBuiltInAi'
 
 const route = useRoute()
 const router = useRouter()
@@ -22,6 +23,7 @@ const editorInstance = ref<Editor | undefined>(undefined)
 
 provide('editorInstance', editorInstance)
 
+const { isOpenBuiltInAiPanel, toggleBuiltInAiPanel } = useBuiltInAi()
 const { isOpenSearchDialog, openSearchDialog } = useSearchDialog()
 
 const handleAdd = async () => {
@@ -55,9 +57,7 @@ const handleDelete = (id: string) => {
     }
   }
 }
-const toggleAiPanel = () => {
-  store.isOpenAiPanel = !store.isOpenAiPanel
-}
+
 const modifiler = commandMenuModifier === 'Meta' ? '⌘' : 'Ctrl'
 </script>
 
@@ -150,7 +150,7 @@ const modifiler = commandMenuModifier === 'Meta' ? '⌘' : 'Ctrl'
       <div class="pl-6 pr-4">
         <button
           class="w-full pattern-button-base h-8 text-small"
-          @click="toggleAiPanel"
+          @click="toggleBuiltInAiPanel"
         >
           Built-in AI
         </button>
@@ -165,7 +165,7 @@ const modifiler = commandMenuModifier === 'Meta' ? '⌘' : 'Ctrl'
       </div>
       <!-- @vue-ignore -->
       <TheAiPanel
-        v-if="store.isOpenAiPanel"
+        v-if="isOpenBuiltInAiPanel"
         :editor="editorInstance"
       />
     </div>
