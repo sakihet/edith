@@ -1,5 +1,4 @@
 <script setup lang="ts">
-// import { onMounted, ref, watch } from 'vue'
 import { onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 // import { useSpeechRecognition } from '@vueuse/core'
@@ -17,7 +16,9 @@ const route = useRoute()
 // const enableSpeechInput = ref(false)
 // const speechText = ref('')
 
-const { closeSearchDialog } = useSearchDialog()
+const props = defineProps<{
+  searchDialog: ReturnType<typeof useSearchDialog>
+}>()
 
 onMounted(() => {
   if (route.params.noteId) {
@@ -26,7 +27,7 @@ onMounted(() => {
 })
 
 watch (() => route.params.noteId, (noteIdAfter, noteIdBefore) => {
-  closeSearchDialog()
+  props.searchDialog.closeSearchDialog()
   if (noteIdBefore === undefined && noteIdAfter) {
     store.currentNote = store.notes.find(n => n.id === noteIdAfter)
     if (store.currentNote?.id) {
