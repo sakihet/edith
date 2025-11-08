@@ -11,6 +11,7 @@ import { Language } from '../types/language';
 
 const props = defineProps<{
   editor?: Ref<Editor | undefined>
+  width?: number
 }>()
 
 const aiMode = ref<AiMode>('translator')
@@ -220,7 +221,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="w-80 bg-secondary">
+  <div class="bg-secondary" :style="{ width: props.width + 'px' }">
     <div class="py-6 pl-4 pr-6 layout-stack-2">
       <div class="text-secondary">
         Built-in AI
