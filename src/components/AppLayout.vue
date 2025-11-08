@@ -24,7 +24,7 @@ const editorInstance = ref<Editor | undefined>(undefined)
 provide('editorInstance', editorInstance)
 
 const { isOpenBuiltInAiPanel, toggleBuiltInAiPanel } = useBuiltInAi()
-const { isOpenSearchDialog, openSearchDialog } = useSearchDialog()
+const searchDialog = useSearchDialog()
 
 const handleAdd = async () => {
   const now = new Date().toISOString()
@@ -38,7 +38,7 @@ const handleAdd = async () => {
   router.push(`/${note.id}`)
 }
 const handleClickSearch = () => {
-  openSearchDialog()
+  searchDialog.openSearchDialog()
 }
 const handleSort = (sortKey: string) => {
   store.sort(sortKey)
@@ -161,7 +161,7 @@ const modifiler = commandMenuModifier === 'Meta' ? '⌘' : 'Ctrl'
     </div>
     <div class="f-1 flex-row">
       <div class="f-1">
-        <router-view />
+        <router-view :searchDialog="searchDialog" />
       </div>
       <!-- @vue-ignore -->
       <TheAiPanel
@@ -169,6 +169,10 @@ const modifiler = commandMenuModifier === 'Meta' ? '⌘' : 'Ctrl'
         :editor="editorInstance"
       />
     </div>
-    <AppDialog v-if="isOpenSearchDialog" />
+    <AppDialog
+      v-if="searchDialog.isOpenSearchDialog.value"
+      :isOpenSearchDialog="searchDialog.isOpenSearchDialog.value"
+      :closeSearchDialog="searchDialog.closeSearchDialog"
+    />
   </div>
 </template>
