@@ -59,13 +59,13 @@ const handleDelete = (id: string) => {
   }
 }
 
-const { sidebarWidth, handleDblclick, handleMousedown, handleMousemove, handleMouseup } = useSidebarResizable()
+const { sidebarWidth, handleSidebarResizableDblclick, handleSidebarResizableMousedown, handleSidebarResizableMousemove, handleSidebarResizableMouseup } = useSidebarResizable()
 
 const modifiler = commandMenuModifier === 'Meta' ? '⌘' : 'Ctrl'
 </script>
 
 <template>
-  <div class="f-1 flex-row" @mousemove="handleMousemove" @mouseup="handleMouseup">
+  <div class="f-1 flex-row" @mousemove="handleSidebarResizableMousemove" @mouseup="handleSidebarResizableMouseup">
     <div class="pt-6 bg-secondary flex-column layout-stack-2" :style="{ width: sidebarWidth + 'px' }">
       <div class="pl-6 pr-4 flex-row layout-stack-h-2">
         <RouterLink
@@ -166,8 +166,8 @@ const modifiler = commandMenuModifier === 'Meta' ? '⌘' : 'Ctrl'
       <button
         type="button"
         class="h-full w-2 bg-transparent border-none text-tertiary font-mono cursor-ew-resize"
-        @mousedown="handleMousedown"
-        @dblclick="handleDblclick"
+        @mousedown="handleSidebarResizableMousedown"
+        @dblclick="handleSidebarResizableDblclick"
       >
         |
       </button>

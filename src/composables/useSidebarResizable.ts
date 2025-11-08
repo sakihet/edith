@@ -21,14 +21,14 @@ export const useSidebarResizable = () => {
   const sidebarWidthMin = 160
   const sidebarWidthMax = 480
 
-  const handleDblclick = (_e: MouseEvent) => {
+  const handleSidebarResizableDblclick = (_e: MouseEvent) => {
     sidebarWidth.value = WIDTH_DEFAULT
     setValue(WIDTH_DEFAULT)
   }
-  const handleMousedown = (_e: MouseEvent) => {
+  const handleSidebarResizableMousedown = (_e: MouseEvent) => {
     isSidebarResizing.value = true
   }
-  const handleMousemove = (event: MouseEvent) => {
+  const handleSidebarResizableMousemove = (event: MouseEvent) => {
     if (isSidebarResizing.value) {
       const clientX = event.clientX
       if (sidebarWidthMin <= clientX && clientX <= sidebarWidthMax) {
@@ -36,16 +36,16 @@ export const useSidebarResizable = () => {
       }
     }
   }
-  const handleMouseup = (_e: MouseEvent) => {
+  const handleSidebarResizableMouseup = (_e: MouseEvent) => {
     isSidebarResizing.value = false
     setValue(sidebarWidth.value)
   }
 
   return {
     sidebarWidth,
-    handleDblclick,
-    handleMousedown,
-    handleMousemove,
-    handleMouseup
+    handleSidebarResizableDblclick,
+    handleSidebarResizableMousedown,
+    handleSidebarResizableMousemove,
+    handleSidebarResizableMouseup
   }
 }
