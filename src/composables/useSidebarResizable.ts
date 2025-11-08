@@ -23,7 +23,6 @@ export const useSidebarResizable = () => {
 
   const handleDblclick = (_e: MouseEvent) => {
     sidebarWidth.value = WIDTH_DEFAULT
-    // store.sidebarWidth = WIDTH_DEFAULT
     setValue(WIDTH_DEFAULT)
   }
   const handleMousedown = (_e: MouseEvent) => {
