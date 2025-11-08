@@ -14,7 +14,25 @@ const props = defineProps<{
   width?: number
 }>()
 
-const aiMode = ref<AiMode>('translator')
+const aiMode = ref<AiMode>('ask')
+
+// ask
+const askInput = ref('')
+const askPrompts = ref<Prompt[]>([])
+const handleAskSubmit = async (e: Event) => {
+  e.preventDefault()
+  e.stopPropagation()
+  askPrompts.value.push({
+    role: 'user',
+    content: askInput.value
+  })
+  const result = await promptModel(askInput.value)
+  askPrompts.value.push({
+    role: 'assistant',
+    content: result
+  })
+  askInput.value = ''
+}
 
 // translation
 const translated = ref('')
@@ -50,7 +68,7 @@ const promptInput = ref('')
 const prompts = ref<Prompt[]>([])
 
 const route = useRoute()
-const { proofread, promptModel, rewrite, summarize, translate, updateSession, write } = useBuiltInAi()
+const { proofread, promptModel, promptNoteContext, rewrite, summarize, translate, updateSession, write } = useBuiltInAi()
 
 const debouncedFn = useDebounceFn((editor: Editor) => {
   if (aiMode.value === 'translator') {
@@ -142,8 +160,14 @@ const handleChangeSummaryParams = () => {
   handleSummarize(props.editor.getText() || '')
 }
 
-const handleChangeAiMode = () => {
-  if (aiMode.value === 'translator') {
+const handleChangeAiMode = async () => {
+  if (aiMode.value === 'ask') {
+    await updateSession()
+    // @ts-ignore
+    await promptNoteContext(props.editor?.getText() || '')
+    // @ts-ignore
+    const content = props.editor?.getText() || ''
+  } else if (aiMode.value === 'translator') {
     // @ts-ignore
     handleTranslate(props.editor?.getText() || '')
   } else if (aiMode.value === 'summarizer') {
@@ -194,7 +218,14 @@ onMounted(async () => {
   // @ts-ignore
   props.editor?.on('update', updateHandler)
   // @ts-ignore
-  await handleTranslate(props.editor?.getText() || '')
+  if (aiMode.value === 'translator') {
+    // @ts-ignore
+    await handleTranslate(props.editor?.getText() || '')
+  } else if (aiMode.value === 'ask') {
+    await updateSession()
+    // @ts-ignore
+    await promptNoteContext(props.editor?.getText() || '')
+  }
 })
 
 watch (() => route.params.noteId, async (noteIdAfter, noteIdBefore) => {
@@ -232,6 +263,7 @@ onUnmounted(() => {
           v-model="aiMode"
           @change="handleChangeAiMode"
         >
+          <option value="ask">Ask</option>
           <option value="translator">Translator</option>
           <option value="summarizer">Summarizer</option>
           <option value="proofreader">Proofreader</option>
@@ -240,6 +272,41 @@ onUnmounted(() => {
           <option value="prompt">Prompt</option>
         </select>
       </div>
+      <!-- ask -->
+      <div v-if="aiMode === 'ask'" class="layout-stack-2">
+        <div>
+          <form
+            class="layout-stack-1"
+            @submit="handleAskSubmit"
+          >
+            <textarea
+              type="text"
+              v-model="askInput"
+              class="border-solid border-1 border-color-default bg-primary text-secondary p-1 h-10 w-full text-small pattern-scrollbar-thick"
+            />
+            <button
+              type="submit"
+              class="pattern-button-base w-full h-6 text-small"
+            >
+              Submit
+            </button>
+          </form>
+        </div>
+        <div
+          class="overflow-y-scroll pattern-scrollbar-thin layout-stack-2 pr-2"
+          :style="{ height: 'calc(100vh - 12rem)' }"
+        >
+          <div
+            v-for="p in askPrompts"
+            class="text-small text-secondary"
+          >
+            <div>
+              <p :class="{ 'text-right': p.role === 'user' }">{{ p.content }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- translator -->
       <div>
         <form class="layout-stack-h-2" v-if="aiMode === 'translator'">
           <input
