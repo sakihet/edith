@@ -15,6 +15,7 @@ import { commandMenuModifier, store } from '../store'
 import { initialContent } from '../utils'
 import { useSearchDialog } from '../composables/useSearchDialog'
 import { useBuiltInAi } from '../composables/useBuiltInAi'
+import { useSidebarResizable } from '../composables/useSidebarResizable'
 
 const route = useRoute()
 const router = useRouter()
@@ -58,12 +59,14 @@ const handleDelete = (id: string) => {
   }
 }
 
+const { sidebarWidth, handleDblclick, handleMousedown, handleMousemove, handleMouseup } = useSidebarResizable()
+
 const modifiler = commandMenuModifier === 'Meta' ? '⌘' : 'Ctrl'
 </script>
 
 <template>
-  <div class="f-1 flex-row">
-    <div class="pt-6 w-80 bg-secondary flex-column layout-stack-2">
+  <div class="f-1 flex-row" @mousemove="handleMousemove" @mouseup="handleMouseup">
+    <div class="pt-6 bg-secondary flex-column layout-stack-2" :style="{ width: sidebarWidth + 'px' }">
       <div class="pl-6 pr-4 flex-row layout-stack-h-2">
         <RouterLink
           to="/"
@@ -158,6 +161,16 @@ const modifiler = commandMenuModifier === 'Meta' ? '⌘' : 'Ctrl'
       <div class="pl-6 pr-4 text-tertiary text-small font-mono">
         <span class="px-2">v {{ version }}</span>
       </div>
+    </div>
+    <div>
+      <button
+        type="button"
+        class="h-full w-2 bg-transparent border-none text-tertiary font-mono cursor-ew-resize"
+        @mousedown="handleMousedown"
+        @dblclick="handleDblclick"
+      >
+        |
+      </button>
     </div>
     <div class="f-1 flex-row">
       <div class="f-1">
