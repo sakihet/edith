@@ -284,7 +284,7 @@ onUnmounted(() => {
             <textarea
               type="text"
               v-model="askInput"
-              class="border-solid border-1 border-color-default bg-primary text-secondary p-1 h-10 w-full text-small pattern-scrollbar-thick"
+              class="border-solid border-1 border-color-default bg-primary text-secondary p-1 h-10 w-full text-small pattern-scrollbar-thick resize-vertical"
             />
             <button
               type="submit"
