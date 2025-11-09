@@ -2,6 +2,7 @@
 <script setup lang="ts">
 import IconMoreHoriz from './icons/IconMoreHoriz.vue'
 import { Note } from '../types/note'
+import { formatRelativeTime } from '../utils'
 
 const props = defineProps<{
   note: Note
@@ -59,9 +60,9 @@ const handleDelete = (e: Event) => {
         <div>
           <span
             class="text-tertiary text-small"
-            :title="props.note.updatedAt.split('T')[0]"
+            :title="props.note.updatedAt"
           >
-            {{ props.note.updatedAt.split('T')[0] }}
+            {{ formatRelativeTime(props.note.updatedAt) }}
           </span>
         </div>
       </div>
