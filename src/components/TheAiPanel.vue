@@ -16,8 +16,11 @@ const props = defineProps<{
 
 const aiMode = ref<AiMode>('ask')
 
+// ask
+const isComposing = ref(false)
+const askInput = ref('')
+const askPrompts = ref<Prompt[]>([])
 const refAskTextarea = ref<HTMLTextAreaElement>()
-
 const resetTextareaHeight = (textareaRef: Ref<HTMLTextAreaElement | undefined>) => {
   if (textareaRef.value) {
     nextTick(() => {
@@ -28,11 +31,6 @@ const resetTextareaHeight = (textareaRef: Ref<HTMLTextAreaElement | undefined>) 
     })
   }
 }
-
-// ask
-const isComposing = ref(false)
-const askInput = ref('')
-const askPrompts = ref<Prompt[]>([])
 const handleAskSubmit = async (e: Event) => {
   e.preventDefault()
   e.stopPropagation()
@@ -40,6 +38,7 @@ const handleAskSubmit = async (e: Event) => {
     role: 'user',
     content: askInput.value
   })
+  await updateNoteContext()
   const result = await promptModel(askInput.value)
   askPrompts.value.push({
     role: 'assistant',
@@ -61,6 +60,11 @@ const handleAskCompositionStart = () => {
 }
 const handleAskCompositionEnd = () => {
   isComposing.value = false
+}
+const updateNoteContext = async () => {
+  await updateSession()
+  // @ts-ignore
+  await promptNoteContext(props.editor?.getText() || '')
 }
 
 // translation
@@ -191,11 +195,7 @@ const handleChangeSummaryParams = () => {
 
 const handleChangeAiMode = async () => {
   if (aiMode.value === 'ask') {
-    await updateSession()
-    // @ts-ignore
-    await promptNoteContext(props.editor?.getText() || '')
-    // @ts-ignore
-    const content = props.editor?.getText() || ''
+    await updateNoteContext()
   } else if (aiMode.value === 'translator') {
     // @ts-ignore
     handleTranslate(props.editor?.getText() || '')
@@ -265,6 +265,9 @@ watch (() => route.params.noteId, async (noteIdAfter, noteIdBefore) => {
     await nextTick()
     // @ts-ignore
     props.editor?.on('update', updateHandler)
+    if (aiMode.value === 'ask') {
+      await updateNoteContext()
+    }
   } else if (noteIdAfter && noteIdBefore && (noteIdAfter !== noteIdBefore)) {
     translated.value = ''
     await nextTick()
@@ -273,6 +276,8 @@ watch (() => route.params.noteId, async (noteIdAfter, noteIdBefore) => {
     if (aiMode.value === 'translator') {
       // @ts-ignore
       await handleTranslate(props.editor.getText() || '')
+    } else if (aiMode.value === 'ask') {
+      await updateNoteContext()
     }
   } else if (!noteIdAfter) {
     translated.value = ''
