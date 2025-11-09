@@ -322,7 +322,7 @@ onUnmounted(() => {
             <textarea
               type="text"
               v-model="askInput"
-              class="border-solid border-1 border-color-default bg-primary text-secondary p-1 py-2 w-full text-small pattern-scrollbar-thick resize-vertical field-sizing-content"
+              class="border-solid border-1 border-color-default bg-primary text-secondary p-2 w-full text-small pattern-scrollbar-thick resize-vertical field-sizing-content"
               @keydown="handleAskKeyDown"
               @compositionstart="handleAskCompositionStart"
               @compositionend="handleAskCompositionEnd"
