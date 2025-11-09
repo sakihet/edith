@@ -16,7 +16,7 @@ const props = defineProps<{
 
 const aiMode = ref<AiMode>('ask')
 
-const askTextareaRef = ref<HTMLTextAreaElement>()
+const refAskTextarea = ref<HTMLTextAreaElement>()
 
 const resetTextareaHeight = (textareaRef: Ref<HTMLTextAreaElement | undefined>) => {
   if (textareaRef.value) {
@@ -46,7 +46,7 @@ const handleAskSubmit = async (e: Event) => {
     content: result
   })
   askInput.value = ''
-  resetTextareaHeight(askTextareaRef)
+  resetTextareaHeight(refAskTextarea)
 }
 const handleAskKeyDown = async (e: KeyboardEvent) => {
   if (e.key === 'Enter' && !isComposing.value) {
@@ -251,6 +251,9 @@ onMounted(async () => {
     // @ts-ignore
     await handleTranslate(props.editor?.getText() || '')
   } else if (aiMode.value === 'ask') {
+    if (refAskTextarea.value) {
+      refAskTextarea.value?.focus()
+    }
     await updateSession()
     // @ts-ignore
     await promptNoteContext(props.editor?.getText() || '')
@@ -318,7 +321,7 @@ onUnmounted(() => {
               @keydown="handleAskKeyDown"
               @compositionstart="handleAskCompositionStart"
               @compositionend="handleAskCompositionEnd"
-              ref="askTextareaRef"
+              ref="refAskTextarea"
             />
           </form>
         </div>
