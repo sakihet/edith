@@ -5,7 +5,7 @@ export type LanguageModelOptions = {
   temperature?: number
   maxTemperature?: number
   initialPrompts: Prompt[]
-  expectedOutputs?: Array<{ type: string, langueages: string[] }>
+  expectedOutputs?: Array<{ type: string, languages: string[] }>
 }
 export type Prompt = {
   role: string

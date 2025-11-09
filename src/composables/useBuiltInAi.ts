@@ -106,7 +106,7 @@ export const useBuiltInAi = () => {
           }
         ],
         expectedOutputs: [{
-          type: 'text', langueages: ['en', 'ja']
+          type: 'text', languages: ['en', 'ja']
         }],
         monitor(m) {
           m.addEventListener('downloadprogress', (e: any) => {
