@@ -295,6 +295,7 @@ onUnmounted(() => {
           <form
             class="layout-stack-1"
             @submit="handleAskSubmit"
+            :disable="askInput.length === 0"
           >
             <textarea
               type="text"
