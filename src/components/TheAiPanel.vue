@@ -238,8 +238,10 @@ watch (() => route.params.noteId, async (noteIdAfter, noteIdBefore) => {
     await nextTick()
     // @ts-ignore
     props.editor?.on('update', updateHandler)
-    // @ts-ignore
-    await handleTranslate(props.editor.getText() || '')
+    if (aiMode.value === 'translator') {
+      // @ts-ignore
+      await handleTranslate(props.editor.getText() || '')
+    }
   } else if (!noteIdAfter) {
     translated.value = ''
   }
