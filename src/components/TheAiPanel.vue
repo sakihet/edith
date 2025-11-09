@@ -17,6 +17,7 @@ const props = defineProps<{
 const aiMode = ref<AiMode>('ask')
 
 // ask
+const isComposing = ref(false)
 const askInput = ref('')
 const askPrompts = ref<Prompt[]>([])
 const handleAskSubmit = async (e: Event) => {
@@ -32,6 +33,20 @@ const handleAskSubmit = async (e: Event) => {
     content: result
   })
   askInput.value = ''
+}
+const handleAskKeyDown = async (e: KeyboardEvent) => {
+  if (e.key === 'Enter' && !isComposing.value) {
+    e.preventDefault()
+    if (askInput.value.trim() !== '') {
+      await handleAskSubmit(e)
+    }
+  }
+}
+const handleAskCompositionStart = () => {
+  isComposing.value = true
+}
+const handleAskCompositionEnd = () => {
+  isComposing.value = false
 }
 
 // translation
@@ -285,13 +300,10 @@ onUnmounted(() => {
               type="text"
               v-model="askInput"
               class="border-solid border-1 border-color-default bg-primary text-secondary p-1 w-full text-small pattern-scrollbar-thick resize-vertical field-sizing-content"
+              @keydown="handleAskKeyDown"
+              @compositionstart="handleAskCompositionStart"
+              @compositionend="handleAskCompositionEnd"
             />
-            <button
-              type="submit"
-              class="pattern-button-base w-full h-6 text-small"
-            >
-              Submit
-            </button>
           </form>
         </div>
         <div
