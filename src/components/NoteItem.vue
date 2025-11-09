@@ -60,7 +60,7 @@ const handleDelete = (e: Event) => {
         <div>
           <span
             class="text-tertiary text-small"
-            :title="props.note.updatedAt"
+            :title="props.note.updatedAt.split('T')[0]"
           >
             {{ formatRelativeTime(props.note.updatedAt) }}
           </span>
