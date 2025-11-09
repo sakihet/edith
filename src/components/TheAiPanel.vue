@@ -16,6 +16,19 @@ const props = defineProps<{
 
 const aiMode = ref<AiMode>('ask')
 
+const askTextareaRef = ref<HTMLTextAreaElement>()
+
+const resetTextareaHeight = (textareaRef: Ref<HTMLTextAreaElement | undefined>) => {
+  if (textareaRef.value) {
+    nextTick(() => {
+      if (textareaRef.value) {
+        // @ts-ignore
+        textareaRef.value.style.fieldSizing = 'content'
+      }
+    })
+  }
+}
+
 // ask
 const isComposing = ref(false)
 const askInput = ref('')
@@ -33,6 +46,7 @@ const handleAskSubmit = async (e: Event) => {
     content: result
   })
   askInput.value = ''
+  resetTextareaHeight(askTextareaRef)
 }
 const handleAskKeyDown = async (e: KeyboardEvent) => {
   if (e.key === 'Enter' && !isComposing.value) {
@@ -300,10 +314,11 @@ onUnmounted(() => {
             <textarea
               type="text"
               v-model="askInput"
-              class="border-solid border-1 border-color-default bg-primary text-secondary p-1 w-full text-small pattern-scrollbar-thick resize-vertical field-sizing-content"
+              class="border-solid border-1 border-color-default bg-primary text-secondary p-1 py-2 w-full text-small pattern-scrollbar-thick resize-vertical field-sizing-content"
               @keydown="handleAskKeyDown"
               @compositionstart="handleAskCompositionStart"
               @compositionend="handleAskCompositionEnd"
+              ref="askTextareaRef"
             />
           </form>
         </div>
