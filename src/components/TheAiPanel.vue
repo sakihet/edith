@@ -17,6 +17,9 @@ const props = defineProps<{
 const aiMode = ref<AiMode>('ask')
 
 // ask
+type AskModeStatus = 'idle' | 'loading' | 'ready' | 'processing'
+
+const askModeStatus = ref<AskModeStatus>('idle')
 const isComposing = ref(false)
 const askInput = ref('')
 const askPrompts = ref<Prompt[]>([])
@@ -34,16 +37,21 @@ const resetTextareaHeight = (textareaRef: Ref<HTMLTextAreaElement | undefined>) 
 const handleAskSubmit = async (e: Event) => {
   e.preventDefault()
   e.stopPropagation()
+  if (!(askModeStatus.value === 'ready')) {
+    return
+  }
   askPrompts.value.push({
     role: 'user',
     content: askInput.value
   })
+  askModeStatus.value = 'processing'
   await updateNoteContext()
   const result = await promptModel(askInput.value)
   askPrompts.value.push({
     role: 'assistant',
     content: result
   })
+  askModeStatus.value = 'ready'
   askInput.value = ''
   resetTextareaHeight(refAskTextarea)
 }
@@ -62,9 +70,11 @@ const handleAskCompositionEnd = () => {
   isComposing.value = false
 }
 const updateNoteContext = async () => {
+  askModeStatus.value = 'processing'
   await updateSession()
   // @ts-ignore
   await promptNoteContext(props.editor?.getText() || '')
+  askModeStatus.value = 'ready'
 }
 
 // translation
@@ -254,9 +264,11 @@ onMounted(async () => {
     if (refAskTextarea.value) {
       refAskTextarea.value?.focus()
     }
+    askModeStatus.value = 'loading'
     await updateSession()
     // @ts-ignore
     await promptNoteContext(props.editor?.getText() || '')
+    askModeStatus.value = 'ready'
   }
 })
 
@@ -277,7 +289,9 @@ watch (() => route.params.noteId, async (noteIdAfter, noteIdBefore) => {
       // @ts-ignore
       await handleTranslate(props.editor.getText() || '')
     } else if (aiMode.value === 'ask') {
+      askModeStatus.value = 'processing'
       await updateNoteContext()
+      askModeStatus.value = 'ready'
     }
   } else if (!noteIdAfter) {
     translated.value = ''
@@ -329,6 +343,12 @@ onUnmounted(() => {
               ref="refAskTextarea"
             />
           </form>
+          <div class="font-mono text-small text-secondary">
+            <span v-if="askModeStatus === 'idle'">[-]</span>
+            <span v-else-if="askModeStatus === 'loading'">[·]</span>
+            <span v-else-if="askModeStatus === 'ready'">[✓]</span>
+            <span v-else-if="askModeStatus === 'processing'">[~]</span>
+          </div>
         </div>
         <div
           class="overflow-y-scroll pattern-scrollbar-thin layout-stack-2 pr-2"
