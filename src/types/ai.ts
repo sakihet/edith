@@ -1,10 +1,11 @@
-export type AiMode = 'translator' | 'summarizer' | 'proofreader' | 'writer' | 'rewriter' | 'prompt'
+export type AiMode = 'ask' | 'translator' | 'summarizer' | 'proofreader' | 'writer' | 'rewriter' | 'prompt'
 export type LanguageModelOptions = {
   topK?: number
   maxTopK?: number
   temperature?: number
   maxTemperature?: number
   initialPrompts: Prompt[]
+  expectedOutputs?: Array<{ type: string, languages: string[] }>
 }
 export type Prompt = {
   role: string

@@ -105,6 +105,9 @@ export const useBuiltInAi = () => {
             content: 'You are a helpful and friendly assistant.'
           }
         ],
+        expectedOutputs: [{
+          type: 'text', languages: ['en', 'ja']
+        }],
         monitor(m) {
           m.addEventListener('downloadprogress', (e: any) => {
             console.log(`LanguageModel downloaded ${e.loaded * 100}%`)
@@ -120,6 +123,19 @@ export const useBuiltInAi = () => {
       rawResponse += chunk
     }
     return rawResponse
+  }
+  const promptNoteContext = async (context: string): Promise<void> => {
+   const prompt = `Answer questions based on the notes below.
+
+Important rules:
+- Always respond in the same language as the question
+- Use plain text only - No markdown formatting (no #, *, **, -, \`\`\`, etc.)
+
+Notes:
+${context}
+`
+
+    await session.value.prompt(prompt)
   }
 
   const proofread = async (text: string, options: ProofreaderOptions = {}): Promise<ProofreaderResult | undefined> => {
@@ -208,6 +224,7 @@ export const useBuiltInAi = () => {
     isWriterAvailable,
     proofread,
     promptModel,
+    promptNoteContext,
     rewrite,
     summarize,
     translate,

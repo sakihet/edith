@@ -14,7 +14,72 @@ const props = defineProps<{
   width?: number
 }>()
 
-const aiMode = ref<AiMode>('translator')
+const aiMode = ref<AiMode>('ask')
+
+// ask
+type AskModeStatus = 'idle' | 'loading' | 'ready' | 'processing'
+
+const askModeStatus = ref<AskModeStatus>('idle')
+const isComposing = ref(false)
+const askInput = ref('')
+const askPrompts = ref<Prompt[]>([])
+const refAskTextarea = ref<HTMLTextAreaElement>()
+const resetTextareaHeight = (textareaRef: Ref<HTMLTextAreaElement | undefined>) => {
+  if (textareaRef.value) {
+    nextTick(() => {
+      if (textareaRef.value) {
+        // @ts-ignore
+        textareaRef.value.style.fieldSizing = 'content'
+      }
+    })
+  }
+}
+const handleAskSubmit = async (e: Event) => {
+  e.preventDefault()
+  e.stopPropagation()
+  if (!(askModeStatus.value === 'ready')) {
+    return
+  }
+  askPrompts.value.push({
+    role: 'user',
+    content: askInput.value
+  })
+  askModeStatus.value = 'processing'
+  await updateNoteContext()
+  const result = await promptModel(askInput.value)
+  askPrompts.value.push({
+    role: 'assistant',
+    content: result
+  })
+  askModeStatus.value = 'ready'
+  askInput.value = ''
+  resetTextareaHeight(refAskTextarea)
+}
+const handleAskClear = () => {
+  askPrompts.value = []
+  resetTextareaHeight(refAskTextarea)
+}
+const handleAskKeyDown = async (e: KeyboardEvent) => {
+  if (e.key === 'Enter' && !isComposing.value) {
+    e.preventDefault()
+    if (askInput.value.trim() !== '') {
+      await handleAskSubmit(e)
+    }
+  }
+}
+const handleAskCompositionStart = () => {
+  isComposing.value = true
+}
+const handleAskCompositionEnd = () => {
+  isComposing.value = false
+}
+const updateNoteContext = async () => {
+  askModeStatus.value = 'processing'
+  await updateSession()
+  // @ts-ignore
+  await promptNoteContext(props.editor?.getText() || '')
+  askModeStatus.value = 'ready'
+}
 
 // translation
 const translated = ref('')
@@ -50,7 +115,7 @@ const promptInput = ref('')
 const prompts = ref<Prompt[]>([])
 
 const route = useRoute()
-const { proofread, promptModel, rewrite, summarize, translate, updateSession, write } = useBuiltInAi()
+const { proofread, promptModel, promptNoteContext, rewrite, summarize, translate, updateSession, write } = useBuiltInAi()
 
 const debouncedFn = useDebounceFn((editor: Editor) => {
   if (aiMode.value === 'translator') {
@@ -142,8 +207,10 @@ const handleChangeSummaryParams = () => {
   handleSummarize(props.editor.getText() || '')
 }
 
-const handleChangeAiMode = () => {
-  if (aiMode.value === 'translator') {
+const handleChangeAiMode = async () => {
+  if (aiMode.value === 'ask') {
+    await updateNoteContext()
+  } else if (aiMode.value === 'translator') {
     // @ts-ignore
     handleTranslate(props.editor?.getText() || '')
   } else if (aiMode.value === 'summarizer') {
@@ -194,7 +261,19 @@ onMounted(async () => {
   // @ts-ignore
   props.editor?.on('update', updateHandler)
   // @ts-ignore
-  await handleTranslate(props.editor?.getText() || '')
+  if (aiMode.value === 'translator') {
+    // @ts-ignore
+    await handleTranslate(props.editor?.getText() || '')
+  } else if (aiMode.value === 'ask') {
+    if (refAskTextarea.value) {
+      refAskTextarea.value?.focus()
+    }
+    askModeStatus.value = 'loading'
+    await updateSession()
+    // @ts-ignore
+    await promptNoteContext(props.editor?.getText() || '')
+    askModeStatus.value = 'ready'
+  }
 })
 
 watch (() => route.params.noteId, async (noteIdAfter, noteIdBefore) => {
@@ -202,13 +281,22 @@ watch (() => route.params.noteId, async (noteIdAfter, noteIdBefore) => {
     await nextTick()
     // @ts-ignore
     props.editor?.on('update', updateHandler)
+    if (aiMode.value === 'ask') {
+      await updateNoteContext()
+    }
   } else if (noteIdAfter && noteIdBefore && (noteIdAfter !== noteIdBefore)) {
     translated.value = ''
     await nextTick()
     // @ts-ignore
     props.editor?.on('update', updateHandler)
-    // @ts-ignore
-    await handleTranslate(props.editor.getText() || '')
+    if (aiMode.value === 'translator') {
+      // @ts-ignore
+      await handleTranslate(props.editor.getText() || '')
+    } else if (aiMode.value === 'ask') {
+      askModeStatus.value = 'processing'
+      await updateNoteContext()
+      askModeStatus.value = 'ready'
+    }
   } else if (!noteIdAfter) {
     translated.value = ''
   }
@@ -232,6 +320,7 @@ onUnmounted(() => {
           v-model="aiMode"
           @change="handleChangeAiMode"
         >
+          <option value="ask">Ask</option>
           <option value="translator">Translator</option>
           <option value="summarizer">Summarizer</option>
           <option value="proofreader">Proofreader</option>
@@ -240,6 +329,57 @@ onUnmounted(() => {
           <option value="prompt">Prompt</option>
         </select>
       </div>
+      <!-- ask -->
+      <div v-if="aiMode === 'ask'" class="layout-stack-2">
+        <div>
+          <form
+            class="layout-stack-1"
+            @submit="handleAskSubmit"
+            :disable="askInput.length === 0"
+          >
+            <textarea
+              type="text"
+              v-model="askInput"
+              class="border-solid border-1 border-color-default bg-primary text-secondary p-2 w-full text-small pattern-scrollbar-thick resize-vertical field-sizing-content"
+              @keydown="handleAskKeyDown"
+              @compositionstart="handleAskCompositionStart"
+              @compositionend="handleAskCompositionEnd"
+              ref="refAskTextarea"
+            />
+          </form>
+          <div class="flex-row">
+            <div class="f-1 font-mono text-small text-secondary">
+              <span v-if="askModeStatus === 'idle'">[-]</span>
+              <span v-else-if="askModeStatus === 'loading'">[·]</span>
+              <span v-else-if="askModeStatus === 'ready'">[✓]</span>
+              <span v-else-if="askModeStatus === 'processing'">[~]</span>
+            </div>
+            <div class="line-height-0">
+              <button
+                type="button"
+                class="border-none bg-transparent font-mono text-small text-secondary pointer"
+                @click="handleAskClear"
+              >
+                Clear
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          class="overflow-y-scroll pattern-scrollbar-thin layout-stack-2 pr-2"
+          :style="{ height: 'calc(100vh - 12rem)' }"
+        >
+          <div
+            v-for="p in askPrompts"
+            class="text-small text-secondary"
+          >
+            <div>
+              <p :class="{ 'text-right': p.role === 'user' }">{{ p.content }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- translator -->
       <div>
         <form class="layout-stack-h-2" v-if="aiMode === 'translator'">
           <input
