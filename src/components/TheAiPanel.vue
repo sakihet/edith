@@ -55,6 +55,10 @@ const handleAskSubmit = async (e: Event) => {
   askInput.value = ''
   resetTextareaHeight(refAskTextarea)
 }
+const handleAskClear = () => {
+  askPrompts.value = []
+  resetTextareaHeight(refAskTextarea)
+}
 const handleAskKeyDown = async (e: KeyboardEvent) => {
   if (e.key === 'Enter' && !isComposing.value) {
     e.preventDefault()
@@ -343,11 +347,22 @@ onUnmounted(() => {
               ref="refAskTextarea"
             />
           </form>
-          <div class="font-mono text-small text-secondary">
-            <span v-if="askModeStatus === 'idle'">[-]</span>
-            <span v-else-if="askModeStatus === 'loading'">[·]</span>
-            <span v-else-if="askModeStatus === 'ready'">[✓]</span>
-            <span v-else-if="askModeStatus === 'processing'">[~]</span>
+          <div class="flex-row">
+            <div class="f-1 font-mono text-small text-secondary">
+              <span v-if="askModeStatus === 'idle'">[-]</span>
+              <span v-else-if="askModeStatus === 'loading'">[·]</span>
+              <span v-else-if="askModeStatus === 'ready'">[✓]</span>
+              <span v-else-if="askModeStatus === 'processing'">[~]</span>
+            </div>
+            <div class="line-height-0">
+              <button
+                type="button"
+                class="border-none bg-transparent font-mono text-small text-secondary pointer"
+                @click="handleAskClear"
+              >
+                Clear
+              </button>
+            </div>
           </div>
         </div>
         <div
