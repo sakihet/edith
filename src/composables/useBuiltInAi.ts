@@ -125,7 +125,17 @@ export const useBuiltInAi = () => {
     return rawResponse
   }
   const promptNoteContext = async (context: string): Promise<void> => {
-    await session.value.prompt(`Answer future questions based on the notes below:\n${context}`)
+   const prompt = `Answer questions based on the notes below.
+
+Important rules:
+- Always respond in the same language as the question
+- Use plain text only - No markdown formatting (no #, *, **, -, \`\`\`, etc.)
+
+Notes:
+${context}
+`
+
+    await session.value.prompt(prompt)
   }
 
   const proofread = async (text: string, options: ProofreaderOptions = {}): Promise<ProofreaderResult | undefined> => {
