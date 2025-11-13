@@ -26,7 +26,9 @@ const editorInstance = ref<Editor | undefined>(undefined)
 provide('editorInstance', editorInstance)
 
 const { isOpenBuiltInAiPanel, toggleBuiltInAiPanel } = useBuiltInAi()
-const searchDialog = useSearchDialog()
+const searchDialog = useSearchDialog(() => {
+  editorInstance.value?.commands.focus('end')
+})
 
 const handleAdd = async () => {
   const now = new Date().toISOString()
