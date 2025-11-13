@@ -3,13 +3,16 @@ import { store, commandMenuModifier } from '../store'
 
 const isOpenSearchDialog = ref<boolean>(false)
 
-export const useSearchDialog = () => {
+export const useSearchDialog = (onCloseCallback?: () => void) => {
   const attachEventListeners = () => {
     document.addEventListener('keydown', handleKeyDown)
     document.addEventListener('keyup', handleKeyUp)
   }
   const closeSearchDialog = () => {
     isOpenSearchDialog.value = false
+    if (onCloseCallback) {
+      onCloseCallback()
+    }
   }
   const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === 'Escape') {
