@@ -3,6 +3,9 @@ import { VueRenderer, posToDOMRect } from '@tiptap/vue-3'
 import { Editor, Range } from '@tiptap/core'
 
 import CommandsList from '../components/CommandsList.vue'
+import { useBuiltInAi } from '../composables/useBuiltInAi'
+
+const { promptModel, updateSession } = useBuiltInAi()
 
 // @ts-ignore
 const updatePosition = (editor, element) => {
@@ -87,7 +90,70 @@ export default {
         command: ({ editor, range }: { editor: Editor, range: Range }) => {
           editor.chain().focus().deleteRange(range).setHorizontalRule().run()
         }
-      }
+      },
+      {
+        title: 'AI Continue writing',
+        command: async ({ editor, range }: { editor: Editor, range: Range }) => {
+          const context = editor.state.doc.textBetween(Math.max(0, range.from - 1000), range.from)
+          editor.chain().focus().deleteRange(range).insertContent('AI is thinking...').run()
+
+          try {
+            await updateSession()
+            const prompt = `Continue writing the following text naturally. Respond only with the continuation text.
+
+Text:
+${context}`
+            const response = await promptModel(prompt)
+            editor.chain().focus().deleteRange({ from: range.from, to: range.from + 'AI is thinking...'.length }).insertContent(response).run()
+          } catch (e) {
+            console.error(e)
+            editor.chain().focus().deleteRange({ from: range.from, to: range.from + 'AI is thinking...'.length }).insertContent('Failed to generate text.').run()
+          }
+        }
+      },
+      {
+        title: 'AI Extract tasks',
+        command: async ({ editor, range }: { editor: Editor, range: Range }) => {
+          const context = editor.state.doc.textBetween(0, editor.state.doc.content.size)
+          editor.chain().focus().deleteRange(range).insertContent('Extracting tasks...').run()
+
+          try {
+            await updateSession()
+            const prompt = `Extract tasks from the following text and format them as a bulleted list. If no tasks are found, say "No tasks found".
+      Important: Respond in the same language as the source text.
+
+      Text:
+      ${context}`
+            const response = await promptModel(prompt)
+            editor.chain().focus().deleteRange({ from: range.from, to: range.from + 'Extracting tasks...'.length }).insertContent(response).run()
+          } catch (e) {
+            console.error(e)
+            editor.chain().focus().deleteRange({ from: range.from, to: range.from + 'Extracting tasks...'.length }).insertContent('Failed to extract tasks.').run()
+          }
+        }
+      },
+      {
+        title: 'AI Detox',
+        command: async ({ editor, range }: { editor: Editor, range: Range }) => {
+          const context = editor.state.doc.textBetween(Math.max(0, range.from - 1000), range.from)
+          editor.chain().focus().deleteRange(range).insertContent('AI is detoxifying...').run()
+
+          try {
+            await updateSession()
+            const prompt = `Identify any toxic, aggressive, or overly critical expressions in the following text and rephrase them to be constructive, professional, and respectful while maintaining the original intent. Respond only with the rephrased text.
+      Important: Respond in the same language as the source text.
+
+      Text:
+      ${context}`
+            const response = await promptModel(prompt)
+            editor.chain().focus().deleteRange({ from: range.from, to: range.from + 'AI is detoxifying...'.length }).insertContent(response).run()
+          } catch (e) {
+            console.error(e)
+            editor.chain().focus().deleteRange({ from: range.from, to: range.from + 'AI is detoxifying...'.length }).insertContent('Failed to detoxify text.').run()
+          }
+        }
+      },
+
     ].filter(item => item.title.toLowerCase().startsWith(query.toLowerCase())).slice(0, 10)
   },
   render: () => {
