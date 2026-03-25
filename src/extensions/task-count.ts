@@ -26,9 +26,7 @@ export const TaskCount = Extension.create({
     return [
       new Plugin({
         key: new PluginKey('taskCount'),
-        filterTransaction: (transaction, state) => {
-          this.storage.tasks({ node: state.doc })
-          this.storage.tasks({ node: transaction.doc })
+        filterTransaction: () => {
           return true
         },
       }),

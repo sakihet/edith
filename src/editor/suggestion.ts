@@ -1,5 +1,6 @@
 import { computePosition, flip, shift } from '@floating-ui/dom'
-import { Editor, Range, VueRenderer, posToDOMRect } from '@tiptap/vue-3'
+import { VueRenderer, posToDOMRect } from '@tiptap/vue-3'
+import { Editor, Range } from '@tiptap/core'
 
 import CommandsList from '../components/CommandsList.vue'
 
@@ -23,10 +24,14 @@ const updatePosition = (editor, element) => {
 
 export interface SuggestionItem {
   title: string
-  command: () => {}
+  command: (props: { editor: Editor, range: Range }) => void
 }
 
 export default {
+  char: '/',
+  command: ({ editor, range, props }: { editor: Editor, range: Range, props: any }) => {
+    props.command({ editor, range })
+  },
   items: ({ query }: { query: string }) => {
     return [
       {
