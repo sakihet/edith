@@ -1,6 +1,5 @@
-import { Extension } from '@tiptap/core'
+import { Extension, Range, Editor } from '@tiptap/core'
 import Suggestion from '@tiptap/suggestion'
-import { Editor } from '@tiptap/vue-3'
 
 export default Extension.create({
   name: 'customCommands',
