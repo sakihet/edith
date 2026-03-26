@@ -25,6 +25,8 @@ const updatePosition = (editor, element) => {
   })
 }
 
+const MAX_SUGGESTIONS = 20
+
 export interface SuggestionItem {
   title: string
   command: (props: { editor: Editor, range: Range }) => void
@@ -212,7 +214,7 @@ ${context}`
         }
       },
 
-    ].filter(item => item.title.toLowerCase().startsWith(query.toLowerCase())).slice(0, 10)
+    ].filter(item => item.title.toLowerCase().startsWith(query.toLowerCase())).slice(0, MAX_SUGGESTIONS)
   },
   render: () => {
     let component: any
