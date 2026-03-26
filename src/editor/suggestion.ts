@@ -121,13 +121,39 @@ ${context}`
 
           try {
             await updateSession()
-            const prompt = `Extract tasks from the following text and format them as a bulleted list. If no tasks are found, say "No tasks found".
+            const prompt = `Extract tasks from the following text and format them as a simple list (one task per line). 
+      Do not add any bullets or numbers.
+      If no tasks are found, say "No tasks found".
       Important: Respond in the same language as the source text.
 
       Text:
       ${context}`
             const response = await promptModel(prompt)
-            editor.chain().focus().deleteRange({ from: range.from, to: range.from + 'Extracting tasks...'.length }).insertContent(response).run()
+            
+            // Clean up the response and split into lines
+            const tasks = response.split('\n')
+              .map(line => line.replace(/^\[ \]\s*/, '').trim()) // Remove any existing [ ] if AI added it
+              .filter(line => line.length > 0 && line !== 'No tasks found')
+
+            const chain = editor.chain().focus().deleteRange({ from: range.from, to: range.from + 'Extracting tasks...'.length })
+
+            if (tasks.length > 0) {
+              chain.insertContent({
+                type: 'taskList',
+                content: tasks.map(task => ({
+                  type: 'taskItem',
+                  attrs: { checked: false },
+                  content: [{
+                    type: 'paragraph',
+                    content: [{ type: 'text', text: task }]
+                  }]
+                }))
+              })
+            } else {
+              chain.insertContent('No tasks found.')
+            }
+            
+            chain.run()
           } catch (e) {
             console.error(e)
             editor.chain().focus().deleteRange({ from: range.from, to: range.from + 'Extracting tasks...'.length }).insertContent('Failed to extract tasks.').run()
