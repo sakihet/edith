@@ -226,7 +226,7 @@ ${context}`
             await updateSession()
             const prompt = `Generate 5 creative, unexpected ideas or provocative questions related to the following topic to help with brainstorming. 
       Format them as a bulleted list.
-      Important: Respond in the same language as the source text.
+      Important: ALWAYS respond in the same language as the provided topic.
 
       Topic:
       ${context || 'Please provide a topic first.'}`
