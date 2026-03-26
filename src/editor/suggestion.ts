@@ -153,6 +153,64 @@ ${context}`
           }
         }
       },
+      {
+        title: 'AI ASCII Art',
+        command: async ({ editor, range }: { editor: Editor, range: Range }) => {
+          const context = editor.state.doc.textBetween(Math.max(0, range.from - 100), range.from).trim()
+          editor.chain().focus().deleteRange(range).insertContent('AI is drawing...').run()
+
+          try {
+            await updateSession()
+            const topic = context || 'a simple cat'
+            const prompt = `Generate a simple ASCII art representing "${topic}". 
+      Use only standard ASCII characters. 
+      Respond only with the raw ASCII art, no extra text or markdown code blocks.`
+            
+            const response = await promptModel(prompt)
+            
+            // Remove the loading text and insert as a code block
+            editor.chain()
+              .focus()
+              .deleteRange({ from: range.from, to: range.from + 'AI is drawing...'.length })
+              .insertContent([
+                {
+                  type: 'codeBlock',
+                  content: [{ type: 'text', text: response.trim() }]
+                },
+                {
+                  type: 'paragraph'
+                }
+              ])
+              .run()
+          } catch (e) {
+            console.error(e)
+            editor.chain().focus().deleteRange({ from: range.from, to: range.from + 'AI is drawing...'.length }).insertContent('Failed to draw ASCII art.').run()
+          }
+        }
+      },
+      {
+        title: 'AI Brainstorm',
+        command: async ({ editor, range }: { editor: Editor, range: Range }) => {
+          const context = editor.state.doc.textBetween(Math.max(0, range.from - 500), range.from).trim()
+          editor.chain().focus().deleteRange(range).insertContent('AI is brainstorming...').run()
+
+          try {
+            await updateSession()
+            const prompt = `Generate 5 creative, unexpected ideas or provocative questions related to the following topic to help with brainstorming. 
+      Format them as a bulleted list.
+      Important: Respond in the same language as the source text.
+
+      Topic:
+      ${context || 'Please provide a topic first.'}`
+            
+            const response = await promptModel(prompt)
+            editor.chain().focus().deleteRange({ from: range.from, to: range.from + 'AI is brainstorming...'.length }).insertContent(response).run()
+          } catch (e) {
+            console.error(e)
+            editor.chain().focus().deleteRange({ from: range.from, to: range.from + 'AI is brainstorming...'.length }).insertContent('Failed to brainstorm.').run()
+          }
+        }
+      },
 
     ].filter(item => item.title.toLowerCase().startsWith(query.toLowerCase())).slice(0, 10)
   },
